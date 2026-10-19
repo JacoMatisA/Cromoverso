@@ -1,0 +1,18 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    background-color: var(--fondo-pagina);
+    font-family: var(--fuente-rubik);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--texto-principal);
+}
+
+.contenedor{
+    max-width: var(--ancho-contenido);
+    margin-inline: auto;
+    width: calc(100% - 2rem);
+}

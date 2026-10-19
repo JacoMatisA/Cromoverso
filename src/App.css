@@ -1,0 +1,8 @@
+.sitio{
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* se usa flex: 1 para que una pagina crezca de manera natural si tiene mucho contenido */
