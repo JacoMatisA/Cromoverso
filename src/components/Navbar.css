@@ -202,23 +202,58 @@ text-decoration: none;
     box-shadow: var(--sombra-pop-pequena);
 }
 
+/* @media (max-width: 1199.99px) {
+    .navbar-interior {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto auto;
+        align-items: center;
+        width: 100%;
+        max-width: 1440px;
+        height: auto;
+        min-height: 60px;
+        box-sizing: border-box;
+        margin-inline: auto;
+        gap: 0 16px;
+        padding: 8px 16px;
+    }
+    .navbar-izquierda { display: contents; }
+    .navbar-marca { grid-column: 1; grid-row: 1; }
+    .navbar-movil-acciones { grid-column: 2; grid-row: 1; gap: 12px; }
+    .navbar-enlaces { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+    .navbar-panel, .navbar-panel.is-abierto {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        margin: 0;
+    }
+    .navbar-panel.is-abierto { align-items: stretch; }
+} Usar fragmento para desarrollar vista de menu mobile */
+
 @media (min-width: 1200px) {
-    .navbar-interior { width: 1440px;
+    .navbar-interior {
+    width: 100%;
+    max-width: 1440px;
+    box-sizing: border-box;
+    margin-inline: auto;
     height: 76px;
     min-height: 72px;
     display: flex;
-    gap: 28px;
+    gap: clamp(12px, 1.95vw, 28px);
     justify-content: space-between;
-    padding-right: 48px;
-    padding-left: 48px; }
-    .navbar-izquierda { display: flex; flex: 1; min-width: 0; align-items: center; gap: 40px; width: 665px; height: 60px; }
+    padding-inline: clamp(16px, 3.33vw, 48px); }
+    .navbar-izquierda { display: flex; flex: 1 1 665px; min-width: 0; max-width: 665px; align-items: center; gap: 40px; width: auto; height: 60px; }
     .navbar-marca { flex-shrink: 0; }
     .navbar-movil-acciones { display: none; }
-    .navbar-panel, .navbar-panel.is-abierto { display: flex; flex: 0 1 auto; flex-direction: row; align-items: center; gap: 12px; width: 639px; max-height: none; overflow: visible; padding: 0; border: 0; margin-right: 12px ; width: 639px; height: 60px;}
-    .navbar-enlaces, .navbar-interior.is-abierto .navbar-enlaces { display: flex; flex-direction: row; flex: 1; gap: 12px; width: auto;}
-    .navbar-enlaces a { padding: 6px 12px; background: transparent;}
+    .navbar-panel, .navbar-panel.is-abierto { display: flex; flex: 1 1 639px; flex-direction: row; align-items: center; gap: 12px; width: auto; max-width: 639px; min-width: 0; max-height: none; overflow: visible; padding: 0; border: 0; margin-right: 12px; height: 60px;}
+    .navbar-enlaces, .navbar-interior.is-abierto .navbar-enlaces { display: flex; flex-direction: row; flex: 1; gap: clamp(4px, calc(3.33vw - 36px), 12px); width: auto;}
+    .navbar-enlaces a { padding-inline: clamp(6px, calc(2.5vw - 24px), 12px); background: transparent;}
     .navbar-buscador, .navbar-buscador:focus-within{ 
-        width: 260px;
+        width: min(100%, 260px);
+        flex: 0 1 260px;
+        box-sizing: border-box;
         height: 40px;
         border-radius: 999px;
         gap: 2px;
