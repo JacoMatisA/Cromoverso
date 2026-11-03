@@ -5,6 +5,7 @@ import LayoutPublico from "./components/LayoutPublico.jsx";
 import HeroCromoverso from "./components/HeroCromoverso.jsx";
 import SeccionMundos from "./components/SeccionMundos.jsx";
 import VistaMundo from "./components/VistaMundo.jsx";
+import { obtenerCookie, establecerCookie, eliminarCookie } from "./utils/cookies";
 import "./App.css";
 
 const CONFIG_ACCESIBILIDAD_DEFAULT = {
@@ -44,7 +45,21 @@ function DetalleCromoPlaceholder({ textos }) {
 }
 
 function App() {
-  const [idioma, setIdioma] = useState("es");
+  const [idioma, setIdioma] = useState(() => {
+    try {
+      const consentimiento = obtenerCookie("consentimiento");
+      if (consentimiento === "aceptado") {
+        const idiomaGuardado = obtenerCookie("idioma");
+        if (idiomaGuardado === "es" || idiomaGuardado === "en") {
+          return idiomaGuardado;
+        }
+      }
+    } catch (e) {
+      console.warn("No se pudo leer la cookie de idioma:", e);
+    }
+    return "es";
+  });
+
   const [configAccesibilidad, setConfigAccesibilidad] = useState(CONFIG_ACCESIBILIDAD_DEFAULT);
 
   const { textos, cargando, error, recargar } = useTextos(idioma);
@@ -84,6 +99,32 @@ function App() {
     setConfigAccesibilidad(CONFIG_ACCESIBILIDAD_DEFAULT);
   }
 
+  function cambiarIdioma(nuevoIdioma) {
+    setIdioma(nuevoIdioma);
+    try {
+      const consentimiento = obtenerCookie("consentimiento");
+      if (consentimiento === "aceptado") {
+        establecerCookie("idioma", nuevoIdioma, 365);
+      } else {
+        eliminarCookie("idioma");
+      }
+    } catch (e) {
+      console.warn("Error al gestionar cookie de idioma:", e);
+    }
+  }
+
+  function gestionarConsentimiento(decision) {
+    try {
+      if (decision === "aceptado") {
+        establecerCookie("idioma", idioma, 365);
+      } else if (decision === "rechazado") {
+        eliminarCookie("idioma");
+      }
+    } catch (e) {
+      console.warn("Error al gestionar consentimiento e idioma:", e);
+    }
+  }
+
   function gestionarCuenta(accion) {
     const destino = accion === "registro" ? "#crear-cuenta" : "#ingresar";
     window.location.hash = destino;
@@ -97,11 +138,12 @@ function App() {
         error={error}
         recargar={recargar}
         idioma={idioma}
-        onCambiarIdioma={setIdioma}
+        onCambiarIdioma={cambiarIdioma}
         configAccesibilidad={configAccesibilidad}
         onCambiarAccesibilidad={cambiarAjusteAccesibilidad}
         onRestablecerAccesibilidad={restablecerAccesibilidad}
         onCuenta={gestionarCuenta}
+        onConsentimientoCambio={gestionarConsentimiento}
       >
         <Routes>
           <Route

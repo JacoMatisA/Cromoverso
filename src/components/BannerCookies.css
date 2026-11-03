@@ -18,6 +18,10 @@
   box-sizing: border-box;
 }
 
+.banner-cookies:focus {
+  outline: none;
+}
+
 .banner-cookies-contenido {
   display: flex;
   flex-direction: column;
@@ -46,26 +50,54 @@
   flex-shrink: 0;
 }
 
+/* Botones Aceptar y Rechazar con el mismo tamaño y peso visual */
 .banner-boton {
-  min-width: 120px;
+  min-width: 130px;
   min-height: 44px;
   padding: var(--espacio-2) var(--espacio-5);
+  font-family: var(--fuente-rubik);
   font-size: 0.9375rem;
   font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: var(--radio-pildora);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  box-shadow: var(--sombra-pop-pequena);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.banner-boton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-pop);
+}
+
+.banner-boton:focus-visible {
+  outline: 3px solid var(--marca-primario);
+  outline-offset: 2px;
+}
+
+.banner-boton-rechazar {
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+}
+
+.banner-boton-rechazar:hover {
+  background: var(--fondo-sutil);
 }
 
 .banner-boton-aceptar {
   background: var(--marca-primario);
   color: var(--texto-inverso);
-  border-color: var(--borde-fuerte);
 }
 
 .banner-boton-aceptar:hover {
   background: var(--marca-primario-hover);
-  transform: translateY(-1px);
 }
 
-/* Vista móvil según Figma (358 x 196 Hug) */
+/* Vista móvil según Figma (358 x 196) */
 @media (max-width: 768px) {
   .banner-cookies {
     width: min(358px, calc(100% - var(--espacio-4)));
