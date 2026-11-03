@@ -1,0 +1,156 @@
+.abanico-cromos {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: var(--espacio-5);
+}
+
+.abanico-guardiana-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  background: var(--marca-acento);
+  color: var(--texto-principal);
+  padding: var(--espacio-1) var(--espacio-3);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-pildora);
+  font-family: var(--fuente-rubik);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--espacio-4);
+  box-shadow: var(--sombra-pop-pequena);
+  z-index: 4;
+}
+
+.abanico-guardiana-badge svg {
+  width: var(--espacio-4);
+  height: var(--espacio-4);
+}
+
+.abanico-cartas-contenedor {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 350px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.carta-figma {
+  position: absolute;
+  width: 200px;
+  height: 290px;
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-pop);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.carta-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--espacio-2) var(--espacio-3);
+}
+
+.carta-numero {
+  color: var(--texto-principal);
+  font-family: var(--fuente-unbounded);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid var(--borde-fuerte);
+  padding: 1px var(--espacio-2);
+  border-radius: var(--radio-pildora);
+}
+
+.carta-icono-corona svg {
+  width: var(--espacio-4);
+  height: var(--espacio-4);
+  color: var(--marca-acento);
+}
+
+.carta-ilustracion-marco {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-inline: var(--espacio-2);
+  border-radius: var(--radio-s);
+  border: 1px solid var(--borde-fuerte);
+  overflow: hidden;
+}
+
+.cromo-svg-ilustracion {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.carta-pie {
+  padding: var(--espacio-2) var(--espacio-3);
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo-superficie);
+  border-top: 1px solid var(--borde-fuerte);
+}
+
+.carta-pie strong {
+  color: var(--texto-principal);
+  font-size: 0.875rem;
+  font-family: var(--fuente-unbounded);
+}
+
+.carta-pie span {
+  color: var(--texto-secundario);
+  font-size: 0.6875rem;
+}
+
+/* Disposición escalonada tipo abanico de Figma */
+.carta-izquierda {
+  left: 0;
+  transform: rotate(-8deg) translateY(var(--espacio-4));
+  z-index: 1;
+}
+
+.carta-centro {
+  z-index: 3;
+  width: 215px;
+  height: 310px;
+  transform: translateY(-var(--espacio-2));
+  border-width: 3px;
+  box-shadow: 0 0 24px 2px #ffd23f66, var(--sombra-pop);
+}
+
+.carta-derecha {
+  right: 0;
+  transform: rotate(8deg) translateY(var(--espacio-4));
+  z-index: 2;
+}
+
+@media (max-width: 640px) {
+  .abanico-cartas-contenedor {
+    height: 270px;
+    max-width: 340px;
+  }
+
+  .carta-figma {
+    width: 140px;
+    height: 210px;
+  }
+
+  .carta-centro {
+    width: 155px;
+    height: 230px;
+  }
+}

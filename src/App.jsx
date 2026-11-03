@@ -1,64 +1,104 @@
-import { useTextos } from "./hooks/useTextos";
-import "./App.css";
-import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
+import { useTextos } from "./hooks/useTextos";
+import LayoutPublico from "./components/LayoutPublico.jsx";
+import HeroCromoverso from "./components/HeroCromoverso.jsx";
+import SeccionMundos from "./components/SeccionMundos.jsx";
+import "./App.css";
 
-function leerSeccion(){
-    return window.location.hash.slice(1) || "inicio"; /* hash es #, se parte la url hasta encontrar un # para determinar en que pagina se encuentra
-                                                        Para el proyecto se cambia hash por slash ya que si hay landing diferentes */
-                                                        /* Slice(1) quita 1 caracter de izq a der */
+const CONFIG_ACCESIBILIDAD_DEFAULT = {
+  tamano: "normal",
+  altoContraste: false,
+  reducirMovimiento: false,
+  subrayarEnlaces: false,
+  fuenteLecturaFacil: false,
+};
+
+function leerSeccion() {
+  return window.location.hash.slice(1) || "inicio";
 }
 
 function App() {
-    /* idioma por defecto español */
-    const [idioma,setIdioma] = useState("es");
-    const [activo,setActivo] = useState(leerSeccion); /* toma valores dependiendo de la landing actual eliminando la url */
-    const [consulta,setConsulta] = useState("");
-    const [textoGrande,setTextoGrande] = useState(false); /* se inicia con el modo de accesibilidad desactivado */
-    const datos = useTextos(idioma);
-        //Va a sincronizar el estado del componente con el hash de la URL
-        //Estructura useEffect(() => {}, [])
-    useEffect(() => {
-            function actualizar() {
-                setActivo(leerSeccion());
-                setConsulta("");
-            }
-            window.addEventListener("hashchange", actualizar);
-            return () => window.removeEventListener("hashchange", actualizar);
-    }, [])/* con las llaves vacias es porque se esta montando el componente */
+  const [idioma, setIdioma] = useState("es");
+  const [activo, setActivo] = useState(leerSeccion);
+  const [configAccesibilidad, setConfigAccesibilidad] = useState(CONFIG_ACCESIBILIDAD_DEFAULT);
 
-    useEffect(() => {
-        document.documentElement.lang = idioma;
-    }, [idioma]);
+  const { textos, cargando, error, recargar } = useTextos(idioma);
 
-    useEffect(() => {
-        document.documentElement.style.fontSize = textoGrande ? "112%" : "";
-        return () =>
-            {document.documentElement.style.fontSize = ""
-        };
-    }, [textoGrande]);
+  useEffect(() => {
+    function actualizar() {
+      setActivo(leerSeccion());
+    }
+    window.addEventListener("hashchange", actualizar);
+    return () => window.removeEventListener("hashchange", actualizar);
+  }, []);
 
-    function buscar (valor){
-        setConsulta(valor);
-        setActivo("heroes");
-        //window.history es el que da acceso al historial de la pesta;na
-        window.history.replaceState(null, "#heroes");
+  useEffect(() => {
+    document.documentElement.lang = idioma;
+  }, [idioma]);
+
+  // Aplicación de configuraciones de accesibilidad
+  useEffect(() => {
+    // Tamaño de fuente: 'normal' es el predeterminado (100%), 'grande' (112%), 'muyGrande' (125%)
+    if (configAccesibilidad.tamano === "grande") {
+      document.documentElement.style.fontSize = "112%";
+    } else if (configAccesibilidad.tamano === "muyGrande") {
+      document.documentElement.style.fontSize = "125%";
+    } else {
+      document.documentElement.style.fontSize = "";
     }
 
-    return (
-        <>
-            <Navbar 
-            {...datos} 
-            idioma={idioma} 
-            cambiarIdioma={setIdioma} 
-            activo={activo}
-            onBuscar={buscar}
-            textoGrande={textoGrande}
-            alternarTexto={() => setTextoGrande((valor) => !valor)}/>
-            {/* <main className="contenedor contenido" id="inicio"></main> */}
-        </>
-    );
+    document.documentElement.classList.toggle("alto-contraste", configAccesibilidad.altoContraste);
+    document.documentElement.classList.toggle("reducir-movimiento", configAccesibilidad.reducirMovimiento);
+    document.documentElement.classList.toggle("subrayar-enlaces", configAccesibilidad.subrayarEnlaces);
+    document.documentElement.classList.toggle("fuente-lectura-facil", configAccesibilidad.fuenteLecturaFacil);
 
-    
+    return () => {
+      document.documentElement.style.fontSize = "";
+    };
+  }, [configAccesibilidad]);
+
+  function cambiarAjusteAccesibilidad(clave, valor) {
+    setConfigAccesibilidad((prev) => ({
+      ...prev,
+      [clave]: valor,
+    }));
+  }
+
+  function restablecerAccesibilidad() {
+    setConfigAccesibilidad(CONFIG_ACCESIBILIDAD_DEFAULT);
+  }
+
+  function gestionarCuenta(accion) {
+    const destino = accion === "registro" ? "#crear-cuenta" : "#ingresar";
+    window.location.hash = destino;
+  }
+
+  return (
+    <div className="sitio">
+      <LayoutPublico
+        textos={textos}
+        cargando={cargando}
+        error={error}
+        recargar={recargar}
+        idioma={idioma}
+        onCambiarIdioma={setIdioma}
+        activo={activo}
+        configAccesibilidad={configAccesibilidad}
+        onCambiarAccesibilidad={cambiarAjusteAccesibilidad}
+        onRestablecerAccesibilidad={restablecerAccesibilidad}
+        onCuenta={gestionarCuenta}
+      >
+        <HeroCromoverso
+          textos={textos}
+          abrirCuenta={gestionarCuenta}
+          onExplorar={() => {
+            window.location.hash = "#mundos";
+          }}
+        />
+        <SeccionMundos textos={textos} />
+      </LayoutPublico>
+    </div>
+  );
 }
+
 export default App;
