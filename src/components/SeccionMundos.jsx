@@ -4,9 +4,9 @@ import "./SeccionMundos.css";
 const MUNDOS_LISTA = [
   { clave: "neon", nombre: "Ciudad Neón", numero: 1, icono: "rayo", clase: "tarjeta-mundo-neon", tieneTag: true },
   { clave: "coral", nombre: "Abismo Coral", numero: 2, icono: "mundo", clase: "tarjeta-mundo-coral" },
-  { clave: "bosque", nombre: "Bosque Eterno", numero: 3, icono: "estrella", clase: "tarjeta-mundo-bosque" },
+  { clave: "bosque", nombre: "Bosque Eterno", numero: 3, icono: "destellos", clase: "tarjeta-mundo-bosque" },
   { clave: "forja", nombre: "Forja Volcánica", numero: 4, icono: "llama", clase: "tarjeta-mundo-forja" },
-  { clave: "orbita", nombre: "Estación Órbita", numero: 5, icono: "mundo", clase: "tarjeta-mundo-orbita" },
+  { clave: "orbita", nombre: "Estación Órbita", numero: 5, icono: "estrella", clase: "tarjeta-mundo-orbita" },
   { clave: "niebla", nombre: "Reino de Niebla", numero: 6, icono: "ojo", clase: "tarjeta-mundo-niebla" },
 ];
 

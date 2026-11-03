@@ -91,6 +91,8 @@
   overflow: hidden;
 }
 
+.carta-ilustracion-marco .cromo-arte-imagen,
+.carta-ilustracion-marco img,
 .cromo-svg-ilustracion {
   width: 100%;
   height: 100%;
@@ -153,4 +155,27 @@
     width: 155px;
     height: 230px;
   }
+}
+
+
+.carta-ilustracion-marco .cromo-arte-imagen,
+.carta-ilustracion-marco img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.abanico-imagen-marco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.abanico-imagen-hero {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }

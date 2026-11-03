@@ -9,14 +9,21 @@
 }
 
 .idiomas-home button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 32px;
   border: 0;
   border-radius: var(--radio-pildora);
-  padding: var(--espacio-1) var(--espacio-3);
+  padding: 0;
   color: var(--texto-secundario);
   background: transparent;
   font-family: var(--fuente-rubik);
   font-size: 0.8125rem;
   font-weight: 700;
+  line-height: 1;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }

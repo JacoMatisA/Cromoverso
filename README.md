@@ -112,7 +112,9 @@ cromoverso-react/
 - **Propósito**: Sección hero destacada ("Seis mundos. 120 héroes. Un álbum tuyo.") con botones de acción primaria ("Crear cuenta gratis") y secundaria ("Explorar los mundos").
 - **AbanicoCromos**:
   - Renderizado visual de cromos representativos (041 Raíz Madre, 001 Voltia, 081 Astra) con insignias de corona, visor dorado característico y distintivo superior `✦ GUARDIANA HOLOGRÁFICA`.
-  - No utiliza archivos locales falsos ni imágenes estáticas de la API (la API de cromos es para metadatos/estadísticas).
+  - Integración de los artes oficiales de cromos (041 Raíz Madre, 001 Voltia, 081 Astra) con soporte de resoluciones 1x y @2x.
+  - Componente ArteCromo con resolución automática por ID de API (cromos/CV-001) y fallback dinámico mediante ilustracion.colorBase e ilustracion.figura para cromos sin arte gráfico.
+  - Soporte de ilustración global del hero banner (banico-de-cromos) en 1x y @2x.
 
 ### 5. `SeccionMundos` (`src/components/SeccionMundos.jsx`)
 - **Propósito**: Sección "Los seis mundos" con las 6 tarjetas temáticas (Ciudad Neón, Abismo Coral, Bosque Eterno, Forja Volcánica, Estación Órbita, Reino de Niebla), insignias y conteo dinámico de cromos formateado según la API.
@@ -142,3 +144,14 @@ Los estilos están alineados estrictamente con las variables definidas en `src/s
 - Colores de mundos: `--mundo-neon`, `--mundo-coral`, `--mundo-bosque`, `--mundo-forja`, `--mundo-orbita`, `--mundo-niebla` y sus variantes suaves.
 - Fondos y texto: `--fondo-pagina`, `--fondo-superficie`, `--fondo-inverso`, `--texto-principal`, `--texto-secundario`.
 - Sombras y bordes: `--sombra-pop`, `--sombra-pop-pequena`, `--borde-grosor`, `--borde-fuerte`.
+
+
+---
+
+## Imágenes y Recursos Gráficos
+
+Los recursos gráficos exportados desde Figma se encuentran organizados en public/ y src/assets/:
+- **Cromos**: public/cromos/ y src/assets/cromos/ con formato PNG en 1x y @2x nombrando cada archivo por su ID de API (ej: CV-001.png, CV-041@2x.png).
+- **Ilustración del Hero**: public/ilustraciones/ y src/assets/ilustraciones/ (banico-de-cromos.png y banico-de-cromos@2x.png).
+- **Módulo de resolución**: src/assets/imagenes.js provee utilidades como obtenerArteCromo(id), obtenerIlustracion(nombre) y 	ieneArteCromo(id).
+- **Fallback dinámico**: Dado que la API no envía imágenes, para los cromos que no tienen arte rasterizado disponible, el componente ArteCromo genera una composición vectorial SVG utilizando ilustracion.colorBase e ilustracion.figura.

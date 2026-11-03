@@ -36,7 +36,7 @@ export default function Footer({
         <div className="columnas-pie">
           <div className="pie-marca-bloque">
             <a href="#inicio" className="pie-marca" aria-label={textos?.sitio?.nombre}>
-              <LogoCromoverso />
+              <LogoCromoverso invertido />
             </a>
             {lema && <p className="cuerpo-p">{lema}</p>}
           </div>

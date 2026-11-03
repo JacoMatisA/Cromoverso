@@ -149,7 +149,7 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* Menú desplegable móvil según diseño exacto de Figma */}
+      {/* Menú desplegable móvil  */}
       <div
         id="navbar-menu-movil"
         className={`navbar-drawer-movil${abierto ? " is-abierto" : ""}`}
@@ -249,7 +249,7 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* Menú de accesibilidad desplegable (Figma desktop y móvil) */}
+      {/* Menú de accesibilidad desplegable */}
       <MenuAccesibilidad
         abierto={accesibilidadAbierta}
         onCerrar={() => setAccesibilidadAbierta(false)}
