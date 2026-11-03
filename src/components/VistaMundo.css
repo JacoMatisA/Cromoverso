@@ -180,6 +180,12 @@
   padding: 4px 0;
 }
 
+.banner-movil-input-buscar::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 .banner-movil-boton-limpiar {
   background: transparent;
   border: none;
@@ -371,4 +377,3 @@
     gap: var(--espacio-2);
   }
 }
-
