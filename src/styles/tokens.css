@@ -65,6 +65,7 @@
   --espacio-8: 64px;
   --borde-grosor: 2px;
   /* Familias tipográficas (Google Fonts) */
+  --fuente-instrument-sans: 'Instrument Sans', system-ui, sans-serif;
   --fuente-unbounded: 'Unbounded', system-ui, sans-serif;
   --fuente-rubik: 'Rubik', system-ui, sans-serif;
   /* Sombras */

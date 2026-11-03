@@ -31,7 +31,7 @@ export default function HeroCromoverso({
                 className="boton-home primario hero-boton"
                 onClick={() => abrirCuenta?.("registro")}
               >
-                <Icono nombre="estrella" />
+                <Icono nombre="regalo" />
                 <span>{hero.botones.crearCuentaGratis}</span>
               </button>
             )}
@@ -41,7 +41,7 @@ export default function HeroCromoverso({
                 className="boton-home secundario hero-boton"
                 onClick={onExplorar}
               >
-                <Icono nombre="mundo" />
+                <Icono nombre="album" />
                 <span>{hero.botones.explorarMundos}</span>
               </a>
             )}
