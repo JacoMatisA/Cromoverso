@@ -39,3 +39,4 @@ export default function IlustracionHeroe({ colorBase = "#7C4DFF" }) {
     </svg>
   );
 }
+

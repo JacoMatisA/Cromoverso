@@ -121,7 +121,7 @@ export default function MenuLateralMundos({
                   }
                 >
                   <span className={`lateral-badge-rareza rareza-badge-${clave}`}>
-                    <Icono nombre={icono} />
+                    <Icono nombre={icono} relleno />
                     <span className="lateral-badge-nombre">
                       {nombre.toUpperCase()}
                     </span>
@@ -175,3 +175,4 @@ export default function MenuLateralMundos({
     </aside>
   );
 }
+

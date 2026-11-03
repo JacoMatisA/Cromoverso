@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Icono from "./Icono.jsx";
-import IlustracionHeroe from "./IlustracionHeroe.jsx";
+import ArteCromo from "./ArteCromo.jsx";
 import "./TarjetaCromo.css";
 
 const ICONOS_RAREZA = {
@@ -19,7 +19,7 @@ export default function TarjetaCromo({
 }) {
   const numeroFormateado = String(cromo.numero ?? cromo.posicion ?? 1).padStart(3, "0");
   const claveRareza = String(cromo.rareza || "comun").toLowerCase();
-  
+
   // Buscar metadatos de rareza de la API
   const metaRareza = rarezasInfo.find((r) => r.id?.toLowerCase() === claveRareza);
   const nombreRareza =
@@ -60,14 +60,20 @@ export default function TarjetaCromo({
             className={`tarjeta-cromo-badge-rareza badge-${claveRareza}`}
             title={nombreRareza}
           >
-            <Icono nombre={iconoRareza} />
+            <Icono nombre={iconoRareza} relleno />
             <span className="cromo-rareza-sr">{nombreRareza}</span>
           </span>
         </div>
 
-        {/* Ilustración del personaje con halo del mundo */}
+        {/* Arte oficial del cromo con fallback automático */}
         <div className="tarjeta-cromo-ilustracion">
-          <IlustracionHeroe colorBase={colorMundo} />
+          <ArteCromo
+            id={cromo.id}
+            cromo={cromo}
+            nombre={cromo.nombre}
+            colorBase={colorMundo}
+            ilustracion={cromo.ilustracion}
+          />
         </div>
       </div>
 

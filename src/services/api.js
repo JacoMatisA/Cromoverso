@@ -60,3 +60,4 @@ export async function obtenerRarezas() {
   const datos = await respuesta.json();
   return datos?.datos ?? [];
 }
+

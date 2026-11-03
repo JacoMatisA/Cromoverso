@@ -134,6 +134,67 @@
   text-overflow: ellipsis;
 }
 
+/* Buscador interactivo móvil */
+.banner-movil-boton-buscar.is-activo {
+  background-color: var(--marca-acento);
+  color: var(--texto-principal);
+  border-color: var(--borde-fuerte);
+}
+
+.banner-movil-buscador-contenedor {
+  margin-top: var(--espacio-3);
+  width: 100%;
+}
+
+.banner-movil-buscador-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: var(--fondo-superficie);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-pildora);
+  padding: 4px 12px;
+  box-shadow: var(--sombra-pop-pequena);
+}
+
+.banner-movil-buscador-icono {
+  display: flex;
+  align-items: center;
+  color: var(--texto-secundario);
+  margin-right: var(--espacio-2);
+}
+
+.banner-movil-buscador-icono svg {
+  width: 16px;
+  height: 16px;
+}
+
+.banner-movil-input-buscar {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--fuente-rubik);
+  font-size: 0.875rem;
+  color: var(--texto-principal);
+  outline: none;
+  padding: 4px 0;
+}
+
+.banner-movil-boton-limpiar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--texto-secundario);
+  padding: 2px;
+}
+
+.banner-movil-boton-limpiar svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* Cuerpo de la vista */
 .vista-mundo-cuerpo {
   padding: var(--espacio-5) 0 var(--espacio-8);
@@ -310,3 +371,4 @@
     gap: var(--espacio-2);
   }
 }
+

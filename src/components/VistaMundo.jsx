@@ -30,6 +30,18 @@ export default function VistaMundo({ textos, cargandoTextos }) {
   // Filtros desde URL Query Parameters
   const rarezaActual = searchParams.get("rareza") || "";
   const tipoActual = searchParams.get("tipo") || "";
+  const busquedaActual = searchParams.get("buscar") || "";
+
+  // Estado del buscador móvil
+  const [busqueda, setBusqueda] = useState(busquedaActual);
+  const [busquedaAbierta, setBusquedaAbierta] = useState(Boolean(busquedaActual));
+
+  useEffect(() => {
+    setBusqueda(busquedaActual);
+    if (busquedaActual) {
+      setBusquedaAbierta(true);
+    }
+  }, [busquedaActual]);
 
   // Carga de datos de la API
   useEffect(() => {
@@ -80,10 +92,11 @@ export default function VistaMundo({ textos, cargandoTextos }) {
   }
 
   function limpiarFiltros() {
+    setBusqueda("");
     setSearchParams(new URLSearchParams());
   }
 
-  // Filtrado de cromos
+  // Filtrado de cromos (por rareza, tipo y nombre de cromo)
   const cromosFiltrados = useMemo(() => {
     return cromos.filter((cromo) => {
       if (
@@ -98,9 +111,15 @@ export default function VistaMundo({ textos, cargandoTextos }) {
       ) {
         return false;
       }
+      if (
+        busqueda &&
+        !cromo.nombre?.toLowerCase().includes(busqueda.trim().toLowerCase())
+      ) {
+        return false;
+      }
       return true;
     });
-  }, [cromos, rarezaActual, tipoActual]);
+  }, [cromos, rarezaActual, tipoActual, busqueda]);
 
   // Cálculos dinámicos de cromos por filtro
   const conteoPorRareza = useMemo(() => {
@@ -205,12 +224,51 @@ export default function VistaMundo({ textos, cargandoTextos }) {
             </div>
             <button
               type="button"
-              className="banner-movil-boton-buscar"
+              className={`banner-movil-boton-buscar ${busquedaAbierta ? "is-activo" : ""}`}
               aria-label={textos?.navbar?.buscador?.aria ?? "Buscar"}
+              aria-expanded={busquedaAbierta}
+              onClick={() => setBusquedaAbierta((prev) => !prev)}
             >
-              <Icono nombre="buscar" />
+              <Icono nombre={busquedaAbierta ? "cerrar" : "buscar"} />
             </button>
           </div>
+
+          {/* Campo de búsqueda interactivo en móvil */}
+          {busquedaAbierta && (
+            <div className="banner-movil-buscador-contenedor">
+              <div className="banner-movil-buscador-input-wrap">
+                <span className="banner-movil-buscador-icono" aria-hidden="true">
+                  <Icono nombre="buscar" />
+                </span>
+                <input
+                  type="search"
+                  className="banner-movil-input-buscar"
+                  placeholder={textos?.navbar?.buscador?.placeholder ?? "Buscar cromo..."}
+                  aria-label={textos?.navbar?.buscador?.aria ?? "Buscar cromo por nombre"}
+                  value={busqueda}
+                  autoFocus
+                  onChange={(e) => {
+                    const valor = e.target.value;
+                    setBusqueda(valor);
+                    cambiarFiltro("buscar", valor);
+                  }}
+                />
+                {busqueda && (
+                  <button
+                    type="button"
+                    className="banner-movil-boton-limpiar"
+                    aria-label={textos?.menuMovil?.cerrar ?? "Limpiar"}
+                    onClick={() => {
+                      setBusqueda("");
+                      cambiarFiltro("buscar", "");
+                    }}
+                  >
+                    <Icono nombre="cerrar" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
