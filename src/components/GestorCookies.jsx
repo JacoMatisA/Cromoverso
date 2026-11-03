@@ -1,21 +1,23 @@
 import { useState } from "react";
 import BannerCookies from "./BannerCookies.jsx";
 import PreferenciasCookies from "./PreferenciasCookies.jsx";
+import { obtenerCookie, establecerCookie } from "../utils/cookies";
 import "./GestorCookies.css";
 
-const CLAVE_CONSENTIMIENTO = "cromoverso_cookies_consent";
+const NOMBRE_COOKIE_CONSENTIMIENTO = "consentimiento";
 
 export default function GestorCookies({
   textos,
   abierto = false,
   onAbrir,
   onCerrar,
+  onConsentimientoCambio,
 }) {
   const [consentimiento, setConsentimiento] = useState(() => {
     try {
-      return localStorage.getItem(CLAVE_CONSENTIMIENTO);
+      return obtenerCookie(NOMBRE_COOKIE_CONSENTIMIENTO);
     } catch (e) {
-      console.warn("No se pudo leer el almacenamiento local:", e);
+      console.warn("No se pudo leer la cookie de consentimiento:", e);
       return null;
     }
   });
@@ -25,9 +27,10 @@ export default function GestorCookies({
 
   function guardar(permitir) {
     try {
-      const valor = permitir ? "aceptado" : "esenciales";
-      localStorage.setItem(CLAVE_CONSENTIMIENTO, valor);
-      setConsentimiento(valor);
+      const decision = permitir ? "aceptado" : "rechazado";
+      establecerCookie(NOMBRE_COOKIE_CONSENTIMIENTO, decision, 365);
+      setConsentimiento(decision);
+      onConsentimientoCambio?.(decision);
       setError(false);
       onCerrar?.();
     } catch (err) {

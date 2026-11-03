@@ -232,11 +232,18 @@
   min-height: 48px;
   width: 100%;
   font-size: 0.9375rem;
+  box-shadow: var(--sombra-pop-pequena);
 }
 
-.drawer-boton-crear {
+.navbar-drawer-movil .drawer-boton-crear {
   background: var(--marca-primario);
   color: var(--texto-inverso);
+  border-color: var(--borde-fuerte);
+}
+
+.navbar-drawer-movil .drawer-boton-crear:hover {
+  background: var(--marca-primario-hover);
+  box-shadow: var(--sombra-pop);
 }
 
 /* Responsive breakpoint */

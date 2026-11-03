@@ -18,6 +18,7 @@ export default function LayoutPublico({
   onCambiarAccesibilidad,
   onRestablecerAccesibilidad,
   onCuenta,
+  onConsentimientoCambio,
   children,
 }) {
   const [cookiesAbiertas, setCookiesAbiertas] = useState(false);
@@ -64,6 +65,7 @@ export default function LayoutPublico({
         abierto={cookiesAbiertas}
         onAbrir={abrirCookies}
         onCerrar={cerrarCookies}
+        onConsentimientoCambio={onConsentimientoCambio}
       />
     </div>
   );
