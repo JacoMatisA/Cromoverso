@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 import Icono from "./Icono.jsx";
 import LogoCromoverso from "./LogoCromoverso.jsx";
@@ -6,8 +7,8 @@ import SelectorIdioma from "./SelectorIdioma.jsx";
 import MenuAccesibilidad from "./MenuAccesibilidad.jsx";
 
 const DESTINOS = {
-  inicio: "#inicio",
-  mundos: "#mundos",
+  inicio: "/",
+  mundos: "/mundos/neon",
 };
 
 export default function Navbar({
@@ -22,6 +23,14 @@ export default function Navbar({
   const [abierto, setAbierto] = useState(false);
   const [accesibilidadAbierta, setAccesibilidadAbierta] = useState(false);
   const botonMenu = useRef(null);
+  const location = useLocation();
+
+  const seccionActiva = location.pathname.startsWith("/mundos")
+    ? "mundos"
+    : location.pathname === "/" || location.pathname === "/inicio"
+    ? "inicio"
+    : activo;
+
   const nav = textos?.navbar;
   const menuMovil = textos?.menuMovil;
 
@@ -64,28 +73,32 @@ export default function Navbar({
     <header className="navbar">
       <div className="navbar-interior">
         <div className="navbar-izquierda">
-          <a
-            href="#inicio"
+          <Link
+            to="/"
             className="navbar-marca"
             aria-label={nav?.logo?.aria ?? textos?.sitio?.nombre}
             title={textos?.sitio?.lema}
             onClick={() => setAbierto(false)}
           >
             <LogoCromoverso />
-          </a>
+          </Link>
 
           {/* Enlaces versión escritorio */}
           <nav className="navbar-enlaces-escritorio" aria-label={nav?.aria?.menu}>
-            {Object.entries(nav?.enlaces ?? {}).map(([clave, etiqueta]) => (
-              <a
-                key={clave}
-                className="cuerpo-p-fuerte navbar-enlace"
-                href={DESTINOS[clave] ?? `#${clave}`}
-                aria-current={activo === clave ? "page" : undefined}
-              >
-                {etiqueta}
-              </a>
-            ))}
+            {Object.entries(nav?.enlaces ?? {}).map(([clave, etiqueta]) => {
+              const destino = DESTINOS[clave] ?? `/${clave}`;
+              const esActivo = seccionActiva === clave;
+              return (
+                <Link
+                  key={clave}
+                  className="cuerpo-p-fuerte navbar-enlace"
+                  to={destino}
+                  aria-current={esActivo ? "page" : undefined}
+                >
+                  {etiqueta}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -156,13 +169,13 @@ export default function Navbar({
         aria-hidden={!abierto}
       >
         <div className="drawer-cabecera">
-          <a
-            href="#inicio"
+          <Link
+            to="/"
             className="navbar-marca"
             onClick={() => setAbierto(false)}
           >
             <LogoCromoverso />
-          </a>
+          </Link>
           <button
             type="button"
             className="navbar-icono"
@@ -174,25 +187,25 @@ export default function Navbar({
         </div>
 
         <nav className="drawer-enlaces" aria-label={nav?.aria?.menu}>
-          <a
-            href="#inicio"
-            className={`drawer-item ${activo === "inicio" ? "is-activo" : ""}`}
+          <Link
+            to="/"
+            className={`drawer-item ${seccionActiva === "inicio" ? "is-activo" : ""}`}
             onClick={() => setAbierto(false)}
           >
             <span className="drawer-item-izq">
               <Icono nombre="inicio" />
               <span className="cuerpo-m-fuerte">{nav?.enlaces?.inicio ?? "Inicio"}</span>
             </span>
-            {activo === "inicio" && (
+            {seccionActiva === "inicio" && (
               <span className="drawer-badge detalle-etiqueta">
                 {menuMovil?.aria?.estasAqui ?? "ESTÁS AQUÍ"}
               </span>
             )}
-          </a>
+          </Link>
 
-          <a
-            href="#mundos"
-            className={`drawer-item ${activo === "mundos" ? "is-activo" : ""}`}
+          <Link
+            to="/mundos/neon"
+            className={`drawer-item ${seccionActiva === "mundos" ? "is-activo" : ""}`}
             onClick={() => setAbierto(false)}
           >
             <span className="drawer-item-izq">
@@ -200,7 +213,7 @@ export default function Navbar({
               <span className="cuerpo-m-fuerte">{nav?.enlaces?.mundos ?? "Mundos"}</span>
             </span>
             <Icono nombre="chevronder" />
-          </a>
+          </Link>
         </nav>
 
         <div className="drawer-inferior">

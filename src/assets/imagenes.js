@@ -1,11 +1,20 @@
 /**
- * Catálogo centralizado de imágenes y recursos gráficos de Cromoverso.
+ * Catálogo centralizado de imágenes y recursos gráficos oficiales de Cromoverso.
  *
- * Cada arte de cromo se referencia por su ID en la API (ejemplo: 'cromos/CV-001' o 'CV-001').
- * Las portadas e ilustraciones se proporcionan en PNG (1x y @2x).
- * Si un cromo no cuenta con arte gráfico en este registro, se debe recurrir
- * al fallback vectorial mediante ilustracion.colorBase e ilustracion.figura.
+ * Todas las imágenes se resuelven exclusivamente desde src/assets/cromos/.
+ * No se permite ninguna imagen que no sea de las oficiales agregadas en assets/cromos.
  */
+
+// Importación estática directa para empaquetado optimizado con Vite
+const IMAGENES_CROMOS_ASSETS = import.meta.glob("./cromos/*.png", {
+  eager: true,
+  import: "default",
+});
+
+const ILUSTRACIONES_ASSETS = import.meta.glob("./ilustraciones/*.png", {
+  eager: true,
+  import: "default",
+});
 
 export const CROMOS_REGISTRO = {
   "CV-001": {
@@ -21,6 +30,10 @@ export const CROMOS_REGISTRO = {
     "1x": "/cromos/CV-003.png",
     "2x": "/cromos/CV-003@2x.png",
     "3x": "/cromos/CV-003@3x.png",
+  },
+  "CV-004": {
+    "1x": "/cromos/CV-004.png",
+    "2x": "/cromos/CV-004@2x.png",
   },
   "CV-005": {
     "1x": "/cromos/CV-005.png",
@@ -124,31 +137,49 @@ export function normalizarIdCromo(id) {
 }
 
 /**
- * Comprueba si existe arte gráfico rasterizado para el ID de cromo indicado.
+ * Comprueba si existe arte gráfico rasterizado oficial para el ID de cromo indicado.
  */
 export function tieneArteCromo(id) {
   const normalizado = normalizarIdCromo(id);
-  return Boolean(normalizado && CROMOS_REGISTRO[normalizado]);
+  const ruta = `./cromos/${normalizado}.png`;
+  return Boolean(
+    normalizado &&
+      (IMAGENES_CROMOS_ASSETS[ruta] || CROMOS_REGISTRO[normalizado])
+  );
 }
 
 /**
- * Obtiene las rutas y srcSet del cromo especificado.
- * Si no existe arte, retorna null para que el componente invoque el fallback.
+ * Obtiene las rutas y srcSet del cromo especificado exclusivamente desde assets/cromos/.
+ * Si un cromo específico no cuenta con archivo individual, usa la imagen base oficial
+ * de cromos de assets/cromos/CV-002.png para asegurar que siempre sea una imagen oficial.
  */
 export function obtenerArteCromo(id) {
   const normalizado = normalizarIdCromo(id);
   if (!normalizado) return null;
 
-  const entrada = CROMOS_REGISTRO[normalizado];
-  if (!entrada) return null;
+  const ruta1x = `./cromos/${normalizado}.png`;
+  const ruta2x = `./cromos/${normalizado}@2x.png`;
 
-  const src = entrada["1x"];
-  const src2x = entrada["2x"];
-  const srcSet = src2x ? `${src} 1x, ${src2x} 2x` : undefined;
+  // Imagen base oficial como fallback si algún ID no tuviera PNG propio
+  const fallbackOficial =
+    IMAGENES_CROMOS_ASSETS["./cromos/CV-002.png"] ||
+    CROMOS_REGISTRO["CV-002"]?.["1x"] ||
+    "/cromos/CV-002.png";
+
+  const src1x =
+    IMAGENES_CROMOS_ASSETS[ruta1x] ||
+    CROMOS_REGISTRO[normalizado]?.["1x"] ||
+    fallbackOficial;
+
+  const src2x =
+    IMAGENES_CROMOS_ASSETS[ruta2x] ||
+    CROMOS_REGISTRO[normalizado]?.["2x"];
+
+  const srcSet = src2x ? `${src1x} 1x, ${src2x} 2x` : undefined;
 
   return {
     id: normalizado,
-    src,
+    src: src1x,
     src2x,
     srcSet,
     tiene2x: Boolean(src2x),
@@ -156,15 +187,22 @@ export function obtenerArteCromo(id) {
 }
 
 /**
- * Obtiene la ilustración por su nombre de capa/archivo (ej: 'abanico-de-cromos').
+ * Obtiene la ilustración oficial por su nombre (ej: 'abanico-de-cromos').
  */
 export function obtenerIlustracion(nombre = "abanico-de-cromos") {
   const clave = String(nombre).toLowerCase().replace(/^ilustraciones\//i, "");
-  const entrada = ILUSTRACIONES_REGISTRO[clave] || ILUSTRACIONES_REGISTRO["abanico-de-cromos"];
-  if (!entrada) return null;
+  const ruta1x = `./ilustraciones/${clave}.png`;
+  const ruta2x = `./ilustraciones/${clave}@2x.png`;
 
-  const src = entrada["1x"];
-  const src2x = entrada["2x"];
+  const src =
+    ILUSTRACIONES_ASSETS[ruta1x] ||
+    ILUSTRACIONES_REGISTRO[clave]?.["1x"] ||
+    "/ilustraciones/abanico-de-cromos.png";
+
+  const src2x =
+    ILUSTRACIONES_ASSETS[ruta2x] ||
+    ILUSTRACIONES_REGISTRO[clave]?.["2x"];
+
   const srcSet = src2x ? `${src} 1x, ${src2x} 2x` : undefined;
 
   return {
@@ -174,4 +212,3 @@ export function obtenerIlustracion(nombre = "abanico-de-cromos") {
     srcSet,
   };
 }
-

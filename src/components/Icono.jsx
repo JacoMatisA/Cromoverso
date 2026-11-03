@@ -288,6 +288,52 @@ const TRAZOS = {
   ),
 };
 
-export default function Icono({ nombre }) {
-  return <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{TRAZOS[nombre]}</svg>;
+const TRAZOS_RELLENOS = {
+  corona: (
+    <path
+      d="M3 19H21V16H19.5L21 7L16 11L12 4L8 11L3 7L4.5 16H3V19Z"
+      fill="currentColor"
+    />
+  ),
+  estrella: (
+    <path
+      d="M12 2.79999L14.8 8.59999L21.2 9.49999L16.6 14L17.7 20.3L12 17.3L6.29999 20.3L7.39999 14L2.79999 9.49999L9.19999 8.59999L12 2.79999Z"
+      fill="currentColor"
+    />
+  ),
+  rombo: (
+    <path
+      d="M12 3L20 12L12 21L4 12L12 3Z"
+      fill="currentColor"
+    />
+  ),
+  circulo: (
+    <circle
+      cx="12"
+      cy="12"
+      r="8"
+      fill="currentColor"
+    />
+  ),
+};
+
+export default function Icono({ nombre, relleno = false }) {
+  const trazo = relleno && TRAZOS_RELLENOS[nombre] ? TRAZOS_RELLENOS[nombre] : TRAZOS[nombre];
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill={relleno ? "currentColor" : "none"}
+      stroke={relleno ? "none" : "currentColor"}
+      strokeWidth={relleno ? 0 : 1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {trazo}
+    </svg>
+  );
 }
