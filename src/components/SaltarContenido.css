@@ -1,0 +1,20 @@
+.saltar-contenido {
+  position: absolute;
+  top: -9999px;
+  left: var(--espacio-4);
+  z-index: 1000;
+  padding: var(--espacio-2) var(--espacio-4);
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-pildora);
+  text-decoration: none;
+  box-shadow: var(--sombra-pop);
+  transition: top 0.15s ease;
+}
+
+.saltar-contenido:focus {
+  top: var(--espacio-4);
+  outline: 3px solid var(--marca-acento);
+  outline-offset: 2px;
+}

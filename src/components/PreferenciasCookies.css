@@ -1,0 +1,112 @@
+.preferencias-dialogo {
+  width: min(560px, calc(100% - var(--espacio-6)));
+  max-height: calc(100dvh - var(--espacio-6));
+  overflow-y: auto;
+  padding: var(--espacio-6);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-l);
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
+}
+
+.preferencias-dialogo::backdrop {
+  background: rgb(26 16 51 / 70%);
+  backdrop-filter: blur(2px);
+}
+
+.preferencias-dialogo h2 {
+  margin: 0;
+  color: var(--texto-principal);
+}
+
+.preferencias-dialogo p {
+  margin-block: var(--espacio-2) var(--espacio-4);
+  color: var(--texto-secundario);
+  line-height: 1.5;
+}
+
+.seccion-cookie-fija {
+  padding: var(--espacio-4);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-m);
+  background: var(--fondo-sutil);
+  margin-block: var(--espacio-4);
+}
+
+.cabecera-opcion-fija {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--espacio-2);
+}
+
+.cabecera-opcion-fija h3 {
+  margin: 0;
+  color: var(--texto-principal);
+}
+
+.badge-siempre-activa {
+  background: var(--estado-exito-suave);
+  color: var(--estado-exito);
+  padding: 2px var(--espacio-2);
+  border-radius: var(--radio-pildora);
+}
+
+.seccion-cookie-fija p {
+  margin: 0;
+}
+
+.opcion-cookie {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-4);
+  margin-block: var(--espacio-4);
+  padding: var(--espacio-4);
+  border: var(--borde-grosor) solid var(--borde-sutil);
+  border-radius: var(--radio-m);
+  background: var(--fondo-superficie);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.opcion-cookie:hover {
+  border-color: var(--borde-fuerte);
+}
+
+.opcion-cookie input {
+  width: var(--espacio-5);
+  height: var(--espacio-5);
+  accent-color: var(--marca-primario);
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.opcion-cookie strong {
+  display: block;
+  color: var(--texto-principal);
+  margin-bottom: var(--espacio-1);
+}
+
+.opcion-cookie span span {
+  display: block;
+  color: var(--texto-secundario);
+}
+
+.grupo-botones-dialogo {
+  margin-top: var(--espacio-5);
+}
+
+.error-dialogo {
+  color: var(--estado-error);
+  background: var(--estado-error-suave);
+  padding: var(--espacio-2) var(--espacio-3);
+  border-radius: var(--radio-s);
+  border: 1px solid var(--estado-error);
+  margin-top: var(--espacio-3);
+}
+
+body:has(.preferencias-dialogo[open]) {
+  overflow: hidden;
+}

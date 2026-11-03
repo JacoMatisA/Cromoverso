@@ -1,8 +1,8 @@
-*{
+* {
     box-sizing: border-box;
 }
 
-body{
+body {
     margin: 0;
     background-color: var(--fondo-pagina);
     font-family: var(--fuente-rubik);
@@ -11,8 +11,112 @@ body{
     color: var(--texto-principal);
 }
 
-.contenedor{
+.contenedor,
+.ancho-home {
     max-width: var(--ancho-contenido);
     margin-inline: auto;
-    width: calc(100% - 2rem);
+    width: calc(100% - var(--espacio-5));
+}
+
+/* Utilidades compartidas de botones e interacción basadas en tokens */
+.boton-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espacio-2);
+    border-radius: var(--radio-pildora);
+    border: var(--borde-grosor) solid var(--borde-fuerte);
+    font-family: var(--fuente-rubik);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: var(--sombra-pop-pequena);
+}
+
+.boton-home.primario {
+    background: var(--marca-acento);
+    color: var(--texto-principal);
+    border-color: var(--borde-fuerte);
+}
+
+.boton-home.primario:hover {
+    background: #ffe070;
+    transform: translateY(-1px);
+    box-shadow: var(--sombra-pop);
+}
+
+.boton-home.secundario {
+    background: var(--fondo-superficie);
+    color: var(--texto-principal);
+    border-color: var(--borde-fuerte);
+}
+
+.boton-home.secundario:hover {
+    background: var(--fondo-sutil);
+    transform: translateY(-1px);
+    box-shadow: var(--sombra-pop);
+}
+
+.boton-home:focus-visible,
+.enlace-home:focus-visible {
+    outline: 3px solid var(--marca-primario);
+    outline-offset: 2px;
+}
+
+.enlace-home {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.enlace-home:hover {
+    color: var(--marca-primario);
+}
+
+.grupo-botones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espacio-3);
+}
+
+/* Modos de accesibilidad activados por el menú de accesibilidad */
+html.alto-contraste {
+    filter: contrast(125%);
+}
+
+html.reducir-movimiento *,
+html.reducir-movimiento *::before,
+html.reducir-movimiento *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+}
+
+html.subrayar-enlaces a {
+    text-decoration: underline !important;
+}
+
+html.fuente-lectura-facil {
+    letter-spacing: 0.04em;
+    word-spacing: 0.08em;
+}
+
+/* Accesibilidad: texto solo visible para lectores de pantalla */
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
