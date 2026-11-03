@@ -1,0 +1,180 @@
+.menu-lateral-mundos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.lateral-card {
+  background-color: var(--fondo-superficie);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-l);
+  padding: var(--espacio-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.lateral-card-titulo {
+  color: var(--texto-principal);
+  font-family: var(--fuente-rubik);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.lateral-lista-mundos,
+.lateral-lista-filtros {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+/* Items de Mundos */
+.lateral-item-mundo-wrapper {
+  margin: 0;
+}
+
+.lateral-item-mundo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  padding: var(--espacio-2) var(--espacio-2);
+  border-radius: var(--radio-s);
+  transition: background-color 0.15s ease;
+  color: var(--texto-principal);
+}
+
+.lateral-item-mundo:hover {
+  background-color: var(--fondo-sutil);
+}
+
+.lateral-item-mundo.is-activo {
+  background-color: var(--marca-primario-suave);
+}
+
+.lateral-item-mundo-izq {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.lateral-mundo-punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.lateral-mundo-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.lateral-mundo-nombre {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+}
+
+.lateral-mundo-badge-activo {
+  font-size: 0.6875rem;
+  color: var(--texto-marca);
+  font-weight: 600;
+}
+
+.lateral-mundo-conteo {
+  color: var(--texto-secundario);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.lateral-item-mundo.is-activo .lateral-mundo-conteo {
+  color: var(--texto-marca);
+  background-color: #d8c7ff;
+  padding: 2px 6px;
+  border-radius: var(--radio-pildora);
+}
+
+/* Botones de filtros interactivos */
+.lateral-boton-filtro {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radio-s);
+  padding: var(--espacio-1) var(--espacio-2);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.lateral-boton-filtro:hover {
+  background-color: var(--fondo-sutil);
+}
+
+.lateral-boton-filtro.is-activo {
+  background-color: var(--marca-primario-suave);
+  border-color: var(--marca-primario);
+}
+
+.lateral-filtro-nombre {
+  font-size: 0.875rem;
+  color: var(--texto-principal);
+}
+
+.lateral-filtro-conteo {
+  color: var(--texto-secundario);
+  font-size: 0.8125rem;
+}
+
+/* Badges de Rareza */
+.lateral-badge-rareza {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radio-pildora);
+  font-family: var(--fuente-rubik);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--borde-fuerte);
+}
+
+.lateral-badge-rareza svg {
+  width: 13px;
+  height: 13px;
+}
+
+.rareza-badge-legendaria {
+  background-color: var(--rareza-legendaria-suave);
+  color: #8f6600;
+  border-color: var(--rareza-legendaria);
+}
+
+.rareza-badge-epica {
+  background-color: var(--marca-primario-suave);
+  color: var(--rareza-epica);
+  border-color: var(--rareza-epica);
+}
+
+.rareza-badge-rara {
+  background-color: var(--estado-info-suave);
+  color: var(--rareza-rara);
+  border-color: var(--rareza-rara);
+}
+
+.rareza-badge-comun {
+  background-color: var(--fondo-superficie);
+  color: var(--rareza-comun);
+  border-color: var(--rareza-comun);
+}

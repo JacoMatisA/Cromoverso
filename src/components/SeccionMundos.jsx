@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Icono from "./Icono.jsx";
 import "./SeccionMundos.css";
 
@@ -33,15 +34,20 @@ export default function SeccionMundos({ textos }) {
             </p>
           </div>
           {textoVer && (
-            <a href="#mundos" className="enlace-ver-mundo cuerpo-p-fuerte">
+            <Link to="/mundos/neon" className="enlace-ver-mundo cuerpo-p-fuerte">
               <span>&rarr;</span> {textoVer}
-            </a>
+            </Link>
           )}
         </div>
 
         <div className="grilla-mundos">
           {MUNDOS_LISTA.map((mundo) => (
-            <article key={mundo.clave} className={`tarjeta-mundo ${mundo.clase}`}>
+            <Link
+              key={mundo.clave}
+              to={`/mundos/${mundo.clave}`}
+              className={`tarjeta-mundo ${mundo.clase}`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="tarjeta-mundo-cabecera">
                 <div className="icono-circulo-mundo" aria-hidden="true">
                   <Icono nombre={mundo.icono} />
@@ -58,7 +64,7 @@ export default function SeccionMundos({ textos }) {
                   {plantillaCromos.replace("{cantidad}", "20")}
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>

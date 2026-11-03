@@ -1,0 +1,189 @@
+.tarjeta-cromo {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--fondo-superficie);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-m);
+  padding: var(--espacio-2);
+  text-decoration: none;
+  color: var(--texto-principal);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--sombra-pop-pequena);
+}
+
+.tarjeta-cromo:hover,
+.tarjeta-cromo:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-pop);
+  outline: none;
+}
+
+.tarjeta-cromo:focus-visible {
+  border-color: var(--marca-primario);
+}
+
+.tarjeta-cromo-marco {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 4.6;
+  border-radius: var(--radio-s);
+  border: 1px solid var(--borde-fuerte);
+  overflow: hidden;
+  background: var(--fondo-inverso-2);
+}
+
+.tarjeta-cromo-superposicion {
+  position: absolute;
+  top: var(--espacio-2);
+  left: var(--espacio-2);
+  right: var(--espacio-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.tarjeta-cromo-numero {
+  font-family: var(--fuente-unbounded);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+  background-color: var(--fondo-superficie);
+  border: 1px solid var(--borde-fuerte);
+  padding: 1px var(--espacio-2);
+  border-radius: var(--radio-pildora);
+  box-shadow: 1px 1px 0px rgba(26, 16, 51, 0.4);
+}
+
+.tarjeta-cromo-badge-rareza {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radio-pildora);
+  border: 1px solid var(--borde-fuerte);
+  background-color: var(--fondo-superficie);
+}
+
+.tarjeta-cromo-badge-rareza svg {
+  width: 13px;
+  height: 13px;
+}
+
+.badge-legendaria {
+  background-color: var(--rareza-legendaria-suave);
+  color: var(--rareza-legendaria);
+  border-color: var(--borde-fuerte);
+}
+
+.badge-epica {
+  background-color: var(--marca-primario-suave);
+  color: var(--rareza-epica);
+  border-color: var(--borde-fuerte);
+}
+
+.badge-rara {
+  background-color: var(--estado-info-suave);
+  color: var(--rareza-rara);
+  border-color: var(--borde-fuerte);
+}
+
+.badge-comun {
+  background-color: var(--fondo-superficie);
+  color: var(--rareza-comun);
+  border-color: var(--borde-fuerte);
+}
+
+.cromo-rareza-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tarjeta-cromo-ilustracion {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarjeta-cromo-ilustracion svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tarjeta-cromo-info {
+  padding-top: var(--espacio-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tarjeta-cromo-nombre {
+  font-family: var(--fuente-unbounded);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--texto-principal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tarjeta-cromo-subtitulo {
+  font-family: var(--fuente-rubik);
+  font-size: 0.6875rem;
+  color: var(--texto-secundario);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* En mobile, ocultamos subtítulo para ajustarse a 3 columnas idéntico a Figma */
+@media (max-width: 640px) {
+  .tarjeta-cromo {
+    padding: 6px;
+    border-radius: var(--radio-s);
+  }
+
+  .tarjeta-cromo-superposicion {
+    top: 4px;
+    left: 4px;
+    right: 4px;
+  }
+
+  .tarjeta-cromo-numero {
+    font-size: 0.5625rem;
+    padding: 1px 4px;
+  }
+
+  .tarjeta-cromo-badge-rareza {
+    width: 18px;
+    height: 18px;
+  }
+
+  .tarjeta-cromo-badge-rareza svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .tarjeta-cromo-nombre {
+    font-size: 0.6875rem;
+  }
+
+  .tarjeta-cromo-subtitulo {
+    display: none;
+  }
+}

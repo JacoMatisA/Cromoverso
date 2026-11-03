@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useTextos } from "./hooks/useTextos";
 import LayoutPublico from "./components/LayoutPublico.jsx";
 import HeroCromoverso from "./components/HeroCromoverso.jsx";
 import SeccionMundos from "./components/SeccionMundos.jsx";
+import VistaMundo from "./components/VistaMundo.jsx";
 import "./App.css";
 
 const CONFIG_ACCESIBILIDAD_DEFAULT = {
@@ -13,24 +15,39 @@ const CONFIG_ACCESIBILIDAD_DEFAULT = {
   fuenteLecturaFacil: false,
 };
 
-function leerSeccion() {
-  return window.location.hash.slice(1) || "inicio";
+function DetalleCromoPlaceholder({ textos }) {
+  const { id } = useParams();
+  const titulo =
+    textos?.paginas?.detalleCromo?.seo?.titulo?.replace("{nombre}", id) ?? id;
+  const textoVolver = textos?.paginas?.albumMundo?.migas?.inicio ?? "Inicio";
+
+  return (
+    <div
+      className="contenedor"
+      style={{
+        padding: "var(--espacio-7) var(--espacio-4)",
+        textAlign: "center",
+        minHeight: "50vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "var(--espacio-4)",
+      }}
+    >
+      <h2 className="titular-h2">{titulo}</h2>
+      <Link to="/mundos/neon" className="boton-home primario">
+        {textoVolver}
+      </Link>
+    </div>
+  );
 }
 
 function App() {
   const [idioma, setIdioma] = useState("es");
-  const [activo, setActivo] = useState(leerSeccion);
   const [configAccesibilidad, setConfigAccesibilidad] = useState(CONFIG_ACCESIBILIDAD_DEFAULT);
 
   const { textos, cargando, error, recargar } = useTextos(idioma);
-
-  useEffect(() => {
-    function actualizar() {
-      setActivo(leerSeccion());
-    }
-    window.addEventListener("hashchange", actualizar);
-    return () => window.removeEventListener("hashchange", actualizar);
-  }, []);
 
   useEffect(() => {
     document.documentElement.lang = idioma;
@@ -38,7 +55,6 @@ function App() {
 
   // Aplicación de configuraciones de accesibilidad
   useEffect(() => {
-    // Tamaño de fuente: 'normal' es el predeterminado (100%), 'grande' (112%), 'muyGrande' (125%)
     if (configAccesibilidad.tamano === "grande") {
       document.documentElement.style.fontSize = "112%";
     } else if (configAccesibilidad.tamano === "muyGrande") {
@@ -82,20 +98,44 @@ function App() {
         recargar={recargar}
         idioma={idioma}
         onCambiarIdioma={setIdioma}
-        activo={activo}
         configAccesibilidad={configAccesibilidad}
         onCambiarAccesibilidad={cambiarAjusteAccesibilidad}
         onRestablecerAccesibilidad={restablecerAccesibilidad}
         onCuenta={gestionarCuenta}
       >
-        <HeroCromoverso
-          textos={textos}
-          abrirCuenta={gestionarCuenta}
-          onExplorar={() => {
-            window.location.hash = "#mundos";
-          }}
-        />
-        <SeccionMundos textos={textos} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <HeroCromoverso
+                  textos={textos}
+                  abrirCuenta={gestionarCuenta}
+                  onExplorar={() => {
+                    const seccion = document.getElementById("mundos");
+                    seccion?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                />
+                <SeccionMundos textos={textos} />
+              </>
+            }
+          />
+          <Route path="/inicio" element={<Navigate to="/" replace />} />
+          <Route
+            path="/mundos/:id"
+            element={
+              <VistaMundo
+                textos={textos}
+                cargandoTextos={cargando}
+              />
+            }
+          />
+          <Route
+            path="/cromos/:id"
+            element={<DetalleCromoPlaceholder textos={textos} />}
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </LayoutPublico>
     </div>
   );
