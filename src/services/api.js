@@ -1,4 +1,4 @@
-const API_BASE = "https://yanethm-cromoverso-api.fly.dev/api/v1";
+export const API_BASE = import.meta.env.VITE_API_URL || "";
 
 const MUNDOS_MAP = {
   1: "neon",

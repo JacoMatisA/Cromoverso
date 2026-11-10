@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { API_BASE } from "../services/api";
 
-const API = "https://yanethm-cromoverso-api.fly.dev/api/v1/textos";
+const API = `${API_BASE}/textos`;
 
 function validarTextos(datos) {
   const textos = datos?.textos;

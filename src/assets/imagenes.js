@@ -1,9 +1,5 @@
-/**
- * Catálogo centralizado de imágenes y recursos gráficos oficiales de Cromoverso.
- *
- * Todas las imágenes se resuelven exclusivamente desde src/assets/cromos/.
- * No se permite ninguna imagen que no sea de las oficiales agregadas en assets/cromos.
- */
+/*  Todas las imágenes se resuelven exclusivamente desde src/assets/cromos/ */
+
 
 // Importación estática directa para empaquetado optimizado con Vite
 const IMAGENES_CROMOS_ASSETS = import.meta.glob("./cromos/*.png", {
@@ -121,7 +117,7 @@ export const ILUSTRACIONES_REGISTRO = {
 };
 
 /**
- * Normaliza un identificador de cromo admitiendo variantes como:
+ * Normaliza un identificador de cromo admitiendo variantes como
  * 'CV-001', 'cv-001', 'cromos/CV-001', '001', 1
  */
 export function normalizarIdCromo(id) {
@@ -137,7 +133,7 @@ export function normalizarIdCromo(id) {
 }
 
 /**
- * Comprueba si existe arte gráfico rasterizado oficial para el ID de cromo indicado.
+ * Comprueba si existe arte grafico oficial para el ID de cromo indicado.
  */
 export function tieneArteCromo(id) {
   const normalizado = normalizarIdCromo(id);

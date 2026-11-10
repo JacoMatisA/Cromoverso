@@ -102,6 +102,8 @@ dist/
 # Variables de entorno con claves privadas
 .env
 .env.local
+.env.*
+!.env.example
 
 # Lockfile (convención de este curso, ver nota)
 package-lock.json
