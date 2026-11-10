@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useTextos } from "./hooks/useTextos";
 import LayoutPublico from "./components/LayoutPublico.jsx";
-import HeroCromoverso from "./components/HeroCromoverso.jsx";
-import SeccionMundos from "./components/SeccionMundos.jsx";
+import VistaInicio from "./components/VistaInicio.jsx";
 import VistaMundo from "./components/VistaMundo.jsx";
 import { obtenerCookie, establecerCookie, eliminarCookie } from "./utils/cookies";
 import "./App.css";
@@ -145,24 +144,21 @@ function App() {
         onCuenta={gestionarCuenta}
         onConsentimientoCambio={gestionarConsentimiento}
       >
+        {/* enrutador de las vistas principales */}
         <Routes>
+          {/* pagina de inicio */}
           <Route
             path="/"
             element={
-              <>
-                <HeroCromoverso
-                  textos={textos}
-                  abrirCuenta={gestionarCuenta}
-                  onExplorar={() => {
-                    const seccion = document.getElementById("mundos");
-                    seccion?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                />
-                <SeccionMundos textos={textos} />
-              </>
+              <VistaInicio
+                textos={textos}
+                abrirCuenta={gestionarCuenta}
+              />
             }
           />
+          {/* si entran a /inicio lo mandamos directo al / */}
           <Route path="/inicio" element={<Navigate to="/" replace />} />
+          {/* vista dinamica para cada mundo segun el parametro :id */}
           <Route
             path="/mundos/:id"
             element={
@@ -172,10 +168,12 @@ function App() {
               />
             }
           />
+          {/* pantalla para ver el cromo individual (provisional)*/}
           <Route
             path="/cromos/:id"
             element={<DetalleCromoPlaceholder textos={textos} />}
           />
+          {/* cualquier ruta rara que no exista manda para home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </LayoutPublico>
