@@ -8,87 +8,74 @@
   padding-top: var(--espacio-5);
 }
 
+/* Badge superior amarillo inclinado como en el diseño de Figma */
 .abanico-guardiana-badge {
   display: inline-flex;
   align-items: center;
   gap: var(--espacio-2);
-  background: var(--marca-acento);
-  color: var(--texto-principal);
-  padding: var(--espacio-1) var(--espacio-3);
-  border: var(--borde-grosor) solid var(--borde-fuerte);
-  border-radius: var(--radio-pildora);
-  font-family: var(--fuente-rubik);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  margin-bottom: var(--espacio-4);
-  box-shadow: var(--sombra-pop-pequena);
+  background: var(--marca-acento, #ffd23f);
+  color: var(--borde-fuerte, #1a1033);
+  padding: 6px 18px;
+  border: 2px solid var(--borde-fuerte, #1a1033);
+  border-radius: var(--radio-pildora, 999px);
+  font-family: var(--fuente-rubik, system-ui, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  box-shadow: 2.5px 2.5px 0px 0px var(--borde-fuerte, #1a1033);
+  margin-bottom: 22px;
+  transform: rotate(-6deg);
+  transform-origin: center;
   z-index: 4;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.abanico-guardiana-badge:hover {
+  transform: rotate(-4deg) scale(1.03);
 }
 
 .abanico-guardiana-badge svg {
-  width: var(--espacio-4);
-  height: var(--espacio-4);
+  width: 15px;
+  height: 15px;
+  color: var(--borde-fuerte, #1a1033);
+  flex-shrink: 0;
 }
 
+/* Contenedor del abanico */
 .abanico-cartas-contenedor {
   position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: 350px;
+  height: 380px;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
 }
 
+/* Estilo base de cada carta (card) */
 .carta-figma {
   position: absolute;
-  width: 200px;
-  height: 290px;
-  background: var(--fondo-superficie);
-  color: var(--texto-principal);
-  border: var(--borde-grosor) solid var(--borde-fuerte);
-  border-radius: var(--radio-l);
-  box-shadow: var(--sombra-pop);
+  background: #ffffff;
+  color: var(--borde-fuerte, #1a1033);
+  border: 2.5px solid var(--borde-fuerte, #1a1033);
+  border-radius: 22px;
+  box-shadow: 4px 6px 0px 0px var(--borde-fuerte, #1a1033);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: transform 0.2s ease;
-}
-
-.carta-cabecera {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--espacio-2) var(--espacio-3);
-}
-
-.carta-numero {
-  color: var(--texto-principal);
-  font-family: var(--fuente-unbounded);
-  font-size: 0.75rem;
-  font-weight: 700;
-  border: 1px solid var(--borde-fuerte);
-  padding: 1px var(--espacio-2);
-  border-radius: var(--radio-pildora);
-}
-
-.carta-icono-corona svg {
-  width: var(--espacio-4);
-  height: var(--espacio-4);
-  color: var(--marca-acento);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
 }
 
 .carta-ilustracion-marco {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
-  margin-inline: var(--espacio-2);
-  border-radius: var(--radio-s);
-  border: 1px solid var(--borde-fuerte);
+  flex: 1;
+  width: calc(100% - 12px);
+  margin: 6px 6px 0 6px;
+  border-radius: 16px 16px 0 0;
   overflow: hidden;
+  background: #f0f0f5;
+  display: block;
 }
 
 .carta-ilustracion-marco .cromo-arte-imagen,
@@ -96,76 +83,157 @@
 .cromo-svg-ilustracion {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
   display: block;
 }
 
+.carta-badge-numero {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background: #ffffff;
+  border: 2px solid var(--borde-fuerte, #1a1033);
+  border-radius: var(--radio-pildora, 999px);
+  padding: 2px 10px;
+  font-family: var(--fuente-unbounded, system-ui, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--borde-fuerte, #1a1033);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Símbolo de rareza encerrado en un óvalo blanco vertical con borde negro */
+.carta-badge-rareza {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  background: #ffffff;
+  border: 2px solid var(--borde-fuerte, #1a1033);
+  border-radius: var(--radio-pildora, 999px);
+  width: 24px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  user-select: none;
+  pointer-events: none;
+}
+
+.carta-badge-rareza svg {
+  width: 15px;
+  height: 15px;
+  color: var(--rareza-legendaria, #d99a00);
+  fill: var(--rareza-legendaria, #d99a00);
+}
+
+/* Pie de la carta con textos */
 .carta-pie {
-  padding: var(--espacio-2) var(--espacio-3);
+  padding: 8px 12px 10px;
   display: flex;
   flex-direction: column;
-  background: var(--fondo-superficie);
-  border-top: 1px solid var(--borde-fuerte);
+  justify-content: center;
+  background: #ffffff;
+  border-top: none;
+  min-height: 54px;
 }
 
 .carta-pie strong {
-  color: var(--texto-principal);
-  font-size: 0.875rem;
-  font-family: var(--fuente-unbounded);
+  color: var(--borde-fuerte, #1a1033);
+  font-family: var(--fuente-unbounded, system-ui, sans-serif);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin: 0 0 2px 0;
 }
 
 .carta-pie span {
-  color: var(--texto-secundario);
-  font-size: 0.6875rem;
+  color: var(--texto-secundario, #4a4166);
+  font-family: var(--fuente-rubik, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  margin: 0;
 }
 
-/* Disposición escalonada tipo abanico de Figma */
+/* Disposición escalonada de las 3 cartas */
 .carta-izquierda {
-  left: 0;
-  transform: rotate(-8deg) translateY(var(--espacio-4));
+  width: 220px;
+  height: 325px;
+  left: 15px;
+  transform: rotate(-9deg) translateY(18px);
+  transform-origin: bottom center;
   z-index: 1;
 }
 
 .carta-centro {
-  z-index: 3;
-  width: 215px;
-  height: 310px;
-  transform: translateY(-var(--espacio-2));
+  width: 236px;
+  height: 345px;
   border-width: 3px;
-  box-shadow: 0 0 24px 2px #ffd23f66, var(--sombra-pop);
+  border-radius: 24px;
+  z-index: 3;
+  transform: translateY(-4px);
+  box-shadow: 6px 8px 0px 0px var(--borde-fuerte, #1a1033);
+}
+
+.carta-centro .carta-ilustracion-marco {
+  width: calc(100% - 14px);
+  margin: 7px 7px 0 7px;
+  border-radius: 17px 17px 0 0;
+}
+
+.carta-centro .carta-pie {
+  padding: 10px 14px 12px;
+  min-height: 58px;
+}
+
+.carta-centro .carta-pie strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.carta-izquierda .carta-pie strong,
+.carta-derecha .carta-pie strong {
+  font-size: 0.92rem;
+  font-weight: 700;
 }
 
 .carta-derecha {
-  right: 0;
-  transform: rotate(8deg) translateY(var(--espacio-4));
+  width: 220px;
+  height: 325px;
+  right: 15px;
+  transform: rotate(9deg) translateY(18px);
+  transform-origin: bottom center;
   z-index: 2;
 }
 
-@media (max-width: 640px) {
-  .abanico-cartas-contenedor {
-    height: 270px;
-    max-width: 340px;
-  }
-
-  .carta-figma {
-    width: 140px;
-    height: 210px;
-  }
-
-  .carta-centro {
-    width: 155px;
-    height: 230px;
-  }
+/* Efectos sutiles al interactuar */
+.carta-centro:hover {
+  transform: translateY(-8px) scale(1.02);
 }
 
-
-.carta-ilustracion-marco .cromo-arte-imagen,
-.carta-ilustracion-marco img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.carta-izquierda:hover {
+  transform: rotate(-10deg) translateY(10px) scale(1.02);
+  z-index: 4;
 }
 
+.carta-derecha:hover {
+  transform: rotate(10deg) translateY(10px) scale(1.02);
+  z-index: 4;
+}
+
+/* Fallback ilustración estática */
 .abanico-imagen-marco {
   display: flex;
   align-items: center;
@@ -178,4 +246,101 @@
   height: auto;
   display: block;
   object-fit: contain;
+}
+
+/* Adaptación móvil */
+@media (max-width: 640px) {
+  .abanico-guardiana-badge {
+    font-size: 0.7rem;
+    padding: 4px 14px;
+    margin-bottom: 16px;
+    transform: rotate(-5deg);
+  }
+
+  .abanico-cartas-contenedor {
+    height: 270px;
+    max-width: 340px;
+  }
+
+  .carta-figma {
+    width: 145px;
+    height: 220px;
+    border-radius: 16px;
+    border-width: 2px;
+    box-shadow: 3px 4px 0px 0px var(--borde-fuerte, #1a1033);
+  }
+
+  .carta-centro {
+    width: 160px;
+    height: 240px;
+    border-radius: 18px;
+    border-width: 2.5px;
+    box-shadow: 4px 6px 0px 0px var(--borde-fuerte, #1a1033);
+  }
+
+  .carta-izquierda {
+    left: 5px;
+    transform: rotate(-8deg) translateY(12px);
+  }
+
+  .carta-derecha {
+    right: 5px;
+    transform: rotate(8deg) translateY(12px);
+  }
+
+  .carta-ilustracion-marco {
+    width: calc(100% - 8px);
+    margin: 4px 4px 0 4px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .carta-centro .carta-ilustracion-marco {
+    width: calc(100% - 10px);
+    margin: 5px 5px 0 5px;
+    border-radius: 13px 13px 0 0;
+  }
+
+  .carta-badge-numero {
+    top: 6px;
+    left: 6px;
+    font-size: 0.625rem;
+    padding: 1px 6px;
+    border-width: 1.5px;
+  }
+
+  .carta-badge-rareza {
+    top: 6px;
+    right: 6px;
+    width: 18px;
+    height: 26px;
+    border-width: 1.5px;
+  }
+
+  .carta-badge-rareza svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .carta-pie {
+    padding: 6px 8px 8px;
+    min-height: 40px;
+  }
+
+  .carta-centro .carta-pie {
+    padding: 6px 8px 8px;
+    min-height: 44px;
+  }
+
+  .carta-centro .carta-pie strong {
+    font-size: 0.85rem;
+  }
+
+  .carta-izquierda .carta-pie strong,
+  .carta-derecha .carta-pie strong {
+    font-size: 0.75rem;
+  }
+
+  .carta-pie span {
+    font-size: 0.58rem;
+  }
 }

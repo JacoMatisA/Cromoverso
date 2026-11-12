@@ -92,6 +92,7 @@
 .tarjeta-mundo-info h3 {
   margin: 0 0 var(--espacio-1);
   color: var(--texto-principal);
+  font-family: var(--fuente-rubik);
 }
 
 .tarjeta-mundo-conteo {

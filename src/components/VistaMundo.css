@@ -5,9 +5,8 @@
   flex-direction: column;
 }
 
-/* Banner Superior Violeta */
 .vista-mundo-banner {
-  background: linear-gradient(135deg, #6c3bff 0%, #7645f5 55%, #853af0 100%);
+  background: linear-gradient(135deg, var(--marca-primario) 0%, var(--marca-primario-hover) 100%);
   color: var(--texto-inverso);
   padding: var(--espacio-5) 0 var(--espacio-6);
   position: relative;
@@ -35,7 +34,6 @@
   z-index: 1;
 }
 
-/* Versión Escritorio del Banner */
 .banner-escritorio {
   display: flex;
   flex-direction: column;
@@ -82,7 +80,6 @@
   font-size: 0.875rem;
 }
 
-/* Versión Móvil del Banner */
 .banner-movil {
   display: none;
   align-items: center;
@@ -92,24 +89,33 @@
 
 .banner-movil-boton-atras,
 .banner-movil-boton-buscar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--fondo-inverso);
+  width: calc(var(--espacio-6) + var(--espacio-3));
+  height: calc(var(--espacio-6) + var(--espacio-3));
+  border-radius: var(--radio-pildora);
+  background-color: var(--fondo-inverso-2);
   color: var(--texto-inverso);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--borde-inverso);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   cursor: pointer;
   flex-shrink: 0;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  padding: 0;
+}
+
+.banner-movil-boton-atras:hover,
+.banner-movil-boton-buscar:hover {
+  background-color: var(--fondo-inverso);
+  transform: scale(1.05);
 }
 
 .banner-movil-boton-atras svg,
 .banner-movil-boton-buscar svg {
-  width: 18px;
-  height: 18px;
+  width: var(--espacio-5);
+  height: var(--espacio-5);
+  color: var(--texto-inverso);
 }
 
 .banner-movil-titulos {
@@ -117,28 +123,43 @@
   flex-direction: column;
   flex: 1;
   text-align: left;
+  min-width: 0;
+  padding: 0 var(--espacio-2);
 }
 
 .banner-movil-nombre {
   color: var(--texto-inverso);
-  font-size: 1.25rem;
+  font-family: var(--fuente-unbounded);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
   margin: 0;
-}
-
-.banner-movil-tema {
-  color: var(--texto-inverso-suave);
-  font-size: 0.75rem;
-  margin: 0;
+  letter-spacing: -0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Buscador interactivo móvil */
+.banner-movil-tema {
+  color: var(--texto-inverso-suave);
+  font-family: var(--fuente-rubik);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: var(--espacio-1) 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .banner-movil-boton-buscar.is-activo {
   background-color: var(--marca-acento);
   color: var(--texto-principal);
   border-color: var(--borde-fuerte);
+}
+
+.banner-movil-boton-buscar.is-activo svg {
+  color: var(--texto-principal);
 }
 
 .banner-movil-buscador-contenedor {
@@ -153,7 +174,7 @@
   background-color: var(--fondo-superficie);
   border: var(--borde-grosor) solid var(--borde-fuerte);
   border-radius: var(--radio-pildora);
-  padding: 4px 12px;
+  padding: var(--espacio-1) var(--espacio-3);
   box-shadow: var(--sombra-pop-pequena);
 }
 
@@ -165,8 +186,8 @@
 }
 
 .banner-movil-buscador-icono svg {
-  width: 16px;
-  height: 16px;
+  width: var(--espacio-4);
+  height: var(--espacio-4);
 }
 
 .banner-movil-input-buscar {
@@ -177,7 +198,7 @@
   font-size: 0.875rem;
   color: var(--texto-principal);
   outline: none;
-  padding: 4px 0;
+  padding: var(--espacio-1) 0;
 }
 
 .banner-movil-input-buscar::-webkit-search-cancel-button {
@@ -193,15 +214,14 @@
   display: flex;
   align-items: center;
   color: var(--texto-secundario);
-  padding: 2px;
+  padding: var(--espacio-1);
 }
 
 .banner-movil-boton-limpiar svg {
-  width: 16px;
-  height: 16px;
+  width: var(--espacio-4);
+  height: var(--espacio-4);
 }
 
-/* Cuerpo de la vista */
 .vista-mundo-cuerpo {
   padding: var(--espacio-5) 0 var(--espacio-8);
   flex: 1;
@@ -213,11 +233,12 @@
   align-items: flex-start;
 }
 
-/* Barra de Filtros Mobile */
 .filtros-movil-barra {
   display: none;
-  gap: var(--espacio-2);
+  gap: var(--espacio-3);
   width: 100%;
+  margin-bottom: var(--espacio-4);
+  flex-wrap: wrap;
 }
 
 .filtro-movil-pildora {
@@ -227,7 +248,13 @@
   background-color: var(--fondo-superficie);
   border: var(--borde-grosor) solid var(--borde-fuerte);
   border-radius: var(--radio-pildora);
-  padding: 4px 10px;
+  box-shadow: var(--sombra-pop-pequena);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filtro-movil-pildora:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-pop);
 }
 
 .filtro-movil-select {
@@ -235,17 +262,18 @@
   background: transparent;
   border: none;
   font-family: var(--fuente-rubik);
-  font-size: 0.8125rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--texto-principal);
   cursor: pointer;
-  padding-right: 22px;
+  padding: var(--espacio-2) var(--espacio-6) var(--espacio-2) var(--espacio-4);
   outline: none;
+  letter-spacing: -0.01em;
 }
 
 .filtro-movil-icono {
   position: absolute;
-  right: 8px;
+  right: var(--espacio-3);
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -253,11 +281,10 @@
 }
 
 .filtro-movil-icono svg {
-  width: 14px;
-  height: 14px;
+  width: var(--espacio-4);
+  height: var(--espacio-4);
 }
 
-/* Catálogo principal */
 .catalogo-principal {
   flex: 1;
   display: flex;
@@ -279,7 +306,7 @@
   background-color: var(--fondo-superficie);
   border: 1px solid var(--borde-fuerte);
   border-radius: var(--radio-pildora);
-  padding: 3px 12px;
+  padding: 3px var(--espacio-3);
   font-family: var(--fuente-rubik);
   font-size: 0.75rem;
   color: var(--texto-principal);
@@ -287,11 +314,10 @@
 }
 
 .catalogo-orden-pildora svg {
-  width: 14px;
-  height: 14px;
+  width: var(--espacio-3);
+  height: var(--espacio-3);
 }
 
-/* Marco exterior con tono violeta suave idéntico a Figma */
 .catalogo-marco-grilla {
   background-color: var(--marca-primario-suave);
   border: var(--borde-grosor) solid var(--borde-fuerte);
@@ -299,14 +325,12 @@
   padding: var(--espacio-4);
 }
 
-/* Grilla de 5 columnas en Escritorio */
 .catalogo-grilla-cromos {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--espacio-3);
 }
 
-/* Estado vacío */
 .catalogo-vacio {
   display: flex;
   flex-direction: column;
@@ -321,7 +345,6 @@
   margin-top: var(--espacio-2);
 }
 
-/* Estados de carga y error */
 .vista-mundo-cargando,
 .vista-mundo-error {
   min-height: 50vh;
@@ -334,7 +357,6 @@
   text-align: center;
 }
 
-/* Responsive Breakpoints */
 @media (max-width: 1100px) {
   .catalogo-grilla-cromos {
     grid-template-columns: repeat(4, 1fr);
@@ -342,6 +364,10 @@
 }
 
 @media (max-width: 860px) {
+  .vista-mundo-banner {
+    padding: var(--espacio-4) 0 var(--espacio-5);
+  }
+
   .banner-escritorio {
     display: none;
   }
@@ -367,11 +393,12 @@
   }
 
   .catalogo-marco-grilla {
-    border-radius: var(--radio-l);
-    padding: var(--espacio-2);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
   }
 
-  /* 3 columnas en Móvil exactamente como la captura de Figma */
   .catalogo-grilla-cromos {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--espacio-2);

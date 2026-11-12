@@ -14,6 +14,15 @@ import "./VistaMundo.css";
 
 const MUNDOS_ORDEN = ["neon", "coral", "bosque", "forja", "orbita", "niebla"];
 
+const DESCRIPCIONES_MUNDOS = {
+  neon: "Metrópoli tecnológica que nunca duerme",
+  coral: "Arrecifes submarinos y civilizaciones acuáticas",
+  bosque: "Naturaleza ancestral y magia silvestre",
+  forja: "Tierras volcánicas de fuego y metalurgia",
+  orbita: "Estaciones espaciales en el cosmos infinito",
+  niebla: "Reino misterioso entre sombras y espejismos",
+};
+
 export default function VistaMundo({ textos, cargandoTextos }) {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,12 +36,10 @@ export default function VistaMundo({ textos, cargandoTextos }) {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(false);
 
-  // Filtros desde URL Query Parameters
   const rarezaActual = searchParams.get("rareza") || "";
   const tipoActual = searchParams.get("tipo") || "";
   const busquedaActual = searchParams.get("buscar") || "";
 
-  // Estado del buscador móvil
   const [busqueda, setBusqueda] = useState(busquedaActual);
   const [busquedaAbierta, setBusquedaAbierta] = useState(Boolean(busquedaActual));
 
@@ -43,7 +50,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
     }
   }, [busquedaActual]);
 
-  // Carga de datos de la API
   useEffect(() => {
     let activo = true;
     setCargando(true);
@@ -80,7 +86,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
     };
   }, [idNormalizado]);
 
-  // Actualizar filtros en URL mediante useSearchParams
   function cambiarFiltro(clave, valor) {
     const nuevosParams = new URLSearchParams(searchParams);
     if (!valor || valor === "todas" || valor === "todos") {
@@ -96,7 +101,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
     setSearchParams(new URLSearchParams());
   }
 
-  // Filtrado de cromos (por rareza, tipo y nombre de cromo)
   const cromosFiltrados = useMemo(() => {
     return cromos.filter((cromo) => {
       if (
@@ -121,7 +125,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
     });
   }, [cromos, rarezaActual, tipoActual, busqueda]);
 
-  // Cálculos dinámicos de cromos por filtro
   const conteoPorRareza = useMemo(() => {
     const acumulador = { legendaria: 0, epica: 0, rara: 0, comun: 0 };
     cromos.forEach((c) => {
@@ -140,13 +143,11 @@ export default function VistaMundo({ textos, cargandoTextos }) {
     return acumulador;
   }, [cromos]);
 
-  // Textos dinámicos desde useTextos
   const tMundo = textos?.paginas?.albumMundo;
   const tFiltros = tMundo?.filtros;
   const tOrden = tMundo?.orden;
   const tVacio = tMundo?.vacio;
 
-  // Número ordinal del mundo (1 al 6)
   const indiceMundo = MUNDOS_ORDEN.indexOf(idNormalizado) + 1 || 1;
   const desde = String(mundo?.numeros?.desde ?? (indiceMundo - 1) * 20 + 1).padStart(3, "0");
   const hasta = String(mundo?.numeros?.hasta ?? indiceMundo * 20).padStart(3, "0");
@@ -187,12 +188,16 @@ export default function VistaMundo({ textos, cargandoTextos }) {
     );
   }
 
+  const descripcionMundo =
+    mundo.descripcion ||
+    mundo.tema ||
+    DESCRIPCIONES_MUNDOS[idNormalizado] ||
+    "Metrópoli tecnológica que nunca duerme";
+
   return (
-    <div className="vista-mundo">
-      {/* Cabecera Violeta con estilo Figma (Desktop y Mobile) */}
-      <header className="vista-mundo-banner">
+    <div className={`vista-mundo vista-mundo-${idNormalizado}`}>
+      <header className={`vista-mundo-banner mundo-${idNormalizado}`}>
         <div className="vista-mundo-banner-interior">
-          {/* Navegación y título Desktop */}
           <div className="banner-escritorio">
             <nav className="banner-migas" aria-label="Breadcrumb">
               <Link to="/" className="banner-miga-link detalle-nota">
@@ -207,7 +212,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
             <p className="cuerpo-p banner-subtitulo">{subtituloRango}</p>
           </div>
 
-          {/* Cabecera Mobile */}
           <div className="banner-movil">
             <Link
               to="/"
@@ -217,9 +221,9 @@ export default function VistaMundo({ textos, cargandoTextos }) {
               <Icono nombre="flechaizq" />
             </Link>
             <div className="banner-movil-titulos">
-              <h1 className="titular-h3 banner-movil-nombre">{mundo.nombre}</h1>
-              <p className="detalle-nota banner-movil-tema">
-                {mundo.tema || mundo.descripcion}
+              <h1 className="banner-movil-nombre">{mundo.nombre}</h1>
+              <p className="banner-movil-tema">
+                {descripcionMundo}
               </p>
             </div>
             <button
@@ -233,7 +237,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
             </button>
           </div>
 
-          {/* Campo de búsqueda interactivo en móvil */}
           {busquedaAbierta && (
             <div className="banner-movil-buscador-contenedor">
               <div className="banner-movil-buscador-input-wrap">
@@ -272,10 +275,8 @@ export default function VistaMundo({ textos, cargandoTextos }) {
         </div>
       </header>
 
-      {/* Contenido principal en fondo crema (#fff8ec) */}
       <div className="vista-mundo-cuerpo">
         <div className="contenedor vista-mundo-layout">
-          {/* Barra de Filtros Mobile (Selectores tipo píldora) */}
           <div className="filtros-movil-barra">
             <div className="filtro-movil-pildora">
               <select
@@ -287,14 +288,23 @@ export default function VistaMundo({ textos, cargandoTextos }) {
                 <option value="">
                   {tFiltros?.rareza?.todas ?? "Rareza: todas"}
                 </option>
-                {rarezas.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {(tFiltros?.rareza?.valor ?? "Rareza: {rareza}").replace(
-                      "{rareza}",
-                      r.nombre
-                    )}
-                  </option>
-                ))}
+                {rarezas.length > 0 ? (
+                  rarezas.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {(tFiltros?.rareza?.valor ?? "Rareza: {rareza}").replace(
+                        "{rareza}",
+                        r.nombre
+                      )}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="legendaria">Rareza: Legendaria</option>
+                    <option value="epica">Rareza: Épica</option>
+                    <option value="rara">Rareza: Rara</option>
+                    <option value="comun">Rareza: Común</option>
+                  </>
+                )}
               </select>
               <span className="filtro-movil-icono" aria-hidden="true">
                 <Icono nombre="chevronabajo" />
@@ -330,7 +340,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
             </div>
           </div>
 
-          {/* Menú Lateral Izquierdo (Desktop) */}
           <MenuLateralMundos
             mundos={mundos}
             mundoActualId={idNormalizado}
@@ -343,9 +352,7 @@ export default function VistaMundo({ textos, cargandoTextos }) {
             textos={textos}
           />
 
-          {/* Columna Derecha: Catálogo de cromos */}
           <main className="catalogo-principal">
-            {/* Cabecera del catálogo (Orden en Desktop) */}
             <div className="catalogo-acciones-superiores">
               <div className="catalogo-orden-pildora">
                 <span className="detalle-nota-fuerte">{etiquetaOrden}</span>
@@ -353,7 +360,6 @@ export default function VistaMundo({ textos, cargandoTextos }) {
               </div>
             </div>
 
-            {/* Contenedor del Catálogo */}
             <div className="catalogo-marco-grilla">
               {cromosFiltrados.length === 0 ? (
                 <div className="catalogo-vacio">

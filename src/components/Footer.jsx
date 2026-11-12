@@ -21,7 +21,7 @@ export default function Footer({
   const derechos = pie?.legal?.derechos
     ? pie.legal.derechos.replace("{anio}", new Date().getFullYear().toString())
     : null;
-  const textoCookies = textos?.cookies?.preferencias?.titulo ?? "Cookies";
+  const textoCookies = textos?.cookies?.preferencias?.titulo;
 
   function manejarCuenta(clave, e) {
     if (onCuenta && (clave === "ingresar" || clave === "crearCuenta")) {
@@ -86,15 +86,17 @@ export default function Footer({
                     </a>
                   </li>
                 ))}
-                <li>
-                  <button
-                    type="button"
-                    className="cuerpo-p pie-enlace enlace-cookies"
-                    onClick={onAbrirCookies}
-                  >
-                    {textoCookies}
-                  </button>
-                </li>
+                {textoCookies && (
+                  <li>
+                    <button
+                      type="button"
+                      className="cuerpo-p pie-enlace enlace-cookies"
+                      onClick={onAbrirCookies}
+                    >
+                      {textoCookies}
+                    </button>
+                  </li>
+                )}
               </ul>
             </nav>
           )}

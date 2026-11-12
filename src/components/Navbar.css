@@ -248,6 +248,31 @@
 
 /* Responsive breakpoint */
 @media (max-width: 900px) {
+  .navbar {
+    position: absolute;
+    top: var(--espacio-4);
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 20;
+    background: var(--fondo-inverso);
+    border-bottom: 1px solid var(--fondo-inverso-2);
+    color: var(--texto-inverso);
+    padding: 0;
+  }
+
+  .navbar-interior {
+    padding: var(--espacio-2) var(--espacio-4);
+  }
+
+  .navbar-marca {
+    color: var(--texto-inverso);
+  }
+
+  .drawer-cabecera .navbar-marca {
+    color: var(--texto-principal);
+  }
+
   .navbar-enlaces-escritorio,
   .navbar-utilidades-escritorio {
     display: none;
@@ -255,5 +280,25 @@
 
   .navbar-movil-acciones {
     display: flex;
+    align-items: center;
+    gap: var(--espacio-3);
+  }
+
+  .navbar-movil-acciones .navbar-accion-ingresar {
+    background: var(--fondo-superficie);
+    color: var(--texto-principal);
+    border: var(--borde-grosor) solid var(--borde-fuerte);
+  }
+
+  .navbar-movil-acciones .boton-hamburguesa {
+    background: var(--fondo-inverso-2);
+    color: var(--texto-inverso);
+    border: var(--borde-grosor) solid var(--borde-inverso);
+    box-shadow: none;
+  }
+
+  .navbar-movil-acciones .boton-hamburguesa:hover {
+    background: var(--fondo-inverso);
+    color: var(--texto-inverso);
   }
 }

@@ -96,29 +96,40 @@
 
 @media (max-width: 768px) {
   .hero-cromoverso {
-    padding: var(--espacio-6) 0;
+    padding: calc(var(--espacio-8) + var(--espacio-4)) 0 var(--espacio-7);
+  }
+  
+  .hero-cromoverso .abanico-cromos {
+    display: none;
   }
 
   .interior-cromoverso {
     display: flex;
     flex-direction: column;
-    gap: var(--espacio-6);
+    gap: var(--espacio-4);
     min-height: auto;
   }
 
   .descripcion-cromoverso-movil {
     display: block;
-    margin: 0 0 var(--espacio-4);
+    margin: 0 0 var(--espacio-5);
     color: var(--texto-inverso-suave);
   }
 
   .texto-cromoverso .grupo-botones {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
+    gap: var(--espacio-3);
   }
 
   .hero-boton {
     width: 100%;
+    justify-content: center;
+  }
+
+  .hero-boton svg {
+    display: none;
   }
 
   .nota-registro {

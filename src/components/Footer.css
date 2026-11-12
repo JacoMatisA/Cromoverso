@@ -96,8 +96,8 @@
 
 @media (max-width: 900px) {
   .columnas-pie {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--espacio-5);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--espacio-5) var(--espacio-3);
   }
 
   .pie-marca-bloque {
@@ -106,13 +106,39 @@
 }
 
 @media (max-width: 640px) {
+  .pie-sitio {
+    padding: var(--espacio-6) 0 var(--espacio-5);
+  }
+
   .columnas-pie {
-    grid-template-columns: 1fr;
-    gap: var(--espacio-5);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--espacio-5) var(--espacio-2);
+  }
+
+  .pie-columna-titulo {
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--espacio-2);
+  }
+
+  .pie-lista {
+    gap: var(--espacio-2);
+  }
+
+  .pie-enlace {
+    font-size: 0.8125rem;
+    line-height: 1.35;
   }
 
   .pie-creditos {
+    margin-top: var(--espacio-5);
     flex-direction: column;
     align-items: flex-start;
+    gap: var(--espacio-2);
+  }
+
+  .pie-creditos .detalle-nota {
+    font-size: 0.6875rem;
+    line-height: 1.4;
   }
 }

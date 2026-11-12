@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import SaltarContenido from "./SaltarContenido.jsx";
 import Navbar from "./Navbar.jsx";
 import Footer from "./Footer.jsx";
@@ -23,6 +24,9 @@ export default function LayoutPublico({
 }) {
   const [cookiesAbiertas, setCookiesAbiertas] = useState(false);
   const disparador = useRef(null);
+  const location = useLocation();
+
+  const esVistaMundo = location.pathname.startsWith("/mundos");
 
   function abrirCookies() {
     disparador.current = document.activeElement;
@@ -37,7 +41,7 @@ export default function LayoutPublico({
   const saltarTexto = textos?.general?.aria?.saltarAlContenido;
 
   return (
-    <div className="layout-publico landing cromoverso">
+    <div className={`layout-publico landing cromoverso ${esVistaMundo ? "layout-vista-mundo" : ""}`}>
       <SaltarContenido texto={saltarTexto} destino="#contenido" />
       <Navbar
         textos={textos}
