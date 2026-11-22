@@ -3,6 +3,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import Icono from "./Icono.jsx";
 import TarjetaCromo from "./TarjetaCromo.jsx";
 import MenuLateralMundos from "./MenuLateralMundos.jsx";
+import RayosFondo from "./RayosFondo.jsx";
 import {
   normalizarIdMundo,
   obtenerCromos,
@@ -197,6 +198,7 @@ export default function VistaMundo({ textos, cargandoTextos }) {
   return (
     <div className={`vista-mundo vista-mundo-${idNormalizado}`}>
       <header className={`vista-mundo-banner mundo-${idNormalizado}`}>
+        <RayosFondo className="banner-rayos" />
         <div className="vista-mundo-banner-interior">
           <div className="banner-escritorio">
             <nav className="banner-migas" aria-label="Breadcrumb">

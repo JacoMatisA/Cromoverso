@@ -1,138 +1,149 @@
 .hero-cromoverso {
-  position: relative;
-  overflow: hidden;
+  --hero-rayos: 820px;
+  --hero-rayos-cx: 50%;
+  --hero-rayos-cy: 50px;
+  --hero-rayos-color: color-mix(in srgb, var(--marca-primario) 30%, transparent);
+  isolation: isolate;
   color: var(--texto-inverso);
   background: var(--fondo-inverso);
-  padding: var(--espacio-7) 0;
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-cromoverso::before {
-  content: "";
+.hero-rayos {
+  z-index: -1;
+  left: calc(var(--hero-rayos-cx) - var(--hero-rayos) / 2);
+  top: calc(var(--hero-rayos-cy) - var(--hero-rayos) / 2);
+  width: var(--hero-rayos);
+  height: var(--hero-rayos);
+  color: var(--hero-rayos-color);
+  pointer-events: none;
   position: absolute;
-  inset: 0 0 0 26%;
-  background: var(--fondo-inverso-2);
-  clip-path: polygon(
-    4% 0,
-    35% 6%,
-    31% 0,
-    100% 0,
-    100% 100%,
-    94% 93%,
-    96% 100%,
-    37% 100%,
-    38% 93%,
-    32% 100%,
-    23% 100%,
-    30% 80%,
-    0 100%,
-    25% 64%,
-    3% 68%,
-    22% 43%,
-    0 34%,
-    22% 24%
-  );
-  opacity: 0.85;
 }
 
 .interior-cromoverso {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  min-height: 480px;
-  align-items: center;
-  gap: var(--espacio-7);
+  gap: var(--espacio-4);
+  max-width: var(--ancho-maximo);
+  padding: 20px var(--espacio-4) 28px;
+  flex-direction: column;
+  margin-inline: auto;
+  display: flex;
   position: relative;
-  z-index: 1;
+}
+
+.texto-cromoverso {
+  gap: var(--espacio-4);
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  display: flex;
 }
 
 .hero-titulo {
-  color: var(--texto-inverso);
-  margin: 0 0 var(--espacio-5);
-  font-size: clamp(32px, 4vw, 56px);
-  line-height: 1.08;
-  letter-spacing: -1.5px;
+  font-family: var(--fuente-unbounded);
+  letter-spacing: -1px;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 2.875rem;
+}
+
+.descripcion-cromoverso-movil {
+  color: var(--texto-inverso-suave);
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .texto-cromoverso .grupo-botones {
-  margin-top: var(--espacio-5);
   gap: var(--espacio-4);
+  flex-direction: column;
+  max-width: 28rem;
+  display: flex;
 }
 
 .hero-boton {
-  min-height: var(--espacio-7);
-  padding: var(--espacio-3) var(--espacio-5);
-  font-size: 1rem;
+  width: 100%;
+  display: flex;
 }
 
 .hero-boton svg {
-  width: var(--espacio-5);
-  height: var(--espacio-5);
-  flex-shrink: 0;
+  display: none;
 }
 
 .nota-registro {
-  display: flex;
   align-items: center;
   gap: var(--espacio-2);
-  margin-top: var(--espacio-5);
   color: var(--texto-inverso-suave);
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
 }
 
 .nota-registro svg {
   color: var(--marca-acento);
-  flex-shrink: 0;
-  width: var(--espacio-4);
-  height: var(--espacio-4);
+  width: 16px;
+  height: 16px;
+  display: flex;
 }
 
-.descripcion-cromoverso-movil {
+.hero-cromoverso .abanico-cromos {
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (width >= 56.25rem) {
+  .hero-cromoverso {
+    --hero-rayos: 1500px;
+    --hero-rayos-cx: 1130px;
+    --hero-rayos-cy: 190px;
+  }
+
   .interior-cromoverso {
+    padding: 56px var(--espacio-7) 72px;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: var(--espacio-7);
+    min-height: 480px;
+  }
+
+  .texto-cromoverso {
     gap: var(--espacio-5);
   }
-}
 
-@media (max-width: 768px) {
-  .hero-cromoverso {
-    padding: calc(var(--espacio-8) + var(--espacio-4)) 0 var(--espacio-7);
-  }
-  
-  .hero-cromoverso .abanico-cromos {
-    display: none;
-  }
-
-  .interior-cromoverso {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espacio-4);
-    min-height: auto;
+  .hero-titulo {
+    letter-spacing: -1.5px;
+    max-width: 47.5rem;
+    font-size: 3.5rem;
+    line-height: 3.875rem;
   }
 
   .descripcion-cromoverso-movil {
-    display: block;
-    margin: 0 0 var(--espacio-5);
-    color: var(--texto-inverso-suave);
+    display: none;
   }
 
   .texto-cromoverso .grupo-botones {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
     gap: var(--espacio-3);
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: none;
   }
 
   .hero-boton {
-    width: 100%;
-    justify-content: center;
+    width: auto;
   }
 
   .hero-boton svg {
-    display: none;
+    display: inline-flex;
   }
 
-  .nota-registro {
-    display: none;
+  .hero-cromoverso .abanico-cromos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
   }
 }

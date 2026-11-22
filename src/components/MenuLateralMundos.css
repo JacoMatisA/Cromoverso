@@ -2,18 +2,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--espacio-4);
-  width: 280px;
+  width: 296px;
   flex-shrink: 0;
 }
 
 .lateral-card {
   background-color: var(--fondo-superficie);
   border: var(--borde-grosor) solid var(--borde-fuerte);
-  border-radius: var(--radio-l);
+  border-radius: 20px;
   padding: var(--espacio-4);
   display: flex;
   flex-direction: column;
   gap: var(--espacio-3);
+  box-shadow: var(--sombra-pop-pequena);
 }
 
 .lateral-card-titulo {
