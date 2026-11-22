@@ -1,21 +1,33 @@
 .banner-cookies {
+  --banner-relleno: 20px;
   position: fixed;
   z-index: 100;
+  right: var(--espacio-4);
   bottom: var(--espacio-4);
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1200px, calc(100% - var(--espacio-5)));
-  padding: var(--espacio-4) var(--espacio-5);
+  left: var(--espacio-4);
+  max-width: var(--ancho-banner-cookies);
+  max-height: calc(100dvh - 2 * var(--espacio-4));
+  padding: var(--banner-relleno);
   border: var(--borde-grosor) solid var(--borde-fuerte);
   border-radius: var(--radio-xl);
   background: var(--fondo-superficie);
   color: var(--texto-principal);
   box-shadow: var(--sombra-pop);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--espacio-5);
+  flex-direction: column;
+  margin-inline: auto;
+  gap: var(--espacio-4);
   box-sizing: border-box;
+  overflow: auto;
+}
+
+@media (width >= 56.25rem) {
+  .banner-cookies {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--espacio-5);
+  }
 }
 
 .banner-cookies:focus {

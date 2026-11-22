@@ -64,6 +64,19 @@
   --espacio-7: 48px;
   --espacio-8: 64px;
   --borde-grosor: 2px;
+  --borde-delgado: 1px;
+  --borde-medio: 1.5px;
+  --ancho-maximo: 90rem;
+  --ancho-banner-cookies: 75rem;
+  --alto-navbar-web: 76px;
+  --alto-navbar-movil: 60px;
+  --objetivo-minimo: 44px;
+  --anillo-foco: 3px;
+  --transicion-rapida: 0.15s ease;
+  --opacidad-deshabilitado: 0.5;
+  --boton-relleno-g: 28px;
+  --boton-relleno-m: 22px;
+  --radio-carta: 18px;
   /* Familias tipográficas (Google Fonts) */
   --fuente-instrument-sans: 'Instrument Sans', system-ui, sans-serif;
   --fuente-unbounded: 'Unbounded', system-ui, sans-serif;

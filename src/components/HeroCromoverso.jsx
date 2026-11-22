@@ -1,5 +1,6 @@
 import Icono from "./Icono.jsx";
 import AbanicoCromos from "./AbanicoCromos.jsx";
+import RayosFondo from "./RayosFondo.jsx";
 import "./HeroCromoverso.css";
 
 export default function HeroCromoverso({
@@ -12,6 +13,7 @@ export default function HeroCromoverso({
 
   return (
     <section className="hero-cromoverso" aria-labelledby="hero-titulo">
+      <RayosFondo className="hero-rayos" />
       <div className="contenedor interior-cromoverso">
         <div className="texto-cromoverso">
           {hero?.titulo && (

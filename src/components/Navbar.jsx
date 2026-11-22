@@ -70,7 +70,7 @@ export default function Navbar({
   }
 
   return (
-    <header className="navbar">
+    <header className={`navbar navbar-${seccionActiva}`}>
       <div className="navbar-interior">
         <div className="navbar-izquierda">
           <Link

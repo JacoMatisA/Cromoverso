@@ -3,11 +3,11 @@
   flex-direction: column;
   background-color: var(--fondo-superficie);
   border: var(--borde-grosor) solid var(--borde-fuerte);
-  border-radius: var(--radio-m);
+  border-radius: var(--radio-carta);
   padding: var(--espacio-2);
   text-decoration: none;
   color: var(--texto-principal);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform var(--transicion-rapida), box-shadow var(--transicion-rapida);
   overflow: hidden;
   position: relative;
   box-shadow: var(--sombra-pop-pequena);

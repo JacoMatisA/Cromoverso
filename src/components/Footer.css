@@ -2,8 +2,23 @@
   background: var(--fondo-inverso);
   color: var(--texto-inverso);
   border-top: var(--borde-grosor) solid var(--borde-fuerte);
-  padding: var(--espacio-7) 0 var(--espacio-5);
+  padding: 0;
   margin-top: auto;
+  font-family: var(--fuente-rubik);
+}
+
+.pie-sitio :focus-visible {
+  outline: var(--anillo-foco) solid var(--marca-acento);
+  outline-offset: 3px;
+}
+
+.pie-sitio .contenedor {
+  gap: var(--espacio-6);
+  max-width: var(--ancho-maximo);
+  padding: 40px var(--espacio-5) var(--espacio-6);
+  flex-direction: column;
+  margin-inline: auto;
+  display: flex;
 }
 
 .columnas-pie {
