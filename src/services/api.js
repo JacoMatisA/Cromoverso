@@ -106,3 +106,11 @@ export async function obtenerRarezas() {
   return datos?.datos ?? [];
 }
 
+export async function obtenerRivales(id) {
+  const respuesta = await fetch(`${API_BASE}/cromos/${id}/rivales`);
+  if (!respuesta.ok) {
+    throw new Error(`Error al obtener rivales: HTTP ${respuesta.status}`);
+  }
+  const datos = await respuesta.json();
+  return datos?.datos ?? [];
+}
