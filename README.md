@@ -1,8 +1,10 @@
 # Cromoverso React
 
-Aplicación web frontend en React para Cromoverso, una plataforma de colección e intercambio de cromos a través de diferentes mundos temáticos.
+Aplicación web frontend en React para **Cromoverso**, una plataforma de colección e intercambio de cromos a través de diferentes mundos temáticos. El código ha sido refactorizado con una arquitectura modular, declarativa y basada en la **composición de componentes y tarjetas reutilizables mediante props**, siguiendo las mejores prácticas de proyectos como [Bitácora Espacial](https://bitacora-espacial-ecru.vercel.app).
 
-## Requisitos y ejecución
+---
+
+## Requisitos y Ejecución
 
 - **Node.js**: versión 18 o superior recomendada.
 - **Instalación de dependencias**:
@@ -24,134 +26,173 @@ Aplicación web frontend en React para Cromoverso, una plataforma de colección 
 
 ---
 
-## Estructura del proyecto
+## Estructura del Proyecto
+
+El proyecto organiza sus componentes por dominio y responsabilidad clara, facilitando su comprensión, mantenimiento y reutilización:
 
 ```text
-cromoverso-react/
-├── index.html
-├── package.json
-├── vite.config.js
-└── src/
-    ├── App.css
-    ├── App.jsx
-    ├── main.jsx
-    ├── hooks/
-    │   └── useTextos.js
-    ├── styles/
-    │   ├── global.css
-    │   └── tokens.css
-    └── components/
-        ├── Footer.css
-        ├── Footer.jsx
-        ├── Icono.jsx
-        ├── LogoCromoverso.jsx
-        ├── Navbar.css
-        ├── Navbar.jsx
-        ├── SaltarContenido.css
-        ├── SaltarContenido.jsx
-        ├── AbanicoCromos.css
-        ├── AbanicoCromos.jsx
-        ├── BannerCookies.css
-        ├── BannerCookies.jsx
-        ├── GestorCookies.css
-        ├── GestorCookies.jsx
-        ├── HeroCromoverso.css
-        ├── HeroCromoverso.jsx
-        ├── LayoutPublico.css
-        ├── LayoutPublico.jsx
-        ├── MenuAccesibilidad.css
-        ├── MenuAccesibilidad.jsx
-        ├── MenuMovil.css
-        ├── MenuMovil.jsx
-        ├── PreferenciasCookies.css
-        ├── PreferenciasCookies.jsx
-        ├── SeccionMundos.css
-        ├── SeccionMundos.jsx
-        ├── SelectorIdioma.css
-        └── SelectorIdioma.jsx
+src/
+├── assets/
+│   ├── cromos/               # Artes rasterizados de cromos (1x, @2x, @3x)
+│   ├── ilustraciones/        # Ilustraciones principales (hero banner)
+│   └── imagenes.js           # Módulo de resolución y mapeo dinámico de imágenes
+├── components/
+│   ├── cards/                # 🃏 TARJETAS REUTILIZABLES POR PROPS
+│   │   ├── TarjetaCromo.jsx  # Tarjeta de cromo (props atómicas o vía objeto)
+│   │   ├── TarjetaMundo.jsx  # Tarjeta temática de mundo con props configurables
+│   │   ├── TarjetaHero.jsx   # Tarjeta individual para el abanico del Hero
+│   │   └── index.js          # Exportaciones limpias de tarjetas
+│   ├── catalogo/             # 📦 CONTENEDORES Y COLECCIONES
+│   │   ├── GrillaCromos.jsx  # Grilla desacoplada de cromos + estados vacíos
+│   │   └── index.js
+│   ├── hero/                 # 🚀 SECCIÓN HERO Y PRESENTACIÓN
+│   │   ├── HeroCromoverso.jsx
+│   │   └── AbanicoCromos.jsx # Compone tarjetas TarjetaHero de forma limpia
+│   ├── layout/               # 🏛️ ESTRUCTURA Y NAVEGACIÓN
+│   │   ├── LayoutPublico.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── MenuMovil.jsx
+│   │   └── SaltarContenido.jsx
+│   ├── cookies/              # 🍪 GESTIÓN DE CONSENTIMIENTO
+│   │   ├── BannerCookies.jsx
+│   │   ├── GestorCookies.jsx
+│   │   └── PreferenciasCookies.jsx
+│   ├── common/               # 🧩 ELEMENTOS COMUNES Y ÁTOMOS
+│   │   ├── ArteCromo.jsx
+│   │   ├── Icono.jsx
+│   │   ├── LogoCromoverso.jsx
+│   │   ├── RayosFondo.jsx
+│   │   ├── MenuAccesibilidad.jsx
+│   │   └── SelectorIdioma.jsx
+│   ├── VistaInicio.jsx       # Vista de inicio integradora
+│   ├── VistaMundo.jsx        # Vista de álbum de mundo filtrable
+│   └── index.js              # Barril principal de exportaciones
+├── hooks/
+│   └── useTextos.js          # Consumo de textos i18n desde la API
+├── services/
+│   └── api.js                # Cliente HTTP para mundos, cromos y rarezas
+├── styles/
+│   ├── tokens.css            # Tokens de diseño (espaciados, colores, fuentes)
+│   └── global.css            # Estilos base y tipografía
+├── utils/
+│   └── cookies.js            # Utilidades de persistencia y cookies
+├── App.jsx                   # Enrutamiento, accesibilidad e idioma
+└── main.jsx                  # Punto de entrada
 ```
 
 ---
 
-## Componentes y arquitectura
+## Composición de Componentes Reutilizables por Props
 
-### 1. `LayoutPublico` (`src/components/LayoutPublico.jsx`)
-- **Propósito**: Contenedor principal que envuelve las páginas de la aplicación. Centraliza el enlace accesible de salto al contenido (`<main id="contenido">`), la barra de navegación, el pie de página y la gestión del banner y diálogo de cookies.
-- **Props**:
-  - `textos`: Objeto de textos provisto en tiempo real por el hook `useTextos` desde la API.
-  - `cargando`, `error`, `recargar`: Estados de carga y reintento.
-  - `idioma`: Idioma actual (`"es"` o `"en"`), sincronizado con el estado único de `App`.
-  - `onCambiarIdioma`: Callback para actualizar el idioma.
-  - `activo`: Sección activa basada en el hash de navegación (`#inicio`, `#mundos`).
-  - `configAccesibilidad`: Objeto con el estado de tamaño de fuente y toggles de accesibilidad.
-  - `onCambiarAccesibilidad`: Callback para cambiar un parámetro de accesibilidad.
-  - `onRestablecerAccesibilidad`: Callback para restaurar valores por defecto.
-  - `onCuenta`: Callback para acciones de cuenta (ingreso / registro).
-  - `children`: Contenido principal de la página.
+Inspirado en el patrón de tarjetas de [Bitácora Espacial](https://bitacora-espacial-ecru.vercel.app), los componentes clave reciben sus datos mediante **props explícitas y atómicas**, lo que permite usarlos en cualquier contexto sin atarse a estructuras rígidas de la base de datos.
 
-### 2. `Navbar` (`src/components/Navbar.jsx`)
-- **Propósito**: Barra de navegación superior responsive y accesible que replica fielmente el diseño de Figma para desktop y mobile.
-- **Subcomponentes integrados**:
-  - `LogoCromoverso` e `Icono`.
-  - `SelectorIdioma`: Selector tipo píldora (`ES` / `EN`) con atributos accesibles (`role="group"`, `aria-pressed`, `lang`).
-  - `MenuAccesibilidad`: Menú emergente de accesibilidad (tarjeta de 360px en escritorio, modal/drawer en móvil).
-  - Menú lateral móvil con navegación semántica, indicación de "Estás aquí", opciones de idioma, accesibilidad y botones de cuenta.
+### 1. `TarjetaCromo` (`src/components/cards/TarjetaCromo.jsx`)
+Renderiza una tarjeta de cromo coleccionable con su marco, número formateado, insignia de rareza, arte con fallback dinámico y pie con metadatos.
 
-### 3. `MenuAccesibilidad` (`src/components/MenuAccesibilidad.jsx`)
-- **Propósito**: Panel de accesibilidad configurable conforme al diseño de Figma.
-- **Características**:
-  - Selector de tamaño de texto segmentado: "Normal" (100% predeterminado activo), "Grande" (112%), "Muy grande" (125%).
-  - Toggles accesibles (`role="switch"`):
-    - Alto contraste (`alto-contraste`).
-    - Reducir movimiento (`reducir-movimiento`).
-    - Subrayar enlaces (`subrayar-enlaces`).
-    - Fuente para lectura fácil (`fuente-lectura-facil`).
-  - Botón de restablecimiento y enlace a declaración de accesibilidad.
+**Uso declarativo por props atómicas:**
+```jsx
+import { TarjetaCromo } from "./components";
 
-### 4. `HeroCromoverso` y `AbanicoCromos` (`src/components/`)
-- **Propósito**: Sección hero destacada ("Seis mundos. 120 héroes. Un álbum tuyo.") con botones de acción primaria ("Crear cuenta gratis") y secundaria ("Explorar los mundos").
-- **AbanicoCromos**:
-  - Renderizado visual de cromos representativos (041 Raíz Madre, 001 Voltia, 081 Astra) con insignias de corona, visor dorado característico y distintivo superior `✦ GUARDIANA HOLOGRÁFICA`.
-  - Integración de los artes oficiales de cromos (041 Raíz Madre, 001 Voltia, 081 Astra) con soporte de resoluciones 1x y @2x.
-  - Componente ArteCromo con resolución automática por ID de API (cromos/CV-001) y fallback dinámico mediante ilustracion.colorBase e ilustracion.figura para cromos sin arte gráfico.
-  - Soporte de ilustración global del hero banner (banico-de-cromos) en 1x y @2x.
+// Ejemplo de uso limpio por props:
+<TarjetaCromo
+  id="CV-001"
+  numero={1}
+  nombre="Voltia"
+  rareza="legendaria"
+  tipo="heroe"
+  mundo="Ciudad Neón"
+  enlace="/cromos/CV-001"
+/>
+```
 
-### 5. `SeccionMundos` (`src/components/SeccionMundos.jsx`)
-- **Propósito**: Sección "Los seis mundos" con las 6 tarjetas temáticas (Ciudad Neón, Abismo Coral, Bosque Eterno, Forja Volcánica, Estación Órbita, Reino de Niebla), insignias y conteo dinámico de cromos formateado según la API.
-
-### 6. `Footer` (`src/components/Footer.jsx`)
-- **Propósito**: Pie de página semántico (`role="contentinfo"`). Incluye marca, columnas dinámicas ("Explora", "Tu cuenta", "Legal"), enlace a preferencias de cookies y derechos reservados, todo alimentado dinámicamente desde `textos.footer`.
-
-### 7. `GestorCookies` (`src/components/GestorCookies.jsx`)
-- **Propósito**: Banner (`BannerCookies`) y diálogo modal nativo (`PreferenciasCookies`) con persistencia en `localStorage`. Cumple con las dimensiones y diseño de Figma (1200 x 100 en desktop y 358 x 196 en mobile).
+**Uso mediante objeto de datos (retrocompatibilidad):**
+```jsx
+<TarjetaCromo
+  cromo={cromoData}
+  mundoNombre="Ciudad Neón"
+  rarezasInfo={listaRarezas}
+  textos={textosI18n}
+/>
+```
 
 ---
 
-## Textos dinámicos y Consumo de API
+### 2. `TarjetaMundo` (`src/components/cards/TarjetaMundo.jsx`)
+Tarjeta desacoplada para mostrar mundos temáticos en catálogos, secciones o carruseles.
 
-Todos los textos de la interfaz se obtienen en tiempo real a través del hook `useTextos`, el cual consulta directamente la API:
-- Endpoint: `https://yanethm-cromoverso-api.fly.dev/api/v1/textos?idioma={es|en}`.
-- No existen archivos intermedios de fallback ni textos fijos en los componentes.
-- La validación del esquema (`validarTextos`) se adapta a los enlaces provistos por la API (`inicio`, `mundos`).
+```jsx
+import { TarjetaMundo } from "./components";
+
+<TarjetaMundo
+  clave="neon"
+  nombre="Ciudad Neón"
+  numero={1}
+  icono="rayo"
+  totalCromos={20}
+  tieneTag={true}
+  etiquetaMundo="Mundo {numero}"
+  etiquetaCromos="{cantidad} cromos"
+  enlace="/mundos/neon"
+/>
+```
 
 ---
 
-## Tokens de diseño
+### 3. `TarjetaHero` (`src/components/cards/TarjetaHero.jsx`)
+Tarjeta individual para composiciones destacadas (utilizada en el abanico del Hero banner). Elimina la duplicación de código en vistas destacadas.
 
-Los estilos están alineados estrictamente con las variables definidas en `src/styles/tokens.css`, sin valores fijos de espaciado en los componentes:
-- Espaciados: `--espacio-1` (4px) a `--espacio-8` (64px).
-- Radios: `--radio-s` (8px), `--radio-m` (12px), `--radio-l` (16px), `--radio-xl` (24px), `--radio-pildora` (999px).
-- Colores de mundos: `--mundo-neon`, `--mundo-coral`, `--mundo-bosque`, `--mundo-forja`, `--mundo-orbita`, `--mundo-niebla` y sus variantes suaves.
-- Fondos y texto: `--fondo-pagina`, `--fondo-superficie`, `--fondo-inverso`, `--texto-principal`, `--texto-secundario`.
-- Sombras y bordes: `--sombra-pop`, `--sombra-pop-pequena`, `--borde-grosor`, `--borde-fuerte`.
+```jsx
+import { TarjetaHero } from "./components";
 
+<TarjetaHero
+  id="CV-001"
+  numero={1}
+  nombre="Voltia"
+  posicion="centro"
+  destacada={true}
+  formatoTipo="{mundo} • {tipo}"
+/>
+```
 
 ---
 
-## Imágenes y Recursos Gráficos
+### 4. `GrillaCromos` (`src/components/catalogo/GrillaCromos.jsx`)
+Componente contenedor de alto nivel que gestiona el mapeo de colecciones y el renderizado del estado vacío si no hay coincidencias de filtrado.
 
-Los recursos gráficos exportados desde Figma se encuentran organizados en public/ y src/assets/:
-- **Cromos**: public/cromos/ y src/assets/cromos/ con formato PNG en 1x y @2x nombrando cada archivo por su ID de API (ej: CV-001.png, CV-041@2x.png).
-- **Ilustración del Hero**: public/ilustraciones/ y src/assets/ilustraciones/ (banico-de-cromos.png y banico-de-cromos@2x.png).
-- **Módulo de resolución**: src/assets/imagenes.js provee utilidades como obtenerArteCromo(id), obtenerIlustracion(nombre) y 	ieneArteCromo(id).
-- **Fallback dinámico**: Dado que la API no envía imágenes, para los cromos que no tienen arte rasterizado disponible, el componente ArteCromo genera una composición vectorial SVG utilizando ilustracion.colorBase e ilustracion.figura.
+```jsx
+import { GrillaCromos } from "./components";
+
+<GrillaCromos
+  cromos={cromosFiltrados}
+  mundoNombre="Ciudad Neón"
+  colorMundo="var(--mundo-neon)"
+  rarezasInfo={rarezas}
+  textos={textos}
+  onLimpiarFiltros={() => limpiarFiltros()}
+/>
+```
+
+---
+
+## Vistas Principales
+
+### `VistaInicio` (`src/components/VistaInicio.jsx`)
+Compone:
+1. **`HeroCromoverso`**: Encabezado principal que incluye el llamado a la acción y el **`AbanicoCromos`** (compuesto por tres `TarjetaHero`).
+2. **`SeccionMundos`**: Grilla de los 6 mundos temáticos compuesta mediante **`TarjetaMundo`**.
+
+### `VistaMundo` (`src/components/VistaMundo.jsx`)
+Vista de catálogo y álbum interactivo:
+- Carga reactiva de datos (`obtenerMundo`, `obtenerCromos`, `obtenerRarezas`).
+- Sincronización bidireccional de filtros de búsqueda, rareza y tipo en los parámetros de la URL (`?buscar=&rareza=&tipo=`).
+- Menú lateral interactivo (`MenuLateralMundos`) con conteos en tiempo real por categoría.
+- Grilla desacoplada mediante **`GrillaCromos`**.
+
+---
+
+## Accesibilidad y Tokens de Diseño
+
+- **Accesibilidad**: Toggles para alto contraste (`.alto-contraste`), reducción de movimiento (`.reducir-movimiento`), subrayado de enlaces (`.subrayar-enlaces`) y tipografía amigable (`.fuente-lectura-facil`).
+- **Tokens**: Sistema completo de variables CSS en `src/styles/tokens.css` (espaciados `--espacio-1` a `--espacio-8`, radios `--radio-s` a `--radio-pildora`, colores temáticos por mundo).
+- **Textos i18n dinámicos**: Consumo sin cadenas fijas mediante el hook `useTextos` (`es` / `en`).

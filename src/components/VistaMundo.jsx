@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Icono from "./Icono.jsx";
-import TarjetaCromo from "./TarjetaCromo.jsx";
+import GrillaCromos from "./catalogo/GrillaCromos.jsx";
 import MenuLateralMundos from "./MenuLateralMundos.jsx";
 import RayosFondo from "./RayosFondo.jsx";
 import {
@@ -363,36 +363,14 @@ export default function VistaMundo({ textos, cargandoTextos }) {
             </div>
 
             <div className="catalogo-marco-grilla">
-              {cromosFiltrados.length === 0 ? (
-                <div className="catalogo-vacio">
-                  <h3 className="titular-h3">
-                    {tVacio?.titulo ?? "Ningún cromo coincide con estos filtros"}
-                  </h3>
-                  <p className="cuerpo-m">
-                    {tVacio?.texto ?? "Prueba con otra rareza u otro tipo."}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={limpiarFiltros}
-                    className="boton-home primario catalogo-boton-limpiar"
-                  >
-                    {tVacio?.botones?.limpiar ?? "Quitar filtros"}
-                  </button>
-                </div>
-              ) : (
-                <div className="catalogo-grilla-cromos">
-                  {cromosFiltrados.map((cromo) => (
-                    <TarjetaCromo
-                      key={cromo.id}
-                      cromo={cromo}
-                      mundoNombre={mundo.nombre}
-                      colorMundo={mundo.color ?? "var(--marca-primario)"}
-                      rarezasInfo={rarezas}
-                      textos={textos}
-                    />
-                  ))}
-                </div>
-              )}
+              <GrillaCromos
+                cromos={cromosFiltrados}
+                mundoNombre={mundo.nombre}
+                colorMundo={mundo.color ?? "var(--marca-primario)"}
+                rarezasInfo={rarezas}
+                textos={textos}
+                onLimpiarFiltros={limpiarFiltros}
+              />
             </div>
           </main>
         </div>

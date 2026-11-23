@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Icono from "./Icono.jsx";
+import TarjetaMundo from "./cards/TarjetaMundo.jsx";
 import "./SeccionMundos.css";
 
 const MUNDOS_LISTA = [
@@ -11,6 +11,10 @@ const MUNDOS_LISTA = [
   { clave: "niebla", nombre: "Reino de Niebla", numero: 6, icono: "ojo", clase: "tarjeta-mundo-niebla" },
 ];
 
+/**
+ * SeccionMundos: Sección de la página de inicio que lista los mundos temáticos.
+ * Renderiza la grilla de mundos componiendo el componente reutilizable TarjetaMundo.
+ */
 export default function SeccionMundos({ textos }) {
   const mundosInfo = textos?.paginas?.inicio?.mundos;
   if (!mundosInfo) return null;
@@ -42,29 +46,18 @@ export default function SeccionMundos({ textos }) {
 
         <div className="grilla-mundos">
           {MUNDOS_LISTA.map((mundo) => (
-            <Link
+            <TarjetaMundo
               key={mundo.clave}
-              to={`/mundos/${mundo.clave}`}
-              className={`tarjeta-mundo ${mundo.clase}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="tarjeta-mundo-cabecera">
-                <div className="icono-circulo-mundo" aria-hidden="true">
-                  <Icono nombre={mundo.icono} />
-                </div>
-                {mundo.tieneTag && (
-                  <span className="mundo-tag detalle-etiqueta">
-                    {plantillaMundo.replace("{numero}", mundo.numero)}
-                  </span>
-                )}
-              </div>
-              <div className="tarjeta-mundo-info">
-                <h3 className="cromo-nombre-g">{mundo.nombre}</h3>
-                <p className="cuerpo-p tarjeta-mundo-conteo">
-                  {plantillaCromos.replace("{cantidad}", "20")}
-                </p>
-              </div>
-            </Link>
+              clave={mundo.clave}
+              nombre={mundo.nombre}
+              numero={mundo.numero}
+              icono={mundo.icono}
+              clase={mundo.clase}
+              tieneTag={mundo.tieneTag}
+              totalCromos={20}
+              etiquetaMundo={plantillaMundo}
+              etiquetaCromos={plantillaCromos}
+            />
           ))}
         </div>
       </div>
