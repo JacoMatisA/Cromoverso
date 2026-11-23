@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Icono from "./Icono.jsx";
+import TarjetaHero from "./cards/TarjetaHero.jsx";
 import ArteCromo from "./ArteCromo.jsx";
 import { obtenerIlustracion } from "../assets/imagenes";
 import { obtenerCromosHero } from "../services/api.js";
@@ -56,6 +57,10 @@ export function IlustracionHeroBanner({ alt }) {
   );
 }
 
+/**
+ * AbanicoCromos: Presentación visual en abanico de tres cromos representativos para el Hero.
+ * Compuesto limpiamente con el componente reutilizable TarjetaHero.
+ */
 export default function AbanicoCromos({
   etiquetaGuardiana,
   formatoTipo = "{mundo} • {tipo}",
@@ -89,32 +94,6 @@ export default function AbanicoCromos({
 
   const etiquetaFinal = etiquetaGuardiana || "Guardiana holográfica";
 
-  function formatearDetalle(cromo) {
-    if (!cromo) return "";
-    const mundo = cromo.mundoNombre || cromo.mundo?.nombre || cromo.mundo || "";
-    const tipo = cromo.tipoNombre || cromo.tipo || "";
-    if (mundo && tipo) {
-      return `${mundo} • ${tipo}`;
-    }
-    return formatoTipo
-      .replace("{mundo}", mundo)
-      .replace("{tipo}", tipo);
-  }
-
-  function formatearNumero(cromo) {
-    if (!cromo) return "";
-    const n = cromo.numero ?? cromo.posicion ?? "";
-    return String(n).padStart(3, "0");
-  }
-
-  const tieneCorona = (cromo) =>
-    Boolean(
-      cromo?.corona ||
-      cromo?.rareza?.toLowerCase() === "legendaria" ||
-      cromo?.id === "CV-081" ||
-      cromo?.numero === 81
-    );
-
   if (usarIlustracionEstatica) {
     return (
       <div className="abanico-cromos" role="region" aria-label={etiquetaFinal}>
@@ -139,88 +118,29 @@ export default function AbanicoCromos({
       )}
 
       <div className="abanico-cartas-contenedor">
-        {/* Carta izquierda */}
         {cromoIzq && (
-          <div className="carta-figma carta-izquierda">
-            <div className="carta-ilustracion-marco">
-              <span className="carta-badge-numero">
-                {formatearNumero(cromoIzq)}
-              </span>
-              {tieneCorona(cromoIzq) && (
-                <span className="carta-badge-rareza" aria-hidden="true">
-                  <Icono nombre="corona" relleno />
-                </span>
-              )}
-              <ArteCromo
-                id={cromoIzq.id}
-                cromo={cromoIzq}
-                nombre={cromoIzq.nombre}
-                colorBase={cromoIzq.colorBase}
-                figura={cromoIzq.figura}
-                ilustracion={cromoIzq.ilustracion}
-              />
-            </div>
-            <div className="carta-pie">
-              <strong className="cromo-nombre-m">{cromoIzq.nombre}</strong>
-              <span className="detalle-nota">{formatearDetalle(cromoIzq)}</span>
-            </div>
-          </div>
+          <TarjetaHero
+            cromo={cromoIzq}
+            posicion="izquierda"
+            formatoTipo={formatoTipo}
+          />
         )}
 
-        {/* Carta centro destacada */}
         {cromoCentro && (
-          <div className="carta-figma carta-centro">
-            <div className="carta-ilustracion-marco">
-              <span className="carta-badge-numero">
-                {formatearNumero(cromoCentro)}
-              </span>
-              {tieneCorona(cromoCentro) && (
-                <span className="carta-badge-rareza" aria-hidden="true">
-                  <Icono nombre="corona" relleno />
-                </span>
-              )}
-              <ArteCromo
-                id={cromoCentro.id}
-                cromo={cromoCentro}
-                nombre={cromoCentro.nombre}
-                colorBase={cromoCentro.colorBase}
-                figura={cromoCentro.figura}
-                ilustracion={cromoCentro.ilustracion}
-              />
-            </div>
-            <div className="carta-pie">
-              <strong className="cromo-nombre-g">{cromoCentro.nombre}</strong>
-              <span className="detalle-nota-fuerte">{formatearDetalle(cromoCentro)}</span>
-            </div>
-          </div>
+          <TarjetaHero
+            cromo={cromoCentro}
+            posicion="centro"
+            formatoTipo={formatoTipo}
+            destacada
+          />
         )}
 
-        {/* Carta derecha */}
         {cromoDer && (
-          <div className="carta-figma carta-derecha">
-            <div className="carta-ilustracion-marco">
-              <span className="carta-badge-numero">
-                {formatearNumero(cromoDer)}
-              </span>
-              {tieneCorona(cromoDer) && (
-                <span className="carta-badge-rareza" aria-hidden="true">
-                  <Icono nombre="corona" relleno />
-                </span>
-              )}
-              <ArteCromo
-                id={cromoDer.id}
-                cromo={cromoDer}
-                nombre={cromoDer.nombre}
-                colorBase={cromoDer.colorBase}
-                figura={cromoDer.figura}
-                ilustracion={cromoDer.ilustracion}
-              />
-            </div>
-            <div className="carta-pie">
-              <strong className="cromo-nombre-m">{cromoDer.nombre}</strong>
-              <span className="detalle-nota">{formatearDetalle(cromoDer)}</span>
-            </div>
-          </div>
+          <TarjetaHero
+            cromo={cromoDer}
+            posicion="derecha"
+            formatoTipo={formatoTipo}
+          />
         )}
       </div>
     </div>
