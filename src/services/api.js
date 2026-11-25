@@ -149,3 +149,20 @@ export async function obtenerRarezas(opciones) {
   const datos = await pedirJson("rarezas", opciones);
   return datos?.datos ?? [];
 }
+
+/**
+ * POST /sesion. La API valida las credenciales, devuelve el usuario y establece
+ * la cookie httpOnly `sesion` en el navegador.
+ */
+export async function iniciarSesion({ correo, clave }, opciones = {}) {
+  const datos = await pedirJson("sesion", {
+    ...opciones,
+    metodo: "POST",
+    cuerpo: { correo, clave },
+    conSesion: true,
+  });
+  if (typeof datos?.usuario?.nombre !== "string") {
+    throw new Error("La respuesta de la sesión no tiene el formato esperado.");
+  }
+  return datos.usuario;
+}

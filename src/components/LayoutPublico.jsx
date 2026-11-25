@@ -27,6 +27,7 @@ export default function LayoutPublico({
   const location = useLocation();
 
   const esVistaMundo = location.pathname.startsWith("/mundos");
+  const esPantallaCompleta = location.pathname === "/ingresar";
 
   function abrirCookies() {
     disparador.current = document.activeElement;
@@ -43,27 +44,31 @@ export default function LayoutPublico({
   return (
     <div className={`layout-publico landing cromoverso ${esVistaMundo ? "layout-vista-mundo" : ""}`}>
       <SaltarContenido texto={saltarTexto} destino="#contenido" />
-      <Navbar
-        textos={textos}
-        cargando={cargando}
-        error={error}
-        recargar={recargar}
-        idioma={idioma}
-        cambiarIdioma={onCambiarIdioma}
-        activo={activo}
-        onBuscar={onBuscar}
-        configAccesibilidad={configAccesibilidad}
-        onCambiarAccesibilidad={onCambiarAccesibilidad}
-        onRestablecerAccesibilidad={onRestablecerAccesibilidad}
-      />
+      {!esPantallaCompleta && (
+        <Navbar
+          textos={textos}
+          cargando={cargando}
+          error={error}
+          recargar={recargar}
+          idioma={idioma}
+          cambiarIdioma={onCambiarIdioma}
+          activo={activo}
+          onBuscar={onBuscar}
+          configAccesibilidad={configAccesibilidad}
+          onCambiarAccesibilidad={onCambiarAccesibilidad}
+          onRestablecerAccesibilidad={onRestablecerAccesibilidad}
+        />
+      )}
       <main id="contenido" tabIndex={-1} className="contenido-principal">
         {children}
       </main>
-      <Footer
-        textos={textos}
-        onCuenta={onCuenta}
-        onAbrirCookies={abrirCookies}
-      />
+      {!esPantallaCompleta && (
+        <Footer
+          textos={textos}
+          onCuenta={onCuenta}
+          onAbrirCookies={abrirCookies}
+        />
+      )}
       <GestorCookies
         textos={textos}
         abierto={cookiesAbiertas}
