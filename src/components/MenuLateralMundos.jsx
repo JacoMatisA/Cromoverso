@@ -104,8 +104,8 @@ export default function MenuLateralMundos({
             const esSeleccionado = rarezaActual?.toLowerCase() === clave;
             const meta = rarezasInfo.find((r) => r.id?.toLowerCase() === clave);
             const nombre =
-              meta?.nombre ??
               textos?.componentes?.cromo?.rarezas?.[clave] ??
+              meta?.nombre ??
               clave;
             const icono = meta?.icono ?? ICONOS_RAREZA[clave] ?? "circulo";
             const conteo = conteoPorRareza[clave] ?? 0;

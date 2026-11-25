@@ -33,6 +33,7 @@ export default function TarjetaHero({
   colorBase,
   figura,
   ilustracion,
+  textos,
 }) {
   // Resolver props desde argumentos directos o desde objeto cromo
   const idCromo = id ?? cromo?.id ?? "";
@@ -40,7 +41,20 @@ export default function TarjetaHero({
   const numeroFormateado = String(numRaw).padStart(3, "0");
   const nombreCromo = nombre ?? cromo?.nombre ?? "";
   const mundo = mundoNombre ?? cromo?.mundoNombre ?? cromo?.mundo?.nombre ?? cromo?.mundo ?? "";
-  const tipo = tipoNombre ?? cromo?.tipoNombre ?? cromo?.tipo ?? "";
+
+  // Resolver tipo con soporte de i18n
+  const claveTipo = String(cromo?.tipo ?? tipoNombre ?? cromo?.tipoNombre ?? "heroe")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  const tipoTraducido =
+    textos?.componentes?.cromo?.tipos?.[claveTipo] ??
+    textos?.paginas?.albumMundo?.filtros?.tipo?.opciones?.[claveTipo] ??
+    tipoNombre ??
+    cromo?.tipoNombre ??
+    cromo?.tipo ??
+    "";
+  const tipo = tipoTraducido;
   const color = colorBase ?? cromo?.colorBase;
   const figuraCromo = figura ?? cromo?.figura;
   const ilustracionCromo = ilustracion ?? cromo?.ilustracion;
@@ -57,11 +71,12 @@ export default function TarjetaHero({
   const esDestacada = destacada || posicion === "centro";
 
   // Formato del subtítulo
+  const plantillaSubtitulo = formatoTipo || "{mundo} · {tipo}";
   let subtitulo = "";
   if (mundo && tipo) {
-    subtitulo = `${mundo} • ${tipo}`;
+    subtitulo = plantillaSubtitulo.replace("{mundo}", mundo).replace("{tipo}", tipo);
   } else if (mundo || tipo) {
-    subtitulo = formatoTipo.replace("{mundo}", mundo).replace("{tipo}", tipo);
+    subtitulo = plantillaSubtitulo.replace("{mundo}", mundo).replace("{tipo}", tipo);
   }
 
   return (

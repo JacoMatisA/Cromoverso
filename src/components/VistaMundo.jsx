@@ -24,11 +24,11 @@ const DESCRIPCIONES_MUNDOS = {
   niebla: "Reino misterioso entre sombras y espejismos",
 };
 
-export default function VistaMundo({ textos, cargandoTextos }) {
+export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const idNormalizado = normalizarIdMundo(id);
+  const idNormalizado = normalizarIdMundo(idMundo || id);
 
   const [mundo, setMundo] = useState(null);
   const [mundos, setMundos] = useState([]);
@@ -291,21 +291,33 @@ export default function VistaMundo({ textos, cargandoTextos }) {
                   {tFiltros?.rareza?.todas ?? "Rareza: todas"}
                 </option>
                 {rarezas.length > 0 ? (
-                  rarezas.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {(tFiltros?.rareza?.valor ?? "Rareza: {rareza}").replace(
-                        "{rareza}",
-                        r.nombre
-                      )}
-                    </option>
-                  ))
+                  rarezas.map((r) => {
+                    const claveR = r.id?.toLowerCase();
+                    const nombreRareza =
+                      textos?.componentes?.cromo?.rarezas?.[claveR] ??
+                      r.nombre;
+                    return (
+                      <option key={r.id} value={r.id}>
+                        {(tFiltros?.rareza?.valor ?? "Rareza: {rareza}").replace(
+                          "{rareza}",
+                          nombreRareza
+                        )}
+                      </option>
+                    );
+                  })
                 ) : (
-                  <>
-                    <option value="legendaria">Rareza: Legendaria</option>
-                    <option value="epica">Rareza: Épica</option>
-                    <option value="rara">Rareza: Rara</option>
-                    <option value="comun">Rareza: Común</option>
-                  </>
+                  ["legendaria", "epica", "rara", "comun"].map((clave) => {
+                    const nombreRareza =
+                      textos?.componentes?.cromo?.rarezas?.[clave] ?? clave;
+                    return (
+                      <option key={clave} value={clave}>
+                        {(tFiltros?.rareza?.valor ?? "Rareza: {rareza}").replace(
+                          "{rareza}",
+                          nombreRareza
+                        )}
+                      </option>
+                    );
+                  })
                 )}
               </select>
               <span className="filtro-movil-icono" aria-hidden="true">
@@ -323,11 +335,14 @@ export default function VistaMundo({ textos, cargandoTextos }) {
                 <option value="">
                   {tFiltros?.tipo?.todos ?? "Tipo: todos"}
                 </option>
-                {Object.entries(tFiltros?.tipo?.opciones ?? {
-                  heroe: "Héroe",
-                  aliado: "Aliado",
-                  villano: "Villano",
-                }).map(([clave, nombre]) => (
+                {Object.entries(
+                  tFiltros?.tipo?.opciones ??
+                  textos?.componentes?.cromo?.tipos ?? {
+                    heroe: "Héroe",
+                    aliado: "Aliado",
+                    villano: "Villano",
+                  }
+                ).map(([clave, nombre]) => (
                   <option key={clave} value={clave}>
                     {(tFiltros?.tipo?.valor ?? "Tipo: {tipo}").replace(
                       "{tipo}",

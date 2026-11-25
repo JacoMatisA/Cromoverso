@@ -57,8 +57,8 @@ export default function TarjetaCromo({
   const claveRareza = String(rareza ?? cromo?.rareza ?? "comun").toLowerCase();
   const metaRareza = rarezasInfo.find((r) => r.id?.toLowerCase() === claveRareza);
   const nombreRareza =
-    metaRareza?.nombre ??
     textos?.componentes?.cromo?.rarezas?.[claveRareza] ??
+    metaRareza?.nombre ??
     claveRareza;
   const iconoRareza = metaRareza?.icono ?? ICONOS_RAREZA[claveRareza] ?? "circulo";
 

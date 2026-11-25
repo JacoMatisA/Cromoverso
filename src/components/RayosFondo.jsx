@@ -1,9 +1,9 @@
-export default function RayosFondo({ className = "", color = "currentColor", opacity, style, ...props }) {
+export default function RayosFondo({ className = "", color = "currentColor", opacity, style, viewBox, ...props }) {
   return (
     <svg
       width="1060"
       height="558"
-      viewBox="0 0 1060 558"
+      viewBox={viewBox || "0 0 1060 558"}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}

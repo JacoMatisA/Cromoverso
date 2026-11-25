@@ -13,6 +13,7 @@ const CROMOS_HERO_DEFECTO = {
     numero: 41,
     nombre: "Raíz Madre",
     mundoNombre: "Bosque Eterno",
+    tipo: "heroe",
     tipoNombre: "Héroe",
     corona: false,
   },
@@ -21,6 +22,7 @@ const CROMOS_HERO_DEFECTO = {
     numero: 1,
     nombre: "Voltia",
     mundoNombre: "Ciudad Neón",
+    tipo: "heroe",
     tipoNombre: "Héroe",
     corona: true,
   },
@@ -29,6 +31,7 @@ const CROMOS_HERO_DEFECTO = {
     numero: 81,
     nombre: "Astra",
     mundoNombre: "Órbita Prisma",
+    tipo: "heroe",
     tipoNombre: "Héroe",
     corona: true,
   },
@@ -65,6 +68,7 @@ export default function AbanicoCromos({
   etiquetaGuardiana,
   formatoTipo = "{mundo} • {tipo}",
   usarIlustracionEstatica = false,
+  textos,
 }) {
   const [cartas, setCartas] = useState(null);
 
@@ -92,7 +96,10 @@ export default function AbanicoCromos({
   const cromoCentro = cartas?.cromoCentro || CROMOS_HERO_DEFECTO.cromoCentro;
   const cromoDer = cartas?.cromoDer || CROMOS_HERO_DEFECTO.cromoDer;
 
-  const etiquetaFinal = etiquetaGuardiana || "Guardiana holográfica";
+  const etiquetaFinal =
+    etiquetaGuardiana ||
+    textos?.paginas?.inicio?.hero?.etiquetas?.guardiana ||
+    "Guardiana holográfica";
 
   if (usarIlustracionEstatica) {
     return (
@@ -123,6 +130,7 @@ export default function AbanicoCromos({
             cromo={cromoIzq}
             posicion="izquierda"
             formatoTipo={formatoTipo}
+            textos={textos}
           />
         )}
 
@@ -132,6 +140,7 @@ export default function AbanicoCromos({
             posicion="centro"
             formatoTipo={formatoTipo}
             destacada
+            textos={textos}
           />
         )}
 
@@ -140,6 +149,7 @@ export default function AbanicoCromos({
             cromo={cromoDer}
             posicion="derecha"
             formatoTipo={formatoTipo}
+            textos={textos}
           />
         )}
       </div>

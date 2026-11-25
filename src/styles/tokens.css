@@ -77,35 +77,64 @@
   --boton-relleno-g: 28px;
   --boton-relleno-m: 22px;
   --radio-carta: 18px;
+  --radio-modal: 28px;
   /* Familias tipográficas (Google Fonts) */
   --fuente-instrument-sans: 'Instrument Sans', system-ui, sans-serif;
   --fuente-unbounded: 'Unbounded', system-ui, sans-serif;
   --fuente-rubik: 'Rubik', system-ui, sans-serif;
+  /* Tamaños y alturas de línea tipográficos */
+  --tam-display: 56px;
+  --linea-display: 62px;
+  --tam-h1: 40px;
+  --linea-h1: 46px;
+  --tam-h2: 28px;
+  --linea-h2: 34px;
+  --tam-h3: 20px;
+  --linea-h3: 26px;
+  --tam-h4: 16px;
+  --linea-h4: 22px;
+  --tam-cuerpo-g: 18px;
+  --linea-cuerpo-g: 28px;
+  --tam-cuerpo-m: 16px;
+  --linea-cuerpo-m: 24px;
+  --tam-cuerpo-p: 14px;
+  --linea-cuerpo-p: 20px;
+  --tam-dato-num: 14px;
+  --linea-dato-num: 16px;
+  --tam-nota: 12px;
+  --linea-nota: 16px;
+  --tam-etiqueta: 11px;
+  --linea-etiqueta: 14px;
+  --tam-cromo-m: 13px;
+  --linea-cromo-m: 17px;
   /* Sombras */
   --sombra-pop: 4px 4px 0px 0px #1a1033;
   --sombra-pop-pequena: 2px 2px 0px 0px #1a1033;
   --sombra-flotante: 0px 16px 40px -8px #1a10332e;
   --brillo-legendaria: 0px 0px 24px 2px #ffc71a8c;
+  --cromo-brillo: rgba(255, 255, 255, 0.14);
+  --cromo-halo: rgba(255, 255, 255, 0.22);
+  --cromo-holograma: linear-gradient(135deg, rgba(255, 112, 217, 0.5) 14.29%, rgba(255, 230, 110, 0.5) 39.29%, rgba(112, 255, 232, 0.5) 60.71%, rgba(140, 122, 255, 0.5) 85.71%);
 }
 
 /* Estilos de texto de Figma como clases. */
 .titular-gigante { font-family: var(--fuente-unbounded); font-weight: 900; font-size: 88px; line-height: 92px; letter-spacing: -2px; }
-.titular-display { font-family: var(--fuente-unbounded); font-weight: 700; font-size: 56px; line-height: 62px; letter-spacing: -1.5px; }
-.titular-h1 { font-family: var(--fuente-unbounded); font-weight: 700; font-size: 40px; line-height: 46px; letter-spacing: -1px; }
-.titular-h2 { font-family: var(--fuente-unbounded); font-weight: 600; font-size: 28px; line-height: 34px; letter-spacing: -0.5px; }
-.titular-h3 { font-family: var(--fuente-unbounded); font-weight: 600; font-size: 20px; line-height: 26px; }
-.titular-h4 { font-family: var(--fuente-rubik); font-weight: 700; font-size: 16px; line-height: 22px; }
+.titular-display { font-family: var(--fuente-unbounded); font-weight: 700; font-size: var(--tam-display); line-height: var(--linea-display); letter-spacing: -1.5px; }
+.titular-h1 { font-family: var(--fuente-unbounded); font-weight: 700; font-size: var(--tam-h1); line-height: var(--linea-h1); letter-spacing: -1px; }
+.titular-h2 { font-family: var(--fuente-unbounded); font-weight: 600; font-size: var(--tam-h2); line-height: var(--linea-h2); letter-spacing: -0.5px; }
+.titular-h3 { font-family: var(--fuente-unbounded); font-weight: 600; font-size: var(--tam-h3); line-height: var(--linea-h3); }
+.titular-h4 { font-family: var(--fuente-rubik); font-weight: 700; font-size: var(--tam-h4); line-height: var(--linea-h4); }
 .dato-cifra { font-family: var(--fuente-unbounded); font-weight: 700; font-size: 32px; line-height: 36px; letter-spacing: -0.5px; }
-.dato-numero-de-cromo { font-family: var(--fuente-unbounded); font-weight: 700; font-size: 14px; line-height: 16px; }
-.cuerpo-g { font-family: var(--fuente-rubik); font-weight: 400; font-size: 18px; line-height: 28px; }
-.cuerpo-m { font-family: var(--fuente-rubik); font-weight: 400; font-size: 16px; line-height: 24px; }
-.cuerpo-m-fuerte { font-family: var(--fuente-rubik); font-weight: 600; font-size: 16px; line-height: 24px; }
-.cuerpo-p { font-family: var(--fuente-rubik); font-weight: 400; font-size: 14px; line-height: 20px; }
-.cuerpo-p-fuerte { font-family: var(--fuente-rubik); font-weight: 600; font-size: 14px; line-height: 20px; }
-.detalle-nota { font-family: var(--fuente-rubik); font-weight: 400; font-size: 12px; line-height: 16px; }
-.detalle-nota-fuerte { font-family: var(--fuente-rubik); font-weight: 600; font-size: 12px; line-height: 16px; }
-.detalle-etiqueta { font-family: var(--fuente-rubik); font-weight: 700; font-size: 11px; line-height: 14px; letter-spacing: 0.060em; text-transform: uppercase; }
+.dato-numero-de-cromo { font-family: var(--fuente-unbounded); font-weight: 700; font-size: var(--tam-dato-num); line-height: var(--linea-dato-num); }
+.cuerpo-g { font-family: var(--fuente-rubik); font-weight: 400; font-size: var(--tam-cuerpo-g); line-height: var(--linea-cuerpo-g); }
+.cuerpo-m { font-family: var(--fuente-rubik); font-weight: 400; font-size: var(--tam-cuerpo-m); line-height: var(--linea-cuerpo-m); }
+.cuerpo-m-fuerte { font-family: var(--fuente-rubik); font-weight: 600; font-size: var(--tam-cuerpo-m); line-height: var(--linea-cuerpo-m); }
+.cuerpo-p { font-family: var(--fuente-rubik); font-weight: 400; font-size: var(--tam-cuerpo-p); line-height: var(--linea-cuerpo-p); }
+.cuerpo-p-fuerte { font-family: var(--fuente-rubik); font-weight: 600; font-size: var(--tam-cuerpo-p); line-height: var(--linea-cuerpo-p); }
+.detalle-nota { font-family: var(--fuente-rubik); font-weight: 400; font-size: var(--tam-nota); line-height: var(--linea-nota); }
+.detalle-nota-fuerte { font-family: var(--fuente-rubik); font-weight: 600; font-size: var(--tam-nota); line-height: var(--linea-nota); }
+.detalle-etiqueta { font-family: var(--fuente-rubik); font-weight: 700; font-size: var(--tam-etiqueta); line-height: var(--linea-etiqueta); letter-spacing: 0.060em; text-transform: uppercase; }
 .cromo-nombre-g { font-family: var(--fuente-unbounded); font-weight: 600; font-size: 17px; line-height: 22px; }
-.cromo-nombre-m { font-family: var(--fuente-unbounded); font-weight: 600; font-size: 13px; line-height: 17px; }
+.cromo-nombre-m { font-family: var(--fuente-unbounded); font-weight: 600; font-size: var(--tam-cromo-m); line-height: var(--linea-cromo-m); }
 .cromo-nombre-p { font-family: var(--fuente-unbounded); font-weight: 600; font-size: 10px; line-height: 13px; }
 .cromo-numero-p { font-family: var(--fuente-unbounded); font-weight: 700; font-size: 9px; line-height: 11px; }
