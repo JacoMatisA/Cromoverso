@@ -58,6 +58,7 @@ export default function HeroCromoverso({
         <AbanicoCromos
           etiquetaGuardiana={hero?.etiquetas?.guardiana}
           formatoTipo={formatoTipo}
+          textos={textos}
         />
       </div>
     </section>

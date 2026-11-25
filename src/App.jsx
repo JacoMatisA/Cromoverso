@@ -4,6 +4,7 @@ import { useTextos } from "./hooks/useTextos";
 import LayoutPublico from "./components/LayoutPublico.jsx";
 import VistaInicio from "./components/VistaInicio.jsx";
 import VistaMundo from "./components/VistaMundo.jsx";
+import VistaDetalleCromo from "./components/DetalleCromo/VistaDetalleCromo.jsx";
 import { obtenerCookie, establecerCookie, eliminarCookie } from "./utils/cookies";
 import "./App.css";
 
@@ -14,34 +15,6 @@ const CONFIG_ACCESIBILIDAD_DEFAULT = {
   subrayarEnlaces: false,
   fuenteLecturaFacil: false,
 };
-
-function DetalleCromoPlaceholder({ textos }) {
-  const { id } = useParams();
-  const titulo =
-    textos?.paginas?.detalleCromo?.seo?.titulo?.replace("{nombre}", id) ?? id;
-  const textoVolver = textos?.paginas?.albumMundo?.migas?.inicio ?? "Inicio";
-
-  return (
-    <div
-      className="contenedor"
-      style={{
-        padding: "var(--espacio-7) var(--espacio-4)",
-        textAlign: "center",
-        minHeight: "50vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "var(--espacio-4)",
-      }}
-    >
-      <h2 className="titular-h2">{titulo}</h2>
-      <Link to="/mundos/neon" className="boton-home primario">
-        {textoVolver}
-      </Link>
-    </div>
-  );
-}
 
 function App() {
   const [idioma, setIdioma] = useState(() => {
@@ -168,10 +141,15 @@ function App() {
               />
             }
           />
-          {/* pantalla para ver el cromo individual (provisional)*/}
+          {/* pantalla de detalle del cromo individual */}
           <Route
             path="/cromos/:id"
-            element={<DetalleCromoPlaceholder textos={textos} />}
+            element={
+              <VistaDetalleCromo
+                textos={textos}
+                cargandoTextos={cargando}
+              />
+            }
           />
           {/* cualquier ruta rara que no exista manda para home */}
           <Route path="*" element={<Navigate to="/" replace />} />
