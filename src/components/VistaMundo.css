@@ -380,6 +380,54 @@
   text-align: center;
 }
 
+/* Esqueleto de carga del catálogo (US-CRO-S2-02) */
+.vista-mundo-esqueleto-banner {
+  background-color: var(--fondo-superficie);
+  border-bottom: var(--borde-grosor) solid var(--borde-sutil);
+  padding: var(--espacio-6) 0;
+}
+
+.vista-mundo-esqueleto-banner-interior {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.vista-mundo-esqueleto-migas {
+  width: 9rem;
+  height: var(--espacio-4);
+}
+
+.vista-mundo-esqueleto-titulo {
+  width: min(20rem, 70%);
+  height: var(--espacio-7);
+}
+
+.vista-mundo-esqueleto-subtitulo {
+  width: min(26rem, 85%);
+  height: var(--espacio-5);
+}
+
+.vista-mundo-esqueleto-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.vista-mundo-esqueleto-panel {
+  width: 100%;
+  height: 12rem;
+  border-radius: var(--radio-l);
+}
+
+.vista-mundo-esqueleto-carta {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radio-carta);
+}
+
 @media (max-width: 1100px) {
   .catalogo-grilla-cromos {
     grid-template-columns: repeat(4, 1fr);
@@ -403,7 +451,8 @@
     flex-direction: column;
   }
 
-  .menu-lateral-mundos {
+  .menu-lateral-mundos,
+  .vista-mundo-esqueleto-sidebar {
     display: none;
   }
 

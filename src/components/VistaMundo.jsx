@@ -4,7 +4,9 @@ import Icono from "./Icono.jsx";
 import GrillaCromos from "./catalogo/GrillaCromos.jsx";
 import MenuLateralMundos from "./MenuLateralMundos.jsx";
 import RayosFondo from "./RayosFondo.jsx";
+import { AvisoCarga, Esqueleto, EstadoError } from "./Estados.jsx";
 import {
+  ErrorHttp,
   normalizarIdMundo,
   obtenerCromos,
   obtenerMundo,
@@ -12,6 +14,8 @@ import {
   obtenerRarezas,
 } from "../services/api.js";
 import "./VistaMundo.css";
+
+const CROMOS_ESQUELETO = 20;
 
 const MUNDOS_ORDEN = ["neon", "coral", "bosque", "forja", "orbita", "niebla"];
 
@@ -35,7 +39,8 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
   const [cromos, setCromos] = useState([]);
   const [rarezas, setRarezas] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
+  const [intento, setIntento] = useState(0);
 
   const rarezaActual = searchParams.get("rareza") || "";
   const tipoActual = searchParams.get("tipo") || "";
@@ -52,18 +57,20 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
   }, [busquedaActual]);
 
   useEffect(() => {
+    const controlador = new AbortController();
     let activo = true;
     setCargando(true);
-    setError(false);
+    setError(null);
 
     async function cargarDatos() {
       try {
+        const opciones = { signal: controlador.signal };
         const [datosMundo, listaMundos, listaCromos, listaRarezas] =
           await Promise.all([
-            obtenerMundo(idNormalizado),
-            obtenerMundos(),
-            obtenerCromos(idNormalizado),
-            obtenerRarezas(),
+            obtenerMundo(idNormalizado, opciones),
+            obtenerMundos(opciones),
+            obtenerCromos(idNormalizado, opciones),
+            obtenerRarezas(opciones),
           ]);
 
         if (activo) {
@@ -73,8 +80,9 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
           setRarezas(listaRarezas);
         }
       } catch (err) {
+        if (err?.name === "AbortError") return;
         console.error("Error al cargar datos del mundo:", err);
-        if (activo) setError(true);
+        if (activo) setError(err);
       } finally {
         if (activo) setCargando(false);
       }
@@ -84,8 +92,13 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
 
     return () => {
       activo = false;
+      controlador.abort();
     };
-  }, [idNormalizado]);
+  }, [idNormalizado, intento]);
+
+  function reintentar() {
+    setIntento((n) => n + 1);
+  }
 
   function cambiarFiltro(clave, valor) {
     const nuevosParams = new URLSearchParams(searchParams);
@@ -165,27 +178,73 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
 
   if (cargando || cargandoTextos) {
     return (
-      <div className="vista-mundo-cargando">
-        <p className="cuerpo-m">
-          {textos?.estados?.cargando ?? "Cargando..."}
-        </p>
+      <section
+        className="vista-mundo vista-mundo-esqueleto"
+        aria-busy="true"
+      >
+        <AvisoCarga textos={textos} />
+        <div className="vista-mundo-esqueleto-banner" aria-hidden="true">
+          <div className="contenedor vista-mundo-esqueleto-banner-interior">
+            <Esqueleto className="vista-mundo-esqueleto-migas" />
+            <Esqueleto className="vista-mundo-esqueleto-titulo" />
+            <Esqueleto className="vista-mundo-esqueleto-subtitulo" />
+          </div>
+        </div>
+        <div className="vista-mundo-cuerpo">
+          <div className="contenedor vista-mundo-layout">
+            <div className="vista-mundo-esqueleto-sidebar" aria-hidden="true">
+              <Esqueleto className="vista-mundo-esqueleto-panel" />
+              <Esqueleto className="vista-mundo-esqueleto-panel" />
+            </div>
+            <div className="catalogo-principal" aria-hidden="true">
+              <div className="catalogo-marco-grilla">
+                <div className="catalogo-grilla-cromos">
+                  {Array.from({ length: CROMOS_ESQUELETO }, (_, indice) => (
+                    <Esqueleto
+                      key={indice}
+                      className="vista-mundo-esqueleto-carta"
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const esNoEncontrado =
+    (error instanceof ErrorHttp && error.status === 404) || (!error && !mundo);
+
+  if (esNoEncontrado) {
+    const tNoEncontrado = textos?.estados?.noEncontrado;
+    return (
+      <div className="vista-mundo-error" role="alert">
+        {tNoEncontrado?.titulo && (
+          <h1 className="titular-h2">{tNoEncontrado.titulo}</h1>
+        )}
+        {tNoEncontrado?.texto && (
+          <p className="cuerpo-m">{tNoEncontrado.texto}</p>
+        )}
+        {tNoEncontrado?.botones?.irAlInicio && (
+          <Link to="/" className="boton-home primario">
+            {tNoEncontrado.botones.irAlInicio}
+          </Link>
+        )}
       </div>
     );
   }
 
-  if (error || !mundo) {
+  if (error) {
     return (
-      <div className="vista-mundo-error">
-        <h2 className="titular-h2">
-          {textos?.errores?.noEncontrado?.titulo ?? "Mundo no encontrado"}
-        </h2>
-        <p className="cuerpo-m">
-          {textos?.errores?.noEncontrado?.texto ?? "No se pudieron cargar los datos de este mundo."}
-        </p>
-        <Link to="/" className="boton-home primario">
-          {tMundo?.migas?.inicio ?? "Inicio"}
-        </Link>
-      </div>
+      <EstadoError
+        className="vista-mundo-error"
+        textos={textos}
+        error={error}
+        onReintentar={reintentar}
+        etiquetaTitulo="h1"
+      />
     );
   }
 

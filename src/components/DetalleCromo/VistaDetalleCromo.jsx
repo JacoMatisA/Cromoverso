@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Icono from "../Icono.jsx";
 import RayosFondo from "../RayosFondo.jsx";
 import VistaMundo from "../VistaMundo.jsx";
-import { obtenerCromo, obtenerCromos } from "../../services/api.js";
+import { AvisoCarga, Esqueleto, EstadoError } from "../Estados.jsx";
+import { ErrorHttp, obtenerCromo, obtenerCromos } from "../../services/api.js";
 import "./DetalleCromo.css";
 
 const ICONOS_RAREZA = {
@@ -53,18 +54,23 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
   const [cromoSiguiente, setCromoSiguiente] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error404, setError404] = useState(false);
+  const [errorApi, setErrorApi] = useState(null);
+  const [intento, setIntento] = useState(0);
 
   // Cargar datos del cromo actual y sus vecinos
   useEffect(() => {
+    const controlador = new AbortController();
     let activo = true;
     setCargando(true);
     setError404(false);
+    setErrorApi(null);
     setCromoAnterior(null);
     setCromoSiguiente(null);
 
     async function cargarDetalle() {
       try {
-        const datos = await obtenerCromo(id);
+        const opciones = { signal: controlador.signal };
+        const datos = await obtenerCromo(id, opciones);
         if (!datos || (!datos.nombre && !datos.id)) {
           if (activo) setError404(true);
           return;
@@ -75,7 +81,7 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
 
         if (datos.mundo) {
           try {
-            const coleccion = await obtenerCromos(datos.mundo);
+            const coleccion = await obtenerCromos(datos.mundo, opciones);
             if (activo && Array.isArray(coleccion)) {
               const idx = coleccion.findIndex(
                 (c) =>
@@ -91,12 +97,21 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
               }
             }
           } catch (errMundo) {
-            console.warn("No se pudo cargar la lista del mundo para navegación:", errMundo);
+            if (errMundo?.name !== "AbortError") {
+              console.warn("No se pudo cargar la lista del mundo para navegación:", errMundo);
+            }
           }
         }
       } catch (err) {
+        if (err?.name === "AbortError") return;
         console.error("Error al obtener cromo:", err);
-        if (activo) setError404(true);
+        if (activo) {
+          if (err instanceof ErrorHttp && err.status === 404) {
+            setError404(true);
+          } else {
+            setErrorApi(err);
+          }
+        }
       } finally {
         if (activo) setCargando(false);
       }
@@ -106,8 +121,13 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
 
     return () => {
       activo = false;
+      controlador.abort();
     };
-  }, [id]);
+  }, [id, intento]);
+
+  function reintentar() {
+    setIntento((n) => n + 1);
+  }
 
   // Actualizar metadatos de la página
   useEffect(() => {
@@ -263,36 +283,66 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
             </button>
           </div>
 
-          {/* Estado de Carga */}
-          {cargando && (
+          {/* Estado de Carga (Esqueleto) */}
+          {(cargando || cargandoTextos) && (
+            <div className="detalle__esqueleto" aria-busy="true">
+              <AvisoCarga textos={textos} />
+              <Esqueleto className="detalle__esqueleto-carta" />
+              <div className="detalle__esqueleto-info" aria-hidden="true">
+                <Esqueleto className="detalle__esqueleto-etiquetas" />
+                <Esqueleto className="detalle__esqueleto-titulo" />
+                <Esqueleto className="detalle__esqueleto-poder" />
+                <Esqueleto className="detalle__esqueleto-atributos" />
+              </div>
+            </div>
+          )}
+
+          {/* Estado de Error de API con botón Reintentar */}
+          {!cargando && !cargandoTextos && errorApi && (
             <div className="detalle-cromo-estado-vacio">
-              <p className="cuerpo-m">
-                {textos?.estados?.cargando ?? "Cargando..."}
-              </p>
+              <button
+                type="button"
+                className="detalle__cerrar detalle__cerrar--estado"
+                onClick={cerrarModal}
+                aria-label={tDetalle?.botones?.cerrar ?? textos?.general?.acciones?.cerrar}
+              >
+                <Icono nombre="cerrar" />
+              </button>
+              <EstadoError
+                textos={textos}
+                error={errorApi}
+                onReintentar={reintentar}
+              />
             </div>
           )}
 
           {/* Estado 404 No Encontrado */}
-          {!cargando && error404 && (
-            <div className="detalle-cromo-estado-vacio">
-              <h2 className="titular-h2">
-                {tNoEncontrado?.titulo || "No encontramos este cromo"}
-              </h2>
-              <p className="cuerpo-m">
-                {tNoEncontrado?.texto || "Puede que el número esté mal escrito."}
-              </p>
-              <button
-                type="button"
-                className="boton-home primario"
-                onClick={cerrarModal}
-              >
-                {tNoEncontrado?.botones?.volver || "Volver a los mundos"}
-              </button>
+          {!cargando && !cargandoTextos && !errorApi && error404 && (
+            <div className="detalle-cromo-estado-vacio" role="alert">
+              {(tNoEncontrado?.titulo ?? textos?.estados?.noEncontrado?.titulo) && (
+                <h2 className="titular-h2">
+                  {tNoEncontrado?.titulo ?? textos?.estados?.noEncontrado?.titulo}
+                </h2>
+              )}
+              {(tNoEncontrado?.texto ?? textos?.estados?.noEncontrado?.texto) && (
+                <p className="cuerpo-m">
+                  {tNoEncontrado?.texto ?? textos?.estados?.noEncontrado?.texto}
+                </p>
+              )}
+              {(tNoEncontrado?.botones?.volver ?? textos?.estados?.noEncontrado?.botones?.irAlInicio) && (
+                <button
+                  type="button"
+                  className="boton-home primario"
+                  onClick={cerrarModal}
+                >
+                  {tNoEncontrado?.botones?.volver ?? textos?.estados?.noEncontrado?.botones?.irAlInicio}
+                </button>
+              )}
             </div>
           )}
 
           {/* Contenido principal del Cromo */}
-          {!cargando && !error404 && cromo && (
+          {!cargando && !cargandoTextos && !errorApi && !error404 && cromo && (
             <>
               {/* --------------------------------------------------------------
                   Zona Izquierda (Desktop): Contenedor morado de 316x420 con rayos centrados

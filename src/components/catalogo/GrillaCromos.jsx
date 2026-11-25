@@ -20,23 +20,23 @@ export default function GrillaCromos({
   onLimpiarFiltros,
 }) {
   const tVacio = textos?.paginas?.albumMundo?.vacio;
+  const tituloVacio = tVacio?.titulo ?? textos?.estados?.vacio?.titulo;
+  const textoVacio = tVacio?.texto;
+  const textoBotonLimpiar =
+    tVacio?.botones?.limpiar ?? textos?.general?.acciones?.quitarFiltros;
 
   if (cromos.length === 0) {
     return (
-      <div className="catalogo-vacio">
-        <h3 className="titular-h3">
-          {tVacio?.titulo ?? "Ningún cromo coincide con estos filtros"}
-        </h3>
-        <p className="cuerpo-m">
-          {tVacio?.texto ?? "Prueba con otra rareza u otro tipo."}
-        </p>
-        {onLimpiarFiltros && (
+      <div className="catalogo-vacio" role="status">
+        {tituloVacio && <h3 className="titular-h3">{tituloVacio}</h3>}
+        {textoVacio && <p className="cuerpo-m">{textoVacio}</p>}
+        {onLimpiarFiltros && textoBotonLimpiar && (
           <button
             type="button"
             onClick={onLimpiarFiltros}
             className="boton-home primario catalogo-boton-limpiar"
           >
-            {tVacio?.botones?.limpiar ?? "Quitar filtros"}
+            {textoBotonLimpiar}
           </button>
         )}
       </div>

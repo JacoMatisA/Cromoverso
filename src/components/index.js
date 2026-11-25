@@ -23,6 +23,7 @@ export { default as SaltarContenido } from "./SaltarContenido.jsx";
 
 // Accesibilidad y utilitarios UI
 export { default as Icono } from "./Icono.jsx";
+export { EstadoError, Esqueleto, AvisoCarga } from "./Estados.jsx";
 export { default as ArteCromo } from "./ArteCromo.jsx";
 export { default as RayosFondo } from "./RayosFondo.jsx";
 export { default as LogoCromoverso } from "./LogoCromoverso.jsx";
