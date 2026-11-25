@@ -1,4 +1,3 @@
-/* Vista 4 · Iniciar sesión (US-CRO-S2-03) */
 .ingreso {
   display: flex;
   flex-direction: column;
@@ -209,6 +208,36 @@
 
 .ingreso-enviar {
   width: 100%;
+}
+
+.ingreso-enviar[aria-busy="true"] {
+  cursor: progress;
+}
+
+.ingreso-girando {
+  width: var(--espacio-4);
+  height: var(--espacio-4);
+  border: var(--borde-grosor) solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--radio-pildora);
+  animation: ingreso-girar 0.8s linear infinite;
+}
+
+@keyframes ingreso-girar {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ingreso-girando {
+    animation: none;
+  }
+}
+
+.ingreso-casilla:has(input:disabled) {
+  opacity: var(--opacidad-deshabilitado);
+  cursor: not-allowed;
 }
 
 .ingreso-pie {

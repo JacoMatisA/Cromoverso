@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import abanico from "../assets/ilustraciones/abanico-de-cromos.png";
 import abanico2x from "../assets/ilustraciones/abanico-de-cromos@2x.png";
 import { iniciarSesion } from "../services/api.js";
+import { avisoDeError, insertarVariables } from "../utils/erroresIngreso.js";
 import CampoClave from "./CampoClave.jsx";
 import Icono from "./Icono.jsx";
 import LogoCromoverso from "./LogoCromoverso.jsx";
@@ -22,7 +23,26 @@ export function validarIngreso({ correo, clave }, erroresTextos) {
   return resultado;
 }
 
-/** Vista 4 · Iniciar sesión (US-CRO-S2-03). */
+function AvisoIngreso({ titulo, texto, esBloqueo = false }) {
+  return (
+    <div className="ingreso-aviso" role="alert">
+      <Icono nombre="alerta" />
+      <div>
+        {titulo && (
+          <p className="ingreso-aviso-titulo cuerpo-p-fuerte">{titulo}</p>
+        )}
+        {/* En cuenta regresiva cada segundo cambia el texto: no se re-anuncia en cada tick. */}
+        {texto && (
+          <p className="cuerpo-p" aria-live={esBloqueo ? "off" : undefined}>
+            {texto}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Vista 4 · Iniciar sesión (US-CRO-S2-03 y US-CRO-S2-04). */
 export default function Ingresar({ textos }) {
   const pagina = textos?.paginas?.ingresar;
   const navigate = useNavigate();
@@ -31,6 +51,8 @@ export default function Ingresar({ textos }) {
   const [mantener, setMantener] = useState(true);
   const [errores, setErrores] = useState({});
   const [aviso, setAviso] = useState(null);
+  const [enviando, setEnviando] = useState(false);
+  const [segundos, setSegundos] = useState(0);
 
   const correoRef = useRef(null);
   const claveRef = useRef(null);
@@ -47,9 +69,31 @@ export default function Ingresar({ textos }) {
     };
   }, [pagina, textos]);
 
+  // Cuenta regresiva del bloqueo temporal por 429 demasiadas_peticiones (Retry-After).
+  useEffect(() => {
+    if (segundos <= 0) return undefined;
+    const temporizador = setTimeout(() => {
+      setSegundos((actual) => {
+        const siguiente = actual - 1;
+        if (siguiente <= 0) {
+          setAviso((avisoActual) =>
+            avisoActual?.tipo === "bloqueo" ? null : avisoActual,
+          );
+        }
+        return siguiente;
+      });
+    }, 1000);
+    return () => clearTimeout(temporizador);
+  }, [segundos]);
+
   if (!pagina) return null;
 
   const { formulario, presentacion } = pagina;
+  const bloqueado = segundos > 0;
+  const textoAviso =
+    aviso?.tipo === "bloqueo"
+      ? insertarVariables(aviso.texto, { segundos })
+      : aviso?.texto;
 
   function cambiar(evento) {
     const { name, value } = evento.target;
@@ -70,12 +114,15 @@ export default function Ingresar({ textos }) {
 
   async function enviar(evento) {
     evento.preventDefault();
+    if (enviando || bloqueado) return;
+
     if (marcarCampos(validarIngreso(valores, pagina.errores))) {
-      setAviso(pagina.errores.camposObligatorios);
+      setAviso({ ...pagina.errores.camposObligatorios, tipo: "campos" });
       return;
     }
 
     setAviso(null);
+    setEnviando(true);
     try {
       await iniciarSesion({
         correo: valores.correo.trim(),
@@ -83,9 +130,23 @@ export default function Ingresar({ textos }) {
       });
       navigate("/");
     } catch (err) {
-      console.error("Error al iniciar sesión:", err);
-      setAviso(pagina.errores.credenciales);
+      const resultado = avisoDeError(err, pagina, textos);
+      setAviso({ ...resultado.aviso, tipo: resultado.tipo });
+      if (resultado.campos) {
+        marcarCampos(resultado.campos);
+      }
+      if (resultado.segundos) {
+        setSegundos(resultado.segundos);
+      }
+      setEnviando(false);
     }
+  }
+
+  let etiquetaBoton = formulario.botones.ingresar;
+  if (enviando) {
+    etiquetaBoton = formulario.mensajes.ingresando;
+  } else if (aviso?.tipo === "conexion") {
+    etiquetaBoton = pagina.errores.conexion.botones.reintentar;
   }
 
   return (
@@ -142,20 +203,14 @@ export default function Ingresar({ textos }) {
           </div>
 
           {aviso && (
-            <div className="ingreso-aviso" role="alert">
-              <Icono nombre="alerta" />
-              <div>
-                {aviso.titulo && (
-                  <p className="ingreso-aviso-titulo cuerpo-p-fuerte">
-                    {aviso.titulo}
-                  </p>
-                )}
-                {aviso.texto && <p className="cuerpo-p">{aviso.texto}</p>}
-              </div>
-            </div>
+            <AvisoIngreso
+              titulo={aviso.titulo}
+              texto={textoAviso}
+              esBloqueo={aviso.tipo === "bloqueo"}
+            />
           )}
 
-          <fieldset className="ingreso-campos">
+          <fieldset className="ingreso-campos" disabled={bloqueado}>
             <TextField
               ref={correoRef}
               id="ingreso-correo"
@@ -186,6 +241,7 @@ export default function Ingresar({ textos }) {
               <input
                 type="checkbox"
                 checked={mantener}
+                disabled={bloqueado}
                 onChange={(e) => setMantener(e.target.checked)}
               />
               <span className="ingreso-casilla-marca" aria-hidden="true">
@@ -202,8 +258,13 @@ export default function Ingresar({ textos }) {
           <button
             type="submit"
             className="boton boton--primario boton--g ingreso-enviar"
+            disabled={enviando || bloqueado}
+            aria-busy={enviando}
           >
-            {formulario.botones.ingresar}
+            {enviando && (
+              <span className="ingreso-girando" aria-hidden="true" />
+            )}
+            {etiquetaBoton}
           </button>
 
           <p className="ingreso-pie cuerpo-p">
