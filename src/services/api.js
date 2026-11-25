@@ -1,4 +1,4 @@
-export const API_BASE = import.meta.env.VITE_API_URL || "";
+export const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
 
 const MUNDOS_MAP = {
   1: "neon",
@@ -18,69 +18,117 @@ export function normalizarIdMundo(id) {
   return idStr;
 }
 
-export async function obtenerMundos() {
-  const respuesta = await fetch(`${API_BASE}/mundos`);
-  if (!respuesta.ok) {
-    throw new Error(`Error al obtener mundos: HTTP ${respuesta.status}`);
+/**
+ * Error estructurado de la API con código HTTP, código interno (`error.codigo`),
+ * errores por campo (`error.campos`) y tiempo de espera (`Retry-After`).
+ */
+export class ErrorHttp extends Error {
+  constructor(
+    status,
+    codigo = null,
+    { campos = null, reintentarEn = null } = {},
+  ) {
+    super(`Error HTTP ${status}`);
+    this.name = "ErrorHttp";
+    this.status = status;
+    this.codigo = codigo;
+    this.campos = campos;
+    this.reintentarEn = reintentarEn;
   }
-  const datos = await respuesta.json();
+}
+
+/** Interpreta la cabecera Retry-After en segundos (entero o fecha HTTP). */
+export function segundosDeEspera(valor, ahora = Date.now()) {
+  if (!valor) return null;
+  if (/^\d+$/.test(valor.trim())) return Number(valor);
+  const fecha = Date.parse(valor);
+  return Number.isNaN(fecha)
+    ? null
+    : Math.max(0, Math.ceil((fecha - ahora) / 1000));
+}
+
+/**
+ * Cabeceras de simulación de la API (`X-Simular-Latencia`, `X-Simular-Error`)
+ * activadas mediante parámetros en la URL: ?simularLatencia=2000 o ?simularError=503.
+ */
+export function cabecerasDeSimulacion(busqueda = globalThis.location?.search) {
+  const parametros = new URLSearchParams(busqueda ?? "");
+  const cabeceras = {};
+  const latencia = parametros.get("simularLatencia");
+  const error = parametros.get("simularError");
+  if (/^\d+$/.test(latencia ?? "")) {
+    cabeceras["X-Simular-Latencia"] = latencia;
+  }
+  if (/^(500|503|504)$/.test(error ?? "")) {
+    cabeceras["X-Simular-Error"] = error;
+  }
+  return cabeceras;
+}
+
+/**
+ * Cliente HTTP base que adjunta cabeceras de simulación y convierte respuestas
+ * de error en instancias de ErrorHttp.
+ */
+export async function pedirJson(
+  ruta,
+  { signal, metodo = "GET", cuerpo, conSesion = false } = {},
+) {
+  const url = `${API_BASE}/${ruta.replace(/^\/+/, "")}`;
+  const respuesta = await fetch(url, {
+    method: metodo,
+    signal,
+    credentials: conSesion ? "include" : "same-origin",
+    headers: {
+      ...cabecerasDeSimulacion(),
+      ...(cuerpo ? { "Content-Type": "application/json" } : {}),
+    },
+    body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+  });
+
+  if (!respuesta.ok) {
+    const datos = await respuesta.json().catch(() => null);
+    throw new ErrorHttp(respuesta.status, datos?.error?.codigo ?? null, {
+      campos: datos?.error?.campos ?? null,
+      reintentarEn: segundosDeEspera(respuesta.headers?.get?.("Retry-After")),
+    });
+  }
+
+  return respuesta.status === 204 ? null : respuesta.json();
+}
+
+export async function obtenerMundos(opciones) {
+  const datos = await pedirJson("mundos", opciones);
   return datos?.datos ?? [];
 }
 
-export async function obtenerMundo(id) {
+export async function obtenerMundo(id, opciones) {
   const slug = normalizarIdMundo(id);
-  const respuesta = await fetch(`${API_BASE}/mundos/${slug}`);
-  if (!respuesta.ok) {
-    // Si la API no lo encuentra directamente por slug, intentamos buscar en la lista completa
-    const mundos = await obtenerMundos();
-    const encontrado = mundos.find(
-      (m) => m.id === slug || m.nombre.toLowerCase().includes(slug)
-    );
-    if (encontrado) return encontrado;
-    throw new Error(`Error al obtener mundo ${id}: HTTP ${respuesta.status}`);
+  try {
+    return await pedirJson(`mundos/${encodeURIComponent(slug)}`, opciones);
+  } catch (err) {
+    if (err instanceof ErrorHttp && err.status === 404) {
+      const mundos = await obtenerMundos(opciones);
+      const encontrado = mundos.find(
+        (m) => m.id === slug || m.nombre.toLowerCase().includes(slug),
+      );
+      if (encontrado) return encontrado;
+    }
+    throw err;
   }
-  return await respuesta.json();
 }
 
-export async function obtenerCromos(mundoId) {
+export async function obtenerCromos(mundoId, opciones) {
   const slug = normalizarIdMundo(mundoId);
-  const respuesta = await fetch(`${API_BASE}/cromos?mundo=${slug}&limite=100`);
-  if (!respuesta.ok) {
-    throw new Error(`Error al obtener cromos: HTTP ${respuesta.status}`);
-  }
-  const datos = await respuesta.json();
+  const datos = await pedirJson(
+    `cromos?mundo=${encodeURIComponent(slug)}&limite=100`,
+    opciones,
+  );
   return datos?.datos ?? [];
 }
 
-export async function obtenerCromo(id) {
-  try {
-    const respuesta = await fetch(`${API_BASE}/cromos/${id}`);
-    if (respuesta.ok) {
-      const datos = await respuesta.json();
-      const c = datos?.datos ?? datos;
-      if (c && (c.nombre || c.id)) return c;
-    }
-  } catch {
-    // Si falla el endpoint individual, busca en la lista del mundo correspondiente
-  }
-
-  const idNum = parseInt(String(id).replace(/\D/g, ""), 10);
-  let mundoSlug = "neon";
-  if (idNum >= 41 && idNum <= 60) mundoSlug = "bosque";
-  else if (idNum >= 81 && idNum <= 100) mundoSlug = "orbita";
-  else if (idNum >= 21 && idNum <= 40) mundoSlug = "coral";
-  else if (idNum >= 61 && idNum <= 80) mundoSlug = "forja";
-  else if (idNum >= 101 && idNum <= 120) mundoSlug = "niebla";
-
-  const cromos = await obtenerCromos(mundoSlug);
-  return (
-    cromos.find(
-      (c) =>
-        c.id === id ||
-        String(c.numero) === String(idNum) ||
-        String(c.posicion) === String(idNum)
-    ) || null
-  );
+export async function obtenerCromo(id, opciones) {
+  const datos = await pedirJson(`cromos/${encodeURIComponent(id)}`, opciones);
+  return datos?.datos ?? datos;
 }
 
 export async function obtenerCromosHero() {
@@ -97,12 +145,7 @@ export async function obtenerCromosHero() {
   }
 }
 
-export async function obtenerRarezas() {
-  const respuesta = await fetch(`${API_BASE}/rarezas`);
-  if (!respuesta.ok) {
-    throw new Error(`Error al obtener rarezas: HTTP ${respuesta.status}`);
-  }
-  const datos = await respuesta.json();
+export async function obtenerRarezas(opciones) {
+  const datos = await pedirJson("rarezas", opciones);
   return datos?.datos ?? [];
 }
-
