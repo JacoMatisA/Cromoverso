@@ -1,0 +1,102 @@
+/* Campo de formulario reutilizable (US-CRO-S2-03) */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.campo-etiqueta {
+  color: var(--texto-principal);
+}
+
+.campo-caja {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-control {
+  width: 100%;
+  min-height: var(--objetivo-minimo);
+  padding: var(--espacio-3) var(--espacio-4);
+  border: var(--borde-grosor) solid var(--borde-fuerte);
+  border-radius: var(--radio-m);
+  color: var(--texto-principal);
+  background: var(--fondo-superficie);
+  transition: background-color var(--transicion-rapida), border-color var(--transicion-rapida);
+}
+
+.campo-control::placeholder {
+  color: var(--texto-secundario);
+}
+
+.campo-caja:has(.campo-accesorio) .campo-control {
+  padding-right: calc(var(--objetivo-minimo) + var(--espacio-2));
+}
+
+.campo-control:hover:not(:disabled) {
+  background: var(--fondo-pagina);
+}
+
+.campo-control:focus-visible {
+  border-color: var(--marca-primario);
+  outline: var(--anillo-foco) solid var(--marca-primario);
+  outline-offset: 0;
+}
+
+.campo-control:disabled {
+  color: var(--texto-secundario);
+  background: var(--fondo-sutil);
+  cursor: not-allowed;
+}
+
+.campo-control[aria-invalid="true"] {
+  border-color: var(--estado-error);
+}
+
+.campo-accesorio {
+  position: absolute;
+  right: var(--espacio-1);
+  display: grid;
+  place-items: center;
+  width: var(--objetivo-minimo);
+  height: var(--objetivo-minimo);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radio-s);
+  color: var(--texto-secundario);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--transicion-rapida), color var(--transicion-rapida);
+}
+
+.campo-accesorio:hover:not(:disabled) {
+  background: var(--fondo-sutil);
+  color: var(--texto-principal);
+}
+
+.campo-accesorio:focus-visible {
+  outline: var(--anillo-foco) solid var(--marca-primario);
+}
+
+.campo-descripcion,
+.campo-error {
+  margin: 0;
+}
+
+.campo-descripcion {
+  color: var(--texto-secundario);
+}
+
+.campo-error {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  color: var(--estado-error);
+}
+
+.campo-error svg {
+  width: var(--espacio-4);
+  height: var(--espacio-4);
+  flex-shrink: 0;
+}

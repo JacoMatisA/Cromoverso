@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { useTextos } from "./hooks/useTextos";
 import LayoutPublico from "./components/LayoutPublico.jsx";
 import VistaInicio from "./components/VistaInicio.jsx";
 import VistaMundo from "./components/VistaMundo.jsx";
 import VistaDetalleCromo from "./components/DetalleCromo/VistaDetalleCromo.jsx";
+import Ingresar from "./components/Ingresar.jsx";
+import VistaRegistro from "./components/VistaRegistro.jsx";
+import VistaRecuperarClave from "./components/VistaRecuperarClave.jsx";
 import { obtenerCookie, establecerCookie, eliminarCookie } from "./utils/cookies";
 import "./App.css";
 
@@ -97,9 +100,11 @@ function App() {
     }
   }
 
+  const navigate = useNavigate();
+
   function gestionarCuenta(accion) {
-    const destino = accion === "registro" ? "#crear-cuenta" : "#ingresar";
-    window.location.hash = destino;
+    const destino = accion === "registro" ? "/registro" : "/ingresar";
+    navigate(destino);
   }
 
   return (
@@ -150,6 +155,20 @@ function App() {
                 cargandoTextos={cargando}
               />
             }
+          />
+          {/* vista 4: iniciar sesion */}
+          <Route
+            path="/ingresar"
+            element={<Ingresar textos={textos} />}
+          />
+          {/* vistas provisionales de cuenta */}
+          <Route
+            path="/registro"
+            element={<VistaRegistro textos={textos} />}
+          />
+          <Route
+            path="/recuperar-clave"
+            element={<VistaRecuperarClave textos={textos} />}
           />
           {/* cualquier ruta rara que no exista manda para home */}
           <Route path="*" element={<Navigate to="/" replace />} />

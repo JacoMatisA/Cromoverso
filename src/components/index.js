@@ -13,6 +13,13 @@ export { default as AbanicoCromos } from "./AbanicoCromos.jsx";
 // Vistas
 export { default as VistaInicio } from "./VistaInicio.jsx";
 export { default as VistaMundo } from "./VistaMundo.jsx";
+export { default as Ingresar } from "./Ingresar.jsx";
+export { default as VistaRegistro } from "./VistaRegistro.jsx";
+export { default as VistaRecuperarClave } from "./VistaRecuperarClave.jsx";
+
+// Formularios
+export { default as TextField } from "./TextField.jsx";
+export { default as CampoClave } from "./CampoClave.jsx";
 
 // Layout y navegación
 export { default as LayoutPublico } from "./LayoutPublico.jsx";

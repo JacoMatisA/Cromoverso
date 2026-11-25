@@ -105,13 +105,13 @@ export default function Navbar({
         {/* Acciones visibles en móvil  */}
         <div className="navbar-movil-acciones">
           {nav?.botones?.ingresar && (
-            <a
+            <Link
               className="navbar-accion detalle-nota-fuerte navbar-accion-ingresar"
-              href="#ingresar"
+              to="/ingresar"
               onClick={() => setAbierto(false)}
             >
               {nav.botones.ingresar}
-            </a>
+            </Link>
           )}
           <button
             type="button"
@@ -144,20 +144,20 @@ export default function Navbar({
             codigos={textos?.idioma?.codigos}
           />
           {nav?.botones?.ingresar && (
-            <a
+            <Link
               className="navbar-accion detalle-nota-fuerte navbar-accion-ingresar"
-              href="#ingresar"
+              to="/ingresar"
             >
               {nav.botones.ingresar}
-            </a>
+            </Link>
           )}
           {nav?.botones?.crearCuenta && (
-            <a
+            <Link
               className="navbar-accion detalle-nota-fuerte navbar-accion-cuenta"
-              href="#crear-cuenta"
+              to="/registro"
             >
               {nav.botones.crearCuenta}
-            </a>
+            </Link>
           )}
         </div>
       </div>
@@ -241,22 +241,22 @@ export default function Navbar({
 
           <div className="drawer-botones-cuenta">
             {nav?.botones?.ingresar && (
-              <a
+              <Link
                 className="boton-home secundario drawer-boton-cuenta"
-                href="#ingresar"
+                to="/ingresar"
                 onClick={() => setAbierto(false)}
               >
                 {nav.botones.ingresar}
-              </a>
+              </Link>
             )}
             {nav?.botones?.crearCuenta && (
-              <a
+              <Link
                 className="boton-home primario drawer-boton-cuenta drawer-boton-crear"
-                href="#crear-cuenta"
+                to="/registro"
                 onClick={() => setAbierto(false)}
               >
                 {nav.botones.crearCuenta}
-              </a>
+              </Link>
             )}
           </div>
         </div>
