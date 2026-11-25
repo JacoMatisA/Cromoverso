@@ -5,6 +5,8 @@ import Icono from "./Icono.jsx";
 import LogoCromoverso from "./LogoCromoverso.jsx";
 import SelectorIdioma from "./SelectorIdioma.jsx";
 import MenuAccesibilidad from "./MenuAccesibilidad.jsx";
+import MenuCuenta, { Avatar } from "./MenuCuenta.jsx";
+import { useSesion } from "../hooks/useSesion.js";
 
 const DESTINOS = {
   inicio: "/",
@@ -24,6 +26,7 @@ export default function Navbar({
   const [accesibilidadAbierta, setAccesibilidadAbierta] = useState(false);
   const botonMenu = useRef(null);
   const location = useLocation();
+  const { usuario, salir } = useSesion();
 
   const seccionActiva = location.pathname.startsWith("/mundos")
     ? "mundos"
@@ -104,7 +107,7 @@ export default function Navbar({
 
         {/* Acciones visibles en móvil  */}
         <div className="navbar-movil-acciones">
-          {nav?.botones?.ingresar && (
+          {!usuario && nav?.botones?.ingresar && (
             <Link
               className="navbar-accion detalle-nota-fuerte navbar-accion-ingresar"
               to="/ingresar"
@@ -143,21 +146,27 @@ export default function Navbar({
             etiqueta={nav?.aria?.idioma}
             codigos={textos?.idioma?.codigos}
           />
-          {nav?.botones?.ingresar && (
-            <Link
-              className="navbar-accion detalle-nota-fuerte navbar-accion-ingresar"
-              to="/ingresar"
-            >
-              {nav.botones.ingresar}
-            </Link>
-          )}
-          {nav?.botones?.crearCuenta && (
-            <Link
-              className="navbar-accion detalle-nota-fuerte navbar-accion-cuenta"
-              to="/registro"
-            >
-              {nav.botones.crearCuenta}
-            </Link>
+          {usuario ? (
+            <MenuCuenta textos={nav?.usuario} />
+          ) : (
+            <>
+              {nav?.botones?.ingresar && (
+                <Link
+                  className="navbar-accion detalle-nota-fuerte navbar-accion-ingresar"
+                  to="/ingresar"
+                >
+                  {nav.botones.ingresar}
+                </Link>
+              )}
+              {nav?.botones?.crearCuenta && (
+                <Link
+                  className="navbar-accion detalle-nota-fuerte navbar-accion-cuenta"
+                  to="/registro"
+                >
+                  {nav.botones.crearCuenta}
+                </Link>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -239,26 +248,53 @@ export default function Navbar({
             </button>
           </div>
 
-          <div className="drawer-botones-cuenta">
-            {nav?.botones?.ingresar && (
-              <Link
-                className="boton-home secundario drawer-boton-cuenta"
-                to="/ingresar"
-                onClick={() => setAbierto(false)}
+          {usuario ? (
+            <div className="drawer-sesion-usuario">
+              <Avatar usuario={usuario} variante="propio" />
+              <div className="drawer-sesion-persona">
+                <p className="drawer-sesion-nombre cuerpo-m-fuerte">
+                  {usuario.nombre}
+                </p>
+                {usuario.alias && (
+                  <p className="drawer-sesion-alias detalle-nota">
+                    @{usuario.alias}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                className="boton boton--secundario boton--p drawer-boton-salir"
+                onClick={() => {
+                  setAbierto(false);
+                  salir();
+                }}
               >
-                {nav.botones.ingresar}
-              </Link>
-            )}
-            {nav?.botones?.crearCuenta && (
-              <Link
-                className="boton-home primario drawer-boton-cuenta drawer-boton-crear"
-                to="/registro"
-                onClick={() => setAbierto(false)}
-              >
-                {nav.botones.crearCuenta}
-              </Link>
-            )}
-          </div>
+                <Icono nombre="salir" />
+                <span>{menuMovil?.botones?.cerrarSesion ?? nav?.usuario?.cerrarSesion}</span>
+              </button>
+            </div>
+          ) : (
+            <div className="drawer-botones-cuenta">
+              {nav?.botones?.ingresar && (
+                <Link
+                  className="boton-home secundario drawer-boton-cuenta"
+                  to="/ingresar"
+                  onClick={() => setAbierto(false)}
+                >
+                  {nav.botones.ingresar}
+                </Link>
+              )}
+              {nav?.botones?.crearCuenta && (
+                <Link
+                  className="boton-home primario drawer-boton-cuenta drawer-boton-crear"
+                  to="/registro"
+                  onClick={() => setAbierto(false)}
+                >
+                  {nav.botones.crearCuenta}
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

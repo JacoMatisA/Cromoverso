@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import abanico from "../assets/ilustraciones/abanico-de-cromos.png";
-import abanico2x from "../assets/ilustraciones/abanico-de-cromos@2x.png";
 import { iniciarSesion } from "../services/api.js";
+import { useSesion } from "../hooks/useSesion.js";
 import { avisoDeError, insertarVariables } from "../utils/erroresIngreso.js";
+import { recordarPreferenciaDeSesion } from "../utils/sesion.js";
+import AbanicoCromos from "./AbanicoCromos.jsx";
 import CampoClave from "./CampoClave.jsx";
 import Icono from "./Icono.jsx";
 import LogoCromoverso from "./LogoCromoverso.jsx";
@@ -45,6 +46,7 @@ function AvisoIngreso({ titulo, texto, esBloqueo = false }) {
 /** Vista 4 · Iniciar sesión (US-CRO-S2-03 y US-CRO-S2-04). */
 export default function Ingresar({ textos }) {
   const pagina = textos?.paginas?.ingresar;
+  const { setUsuario } = useSesion();
   const navigate = useNavigate();
 
   const [valores, setValores] = useState({ correo: "", clave: "" });
@@ -124,10 +126,12 @@ export default function Ingresar({ textos }) {
     setAviso(null);
     setEnviando(true);
     try {
-      await iniciarSesion({
+      const usuario = await iniciarSesion({
         correo: valores.correo.trim(),
         clave: valores.clave,
       });
+      recordarPreferenciaDeSesion(mantener);
+      setUsuario(usuario);
       navigate("/");
     } catch (err) {
       const resultado = avisoDeError(err, pagina, textos);
@@ -152,19 +156,21 @@ export default function Ingresar({ textos }) {
   return (
     <div className="ingreso">
       <section className="ingreso-escenario" aria-hidden="true">
-        <RayosFondo className="ingreso-rayos" />
+        <RayosFondo
+          className="ingreso-rayos"
+          viewBox="0 -560 1500 1500"
+        />
         <div className="ingreso-escenario-contenido">
           <Link className="ingreso-logo" to="/" tabIndex={-1}>
             <LogoCromoverso invertido />
           </Link>
 
-          <img
+          <AbanicoCromos
             className="ingreso-abanico"
-            src={abanico}
-            srcSet={`${abanico} 1x, ${abanico2x} 2x`}
-            width="600"
-            height="420"
-            alt=""
+            mostrarGuardiana={false}
+            ocultarDerechaEnMovil
+            formatoTipo={textos?.paginas?.inicio?.tarjeta?.tipo}
+            textos={textos}
           />
 
           <div className="ingreso-lema">

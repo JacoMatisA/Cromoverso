@@ -269,6 +269,44 @@
   box-shadow: var(--sombra-pop);
 }
 
+/* Sesión iniciada en el menú móvil*/
+.drawer-sesion-usuario {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding-top: var(--espacio-4);
+  border-top: var(--borde-delgado) solid var(--borde-sutil);
+}
+
+.drawer-sesion-persona {
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-sesion-persona p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drawer-sesion-nombre {
+  color: var(--texto-principal);
+}
+
+.drawer-sesion-alias {
+  color: var(--texto-secundario);
+}
+
+.drawer-boton-salir {
+  flex: 0 0 auto;
+}
+
+.drawer-boton-salir svg {
+  width: var(--espacio-4);
+  height: var(--espacio-4);
+}
+
 /* Responsive breakpoint */
 @media (max-width: 56.1875rem) {
   .navbar {

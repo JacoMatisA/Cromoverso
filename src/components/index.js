@@ -27,6 +27,8 @@ export { default as Navbar } from "./Navbar.jsx";
 export { default as Footer } from "./Footer.jsx";
 export { default as MenuMovil } from "./MenuMovil.jsx";
 export { default as SaltarContenido } from "./SaltarContenido.jsx";
+export { default as ProveedorSesion } from "./ProveedorSesion.jsx";
+export { default as MenuCuenta, Avatar } from "./MenuCuenta.jsx";
 
 // Accesibilidad y utilitarios UI
 export { default as Icono } from "./Icono.jsx";
