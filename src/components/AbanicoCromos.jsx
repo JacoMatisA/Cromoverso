@@ -68,6 +68,9 @@ export default function AbanicoCromos({
   etiquetaGuardiana,
   formatoTipo = "{mundo} • {tipo}",
   usarIlustracionEstatica = false,
+  mostrarGuardiana = true,
+  ocultarDerechaEnMovil = false,
+  className = "",
   textos,
 }) {
   const [cartas, setCartas] = useState(null);
@@ -101,10 +104,18 @@ export default function AbanicoCromos({
     textos?.paginas?.inicio?.hero?.etiquetas?.guardiana ||
     "Guardiana holográfica";
 
+  const clasesContenedor = [
+    "abanico-cromos",
+    ocultarDerechaEnMovil ? "abanico-cromos--dos-movil" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   if (usarIlustracionEstatica) {
     return (
-      <div className="abanico-cromos" role="region" aria-label={etiquetaFinal}>
-        {etiquetaFinal && (
+      <div className={clasesContenedor} role="region" aria-label={etiquetaFinal}>
+        {mostrarGuardiana && etiquetaFinal && (
           <div className="abanico-guardiana-badge">
             <Icono nombre="destellos" />
             <span>{etiquetaFinal.toUpperCase()}</span>
@@ -116,8 +127,8 @@ export default function AbanicoCromos({
   }
 
   return (
-    <div className="abanico-cromos" role="region" aria-label={etiquetaFinal}>
-      {etiquetaFinal && (
+    <div className={clasesContenedor} role="region" aria-label={etiquetaFinal}>
+      {mostrarGuardiana && etiquetaFinal && (
         <div className="abanico-guardiana-badge">
           <Icono nombre="destellos" />
           <span>{etiquetaFinal.toUpperCase()}</span>

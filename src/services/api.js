@@ -166,3 +166,33 @@ export async function iniciarSesion({ correo, clave }, opciones = {}) {
   }
   return datos.usuario;
 }
+
+/**
+ * GET /sesion. Devuelve el usuario autenticado si la cookie httpOnly `sesion`
+ * sigue vigente, o null si la API responde 401 `no_autenticado`.
+ */
+export async function obtenerSesion(opciones = {}) {
+  try {
+    const datos = await pedirJson("sesion", {
+      ...opciones,
+      conSesion: true,
+    });
+    return datos?.usuario ?? null;
+  } catch (err) {
+    if (err instanceof ErrorHttp && err.status === 401) {
+      return null;
+    }
+    throw err;
+  }
+}
+
+/**
+ * DELETE /sesion (204). La API invalida la sesión y borra la cookie httpOnly `sesion`.
+ */
+export async function cerrarSesion(opciones = {}) {
+  await pedirJson("sesion", {
+    ...opciones,
+    metodo: "DELETE",
+    conSesion: true,
+  });
+}
