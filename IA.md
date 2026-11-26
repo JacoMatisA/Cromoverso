@@ -89,5 +89,86 @@ La aplicación compila de forma limpia en 214ms con Vite (`npm run build`). La v
 
 ---
 
+## Entrada 4: Corrección de Textos Hardcodeados y Traducción Dinámica desde la API
 
+- **Contexto:** Revisión de textos que no cambiaban al alternar el idioma entre español e inglés en la página de inicio y en la vista de mundos.
+- **Herramienta:** Asistente AI (Antigravity / Gemini).
 
+### Prompt del Usuario:
+> *"dentro de la pagina hay algunos textos que deberian cambiar y no lo hacen al cambiar de idioma, por lo que pude que estén hardcodeados, revisalos y confirma si tienen variantes en ingles desde la api, si es asi corrigelo para que cambien cuando el idioma seleccionado cambie, los textos particulares son el rol de los cromos del hero banner, que dicen heroe en lugar de hero con la pagina en ingles, y también las rarezas del menu de la izquierda en la vista de los mundos, en la seleccion para filtrar por rarezas, todas las rarezas estan en español, como legendario en lugar de legendary, epico en lugar de epic, etc con la pagina en ingles, al realizar estos cambios verifica que no haya más textos hardcodeados"*
+
+### Respuesta y Acción de la IA:
+1. **Verificación en la API:**
+   - Se consultaron los endpoints `/textos?idioma=en` y `/rarezas?idioma=en`.
+   - Se confirmó que `/rarezas` siempre devuelve los nombres en español, pero que `/textos?idioma=en` sí incluye las traducciones oficiales en `textos.componentes.cromo.rarezas` y `textos.componentes.cromo.tipos`.
+2. **Corrección del rol en el Hero Banner:**
+   - Se pasó la prop `textos` desde `HeroCromoverso.jsx` hacia `AbanicoCromos.jsx` y `TarjetaHero.jsx`.
+   - En `TarjetaHero.jsx` se conectó el tipo del cromo con `textos.componentes.cromo.tipos` y se aplicó la plantilla de subtítulo `formatoTipo`, mostrando `Hero` en inglés y `Héroe` en español.
+3. **Corrección de rarezas en el menú lateral:**
+   - En `MenuLateralMundos.jsx` se cambió la prioridad para tomar primero `textos.componentes.cromo.rarezas` en lugar de `meta.nombre` (que venía en español desde `/rarezas`).
+4. **Revisión y corrección de otros textos fijos:**
+   - En `TarjetaCromo.jsx` se aplicó la misma prioridad para que el nombre de rareza en tooltips y accesibilidad cambie de idioma.
+   - En `VistaMundo.jsx` se tradujeron las opciones de rareza del selector móvil usando `textos.componentes.cromo.rarezas`.
+   - En `VistaDetalleCromo.jsx` se reemplazó el texto fijo `"Cargando..."` por `textos?.estados?.cargando`.
+   - En `AbanicoCromos.jsx` se conectó el respaldo de la insignia de guardiana con `textos?.paginas?.inicio?.hero?.etiquetas?.guardiana`.
+
+### Resultado:
+El proyecto compiló sin errores con `npm run build` (Vite). Los roles del hero banner, las rarezas de los filtros y los demás textos revisados ahora cambian correctamente al alternar entre español e inglés.
+
+---
+
+## Entrada 5: Ajuste del Detalle de Cromo en Desktop y Corrección de Fallos en Mobile
+
+- **Contexto:** Ajustes visuales en la vista de detalle de cromo (`/cromos/:id`) para centrar la estrella de fondo y alinear los contenedores en desktop, y adaptar el menú inferior en mobile fielmente al diseño de Figma.
+- **Herramienta:** Asistente AI (Antigravity / Gemini).
+
+### Prompt del Usuario:
+> *"se requiere que la estrella que hay de fondo en el detalle de un cromo, detras del mismo en desktop este con unas medidas base que varien con respecto al ancho de la pantalla, con unos valores traidos de figma de layout width: 760; height: 760; angle: 0 deg; opacity: 0.16; que este bien centrado dentro del contenedor en el que se muestra, no de manera general en todo el contenedor del detalle de cromo, y que este contenedor en general tenga su borde superior a la misma altura del borde superior del contenedor de la informacion de la derecha, esto por la parte de desktop, en la parte de mobile, en el menu de detalle de cromo se requiere que sea fiel a la imagen que se adjunta del figma, si tienes dudas con medidas o algo por el estilo preguntalas para traerlas directamente del figma"*
+
+### Error Inicial de la IA:
+Tras consultar y aplicar las medidas de Figma, las primeras iteraciones en mobile presentaron varios fallos visuales al probar en dispositivos reales (Android e iOS):
+1. **Texto del cromo sobre la ilustración:** Al posicionar `.cromo__pie` de forma absoluta con porcentajes (`top: 84.82%`) y usar `transform: translateZ(0)`, el nombre y subtítulo quedaron encima del personaje y el espacio blanco inferior quedó vacío.
+2. **Barras de atributos vacías y parpadeos:** El uso de `display: contents`, `position: absolute` y `transform: translateZ(0)` en las barras, junto con variables CSS del mundo sin normalizar, hizo que las barras aparecieran vacías o desaparecieran al hacer scroll en Safari móvil.
+3. **Scroll con espacio vacío y contenido cortado:** Un pseudo-elemento `::after` de `100vh` generó un espacio en blanco gigante al desplazarse; al restringir el scroll después, los últimos atributos quedaron cortados bajo la barra del navegador. Además, faltaba el fondo sólido oscuro (`opacity: 1`) detrás del menú móvil y la píldora de rareza desbordaba con textos largos como `LEGENDARIA`.
+
+### Cómo se Corrigió:
+1. **Desktop (`RayosFondo.jsx`, `VistaDetalleCromo.jsx`, `DetalleCromo.css`):**
+   - Se agregó la prop `viewBox="0 -560 1500 1500"` en `RayosFondo` para centrar la estrella dentro de `.detalle__carta` con tamaño responsivo `clamp(600px, 52vw, 760px)`, `angle: 0deg` y `opacity: 0.16`.
+   - Se alineó `.detalle__carta` al borde superior (`align-self: flex-start`) a la misma altura que `.detalle__info`.
+2. **Tarjeta móvil y píldora de rareza (`DetalleCromo.css`):**
+   - Se cambió `.cromo--m` (168 × 235px) a Flexbox en columna (`display: flex; flex-direction: column;`) para que `.cromo__pie` quede siempre debajo de `.cromo__arte` en flujo normal.
+   - Se cambió el ancho fijo de `.detalle-etiqueta-rareza` a `width: auto; min-width: 80px; white-space: nowrap;` para adaptarse proporcionalmente a rarezas largas como `LEGENDARIA`.
+3. **Barras de atributos (`VistaDetalleCromo.jsx`, `DetalleCromo.css`):**
+   - Se agregó `normalizarSlugMundo` y el color hexadecimal directo del mundo (`colorHexMundo`) en `.detalle__avance`.
+   - Se reemplazó el posicionamiento absoluto, `display: contents` y `transform: translateZ(0)` por un contenedor Flexbox simple, evitando los fallos de repintado en Safari móvil.
+4. **Menú desplegable y fondo sólido oscuro en móvil (`DetalleCromo.css`):**
+   - Se eliminó el `::after` de `100vh`, se ocultó `.detalle__titulo` duplicado y se configuró `.detalle__dialogo` al 100% de ancho con `max-height: 94dvh` y `padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px))` para mostrar todos los atributos por encima de la barra del navegador.
+   - Se definió `.detalle__velo` en mobile con `background-color: var(--fondo-inverso, #1a1033)` y `opacity: 1` para cubrir el fondo con el bloque sólido oscuro de Figma.
+
+### Resultado:
+El proyecto compiló sin errores con `npm run build` (Vite). En desktop la estrella y los contenedores quedan centrados y alineados, y en mobile (Android e iOS) todo el contenido, las barras de progreso y el fondo oscuro sólido se muestran fieles al diseño de Figma.
+
+---
+
+## Entrada 6: Corrección del Cierre del Modal y Ajuste de la Zona Izquierda del Detalle de Cromo
+
+- **Contexto:** Corrección del comportamiento al cerrar el detalle de un cromo (`/cromos/:id`) y ajuste visual de la zona izquierda de la carta.
+- **Herramienta:** Asistente AI (Antigravity / Gemini).
+
+### Prompt del Usuario:
+> *"Se requieren cambios en la vista de detalle de cromo: ajustar la zona izquierda del cromo para que coincida con el diseño, y corregir el funcionamiento de las acciones para salir del menú, ya que al darle por fuera del menú flotante no se cierra sino que cambia de cromo, y pasa lo mismo con la x para cerrar."*
+
+### Respuesta y Acción de la IA:
+1. **Corrección de las acciones para cerrar el modal (`VistaDetalleCromo.jsx`, `DetalleCromo.css`):**
+   - Se identificó que `cerrarModal()` usaba `navigate(-1)`, lo cual retrocedía al cromo anterior en el historial en lugar de salir del modal cuando el usuario había navegado entre cartas.
+   - Se cambió `cerrarModal()` para navegar directamente al catálogo del mundo actual (`/mundos/${cromo.mundo}`) usando `{ replace: true }`.
+   - Se agregó `replace` a los enlaces de cromo anterior y siguiente para evitar acumular entradas en el historial al cambiar de carta.
+   - Se separó el fondo oscuro en un elemento independiente (`.detalle__velo`) con `onClick={cerrarModal}` para cerrar limpiamente al hacer clic fuera del cuadro flotante.
+2. **Ajuste de la zona izquierda del cromo (`VistaDetalleCromo.jsx`, `DetalleCromo.css`):**
+   - Se adoptó la estructura de `.detalle__carta` con el fondo temático del mundo y `RayosFondo` detrás de la carta.
+   - Se aplicó el diseño `.cromo` (`.cromo--g` en desktop y `.cromo--m` en mobile) con su marco de arte, rayos internos, halo, silueta del héroe, número, insignia de rareza y pie de carta.
+
+### Resultado:
+El proyecto compiló correctamente con Vite (`npm run build` en 375ms) sin errores. Tanto el botón `X` como el clic fuera del modal ahora cierran el detalle y regresan directo al catálogo del mundo, y la zona izquierda quedó ajustada al diseño.
+
+---
