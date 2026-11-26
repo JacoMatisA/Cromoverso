@@ -1,12 +1,16 @@
 # Cromoverso React
 
-Aplicación web frontend en React para **Cromoverso**, una plataforma de colección e intercambio de cromos a través de diferentes mundos temáticos. El código ha sido refactorizado con una arquitectura modular, declarativa y basada en la **composición de componentes y tarjetas reutilizables mediante props**, siguiendo las mejores prácticas de proyectos como [Bitácora Espacial](https://bitacora-espacial-ecru.vercel.app).
+Aplicación web frontend en React + Vite para **Cromoverso**, una plataforma de colección e intercambio de cromos a través de seis mundos temáticos. El proyecto sigue una arquitectura modular basada en **componentes reutilizables mediante props**, **textos 100 % dinámicos desde la API (`es` / `en`)**, **tokens estrictos en `tokens.css`** y **autenticación segura mediante cookie `httpOnly`**.
 
 ---
 
-## Requisitos y Ejecución
+## Requisitos, Configuración y Ejecución
 
 - **Node.js**: versión 18 o superior recomendada.
+- **Variable de entorno** (`.env` basado en `.env.example`):
+  ```env
+  VITE_API_URL=https://yanethm-cromoverso-api.fly.dev/api/v1
+  ```
 - **Instalación de dependencias**:
   ```bash
   npm install
@@ -28,73 +32,79 @@ Aplicación web frontend en React para **Cromoverso**, una plataforma de colecci
 
 ## Estructura del Proyecto
 
-El proyecto organiza sus componentes por dominio y responsabilidad clara, facilitando su comprensión, mantenimiento y reutilización:
-
 ```text
 src/
 ├── assets/
-│   ├── cromos/               # Artes rasterizados de cromos (1x, @2x, @3x)
-│   ├── ilustraciones/        # Ilustraciones principales (hero banner)
-│   └── imagenes.js           # Módulo de resolución y mapeo dinámico de imágenes
+│   ├── cromos/                     # Artes rasterizados oficiales de cromos (1x, @2x, @3x)
+│   ├── ilustraciones/              # Ilustraciones principales (abanico de cromos)
+│   └── imagenes.js                 # Módulo de resolución y mapeo dinámico de imágenes
 ├── components/
-│   ├── cards/                # 🃏 TARJETAS REUTILIZABLES POR PROPS
-│   │   ├── TarjetaCromo.jsx  # Tarjeta de cromo (props atómicas o vía objeto)
-│   │   ├── TarjetaMundo.jsx  # Tarjeta temática de mundo con props configurables
-│   │   ├── TarjetaHero.jsx   # Tarjeta individual para el abanico del Hero
-│   │   └── index.js          # Exportaciones limpias de tarjetas
-│   ├── catalogo/             # 📦 CONTENEDORES Y COLECCIONES
-│   │   ├── GrillaCromos.jsx  # Grilla desacoplada de cromos + estados vacíos
+│   ├── cards/                      # Tarjetas reutilizables por props
+│   │   ├── TarjetaCromo.jsx        # Tarjeta de cromo (props atómicas o vía objeto)
+│   │   ├── TarjetaMundo.jsx        # Tarjeta temática de mundo con props configurables
+│   │   ├── TarjetaHero.jsx         # Tarjeta individual para el abanico
 │   │   └── index.js
-│   ├── hero/                 # 🚀 SECCIÓN HERO Y PRESENTACIÓN
-│   │   ├── HeroCromoverso.jsx
-│   │   └── AbanicoCromos.jsx # Compone tarjetas TarjetaHero de forma limpia
-│   ├── layout/               # 🏛️ ESTRUCTURA Y NAVEGACIÓN
-│   │   ├── LayoutPublico.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── Footer.jsx
-│   │   ├── MenuMovil.jsx
-│   │   └── SaltarContenido.jsx
-│   ├── cookies/              # 🍪 GESTIÓN DE CONSENTIMIENTO
-│   │   ├── BannerCookies.jsx
-│   │   ├── GestorCookies.jsx
-│   │   └── PreferenciasCookies.jsx
-│   ├── common/               # 🧩 ELEMENTOS COMUNES Y ÁTOMOS
-│   │   ├── ArteCromo.jsx
-│   │   ├── Icono.jsx
-│   │   ├── LogoCromoverso.jsx
-│   │   ├── RayosFondo.jsx
-│   │   ├── MenuAccesibilidad.jsx
-│   │   └── SelectorIdioma.jsx
-│   ├── VistaInicio.jsx       # Vista de inicio integradora
-│   ├── VistaMundo.jsx        # Vista de álbum de mundo filtrable
-│   └── index.js              # Barril principal de exportaciones
+│   ├── catalogo/                   # Contenedores de colecciones
+│   │   ├── GrillaCromos.jsx        # Grilla de cromos + estado vacío con limpieza de filtros
+│   │   └── index.js
+│   ├── DetalleCromo/               # Vista 3 · Detalle individual del cromo
+│   │   ├── VistaDetalleCromo.jsx   # Modal de ficha con atributos, vecinos, esqueletos y errores
+│   │   ├── IlustracionCromoSVG.jsx
+│   │   └── DetalleCromo.css
+│   ├── AbanicoCromos.jsx           # Abanico reutilizable (3 cromos web / 2 en móvil en ingreso)
+│   ├── ArteCromo.jsx               # Resolución de arte oficial por cromo
+│   ├── BannerCookies.jsx           # Banner de consentimiento de cookies
+│   ├── CampoClave.jsx              # Campo de contraseña con botón ojo/ojoTachado accesible
+│   ├── Estados.jsx                 # Esqueleto, AvisoCarga y EstadoError reutilizables
+│   ├── Footer.jsx                  # Pie de página dinámico
+│   ├── GestorCookies.jsx           # Coordinador de consentimiento de cookies
+│   ├── HeroCromoverso.jsx          # Hero de la página de inicio
+│   ├── Icono.jsx                   # Librería centralizada de iconos SVG de Figma
+│   ├── Ingresar.jsx                # Vista 4 · Iniciar sesión a pantalla completa (/ingresar)
+│   ├── LayoutPublico.jsx           # Layout público (omite Navbar/Footer en /ingresar)
+│   ├── LogoCromoverso.jsx          # Logotipo SVG (normal e invertido)
+│   ├── MenuAccesibilidad.jsx       # Panel de accesibilidad (tamaño, contraste, movimiento, etc.)
+│   ├── MenuCuenta.jsx              # Avatar e interfaz desplegable de cuenta y cierre de sesión
+│   ├── MenuLateralMundos.jsx       # Navegación y filtros laterales del catálogo
+│   ├── MenuMovil.jsx               # Apoyo de navegación móvil
+│   ├── Navbar.jsx                  # Barra superior responsive y drawer móvil con estado de sesión
+│   ├── PreferenciasCookies.jsx     # Diálogo de preferencias de cookies
+│   ├── ProveedorSesion.jsx         # Contexto global de sesión (GET /sesion y DELETE /sesion)
+│   ├── RayosFondo.jsx              # Estrella radial de fondo reutilizable
+│   ├── SaltarContenido.jsx         # Enlace accesible "Saltar al contenido"
+│   ├── SeccionMundos.jsx           # Grilla de los seis mundos
+│   ├── SelectorIdioma.jsx          # Selector ES / EN conectado a cookie con consentimiento
+│   ├── TextField.jsx               # Campo de formulario reutilizable con label y error inline
+│   ├── VistaInicio.jsx             # Vista 1 · Inicio público (/)
+│   ├── VistaMundo.jsx              # Vista 2 · Catálogo de mundo (/mundos/:id)
+│   ├── VistaRecuperarClave.jsx     # Vista provisional (/recuperar-clave)
+│   ├── VistaRegistro.jsx           # Vista provisional (/registro)
+│   └── index.js                    # Barril principal de exportaciones
 ├── hooks/
-│   └── useTextos.js          # Consumo de textos i18n desde la API
+│   ├── useSesion.js                # Hook y contexto de sesión de usuario
+│   └── useTextos.js                # Consumo de textos i18n desde GET /textos?idioma=es|en
 ├── services/
-│   └── api.js                # Cliente HTTP para mundos, cromos y rarezas
+│   └── api.js                      # Cliente HTTP (ErrorHttp, simulación, mundos, cromos, sesión)
 ├── styles/
-│   ├── tokens.css            # Tokens de diseño (espaciados, colores, fuentes)
-│   └── global.css            # Estilos base y tipografía
+│   ├── tokens.css                  # Tokens de diseño oficiales de Figma
+│   └── global.css                  # Estilos base, botones y utilidades de accesibilidad
 ├── utils/
-│   └── cookies.js            # Utilidades de persistencia y cookies
-├── App.jsx                   # Enrutamiento, accesibilidad e idioma
-└── main.jsx                  # Punto de entrada
+│   ├── cookies.js                  # Lectura, escritura y borrado de cookies de preferencias
+│   ├── erroresIngreso.js           # Traducción de errores 401, 429, 422 y red en /ingresar
+│   └── sesion.js                   # Iniciales del avatar y preferencia de sesión temporal
+├── App.jsx                         # Enrutamiento principal, accesibilidad e idioma
+└── main.jsx                        # Punto de entrada con BrowserRouter y ProveedorSesion
 ```
 
 ---
 
 ## Composición de Componentes Reutilizables por Props
 
-Inspirado en el patrón de tarjetas de [Bitácora Espacial](https://bitacora-espacial-ecru.vercel.app), los componentes clave reciben sus datos mediante **props explícitas y atómicas**, lo que permite usarlos en cualquier contexto sin atarse a estructuras rígidas de la base de datos.
+### 1. Tarjetas y catálogo (`TarjetaCromo`, `TarjetaMundo`, `TarjetaHero`, `GrillaCromos`)
 
-### 1. `TarjetaCromo` (`src/components/cards/TarjetaCromo.jsx`)
-Renderiza una tarjeta de cromo coleccionable con su marco, número formateado, insignia de rareza, arte con fallback dinámico y pie con metadatos.
-
-**Uso declarativo por props atómicas:**
 ```jsx
-import { TarjetaCromo } from "./components";
+import { TarjetaCromo, TarjetaMundo, GrillaCromos } from "./components";
 
-// Ejemplo de uso limpio por props:
 <TarjetaCromo
   id="CV-001"
   numero={1}
@@ -104,64 +114,6 @@ import { TarjetaCromo } from "./components";
   mundo="Ciudad Neón"
   enlace="/cromos/CV-001"
 />
-```
-
-**Uso mediante objeto de datos (retrocompatibilidad):**
-```jsx
-<TarjetaCromo
-  cromo={cromoData}
-  mundoNombre="Ciudad Neón"
-  rarezasInfo={listaRarezas}
-  textos={textosI18n}
-/>
-```
-
----
-
-### 2. `TarjetaMundo` (`src/components/cards/TarjetaMundo.jsx`)
-Tarjeta desacoplada para mostrar mundos temáticos en catálogos, secciones o carruseles.
-
-```jsx
-import { TarjetaMundo } from "./components";
-
-<TarjetaMundo
-  clave="neon"
-  nombre="Ciudad Neón"
-  numero={1}
-  icono="rayo"
-  totalCromos={20}
-  tieneTag={true}
-  etiquetaMundo="Mundo {numero}"
-  etiquetaCromos="{cantidad} cromos"
-  enlace="/mundos/neon"
-/>
-```
-
----
-
-### 3. `TarjetaHero` (`src/components/cards/TarjetaHero.jsx`)
-Tarjeta individual para composiciones destacadas (utilizada en el abanico del Hero banner). Elimina la duplicación de código en vistas destacadas.
-
-```jsx
-import { TarjetaHero } from "./components";
-
-<TarjetaHero
-  id="CV-001"
-  numero={1}
-  nombre="Voltia"
-  posicion="centro"
-  destacada={true}
-  formatoTipo="{mundo} • {tipo}"
-/>
-```
-
----
-
-### 4. `GrillaCromos` (`src/components/catalogo/GrillaCromos.jsx`)
-Componente contenedor de alto nivel que gestiona el mapeo de colecciones y el renderizado del estado vacío si no hay coincidencias de filtrado.
-
-```jsx
-import { GrillaCromos } from "./components";
 
 <GrillaCromos
   cromos={cromosFiltrados}
@@ -169,30 +121,110 @@ import { GrillaCromos } from "./components";
   colorMundo="var(--mundo-neon)"
   rarezasInfo={rarezas}
   textos={textos}
-  onLimpiarFiltros={() => limpiarFiltros()}
+  onLimpiarFiltros={limpiarFiltros}
 />
 ```
 
+### 2. Estados de carga y error (`Estados.jsx`)
+
+Componentes reutilizables para vistas asíncronas, alimentados exclusivamente por `textos.estados` y `textos.errores`:
+
+```jsx
+import { AvisoCarga, Esqueleto, EstadoError } from "./components";
+
+<AvisoCarga textos={textos} />
+<Esqueleto className="vista-mundo-esqueleto-carta" />
+<EstadoError
+  textos={textos}
+  error={error}
+  onReintentar={reintentar}
+  etiquetaTitulo="h1"
+/>
+```
+
+### 3. Formularios accesibles (`TextField` y `CampoClave`)
+
+```jsx
+import { TextField, CampoClave } from "./components";
+
+<TextField
+  ref={correoRef}
+  id="ingreso-correo"
+  name="correo"
+  type="email"
+  label={formulario.etiquetas.correo}
+  placeholder={formulario.placeholders.correo}
+  value={valores.correo}
+  onChange={cambiar}
+  error={errores.correo}
+/>
+
+<CampoClave
+  ref={claveRef}
+  id="ingreso-clave"
+  name="clave"
+  label={formulario.etiquetas.clave}
+  etiquetaMostrar={formulario.botones.mostrarClave}
+  etiquetaOcultar={formulario.botones.ocultarClave}
+  value={valores.clave}
+  onChange={cambiar}
+  error={errores.clave}
+/>
+```
+
+### 4. Cuenta y sesión (`MenuCuenta` y `Avatar`)
+
+- `Avatar` acepta `variante="acento"` (amarillo de acento para la barra en escritorio) o `variante="propio"` (color de perfil `usuario.colorAvatar` para el panel desplegable y el menú hamburguesa móvil).
+- `MenuCuenta` muestra el avatar circular en la barra superior de escritorio y despliega un menú accesible (cierre con `Escape` y clic exterior) con los datos del usuario y el botón **Cerrar sesión**.
+
 ---
 
-## Vistas Principales
+## Vistas Principales y Rutas
 
-### `VistaInicio` (`src/components/VistaInicio.jsx`)
-Compone:
-1. **`HeroCromoverso`**: Encabezado principal que incluye el llamado a la acción y el **`AbanicoCromos`** (compuesto por tres `TarjetaHero`).
-2. **`SeccionMundos`**: Grilla de los 6 mundos temáticos compuesta mediante **`TarjetaMundo`**.
-
-### `VistaMundo` (`src/components/VistaMundo.jsx`)
-Vista de catálogo y álbum interactivo:
-- Carga reactiva de datos (`obtenerMundo`, `obtenerCromos`, `obtenerRarezas`).
-- Sincronización bidireccional de filtros de búsqueda, rareza y tipo en los parámetros de la URL (`?buscar=&rareza=&tipo=`).
-- Menú lateral interactivo (`MenuLateralMundos`) con conteos en tiempo real por categoría.
-- Grilla desacoplada mediante **`GrillaCromos`**.
+| Ruta | Componente | Descripción |
+| :--- | :--- | :--- |
+| `/` | `VistaInicio` | Inicio público: `HeroCromoverso` con `AbanicoCromos` y `SeccionMundos`. |
+| `/mundos/:id` | `VistaMundo` | Catálogo filtrable (`?rareza=&tipo=&buscar=`) con esqueletos, vacío y error con reintento. |
+| `/cromos/:id` | `VistaDetalleCromo` | Modal de detalle de cromo con atributos, vecinos, esqueletos, 404 y error con reintento. |
+| `/ingresar` | `Ingresar` | Vista 4 a pantalla completa (sin `Navbar` ni `Footer`) para inicio de sesión con `POST /sesion`. |
+| `/registro` | `VistaRegistro` | Pantalla provisional lista para implementar la creación de cuenta. |
+| `/recuperar-clave` | `VistaRecuperarClave` | Pantalla provisional lista para implementar la recuperación de contraseña. |
 
 ---
 
-## Accesibilidad y Tokens de Diseño
+## Historias de Usuario Implementadas (Sprint 2)
 
-- **Accesibilidad**: Toggles para alto contraste (`.alto-contraste`), reducción de movimiento (`.reducir-movimiento`), subrayado de enlaces (`.subrayar-enlaces`) y tipografía amigable (`.fuente-lectura-facil`).
-- **Tokens**: Sistema completo de variables CSS en `src/styles/tokens.css` (espaciados `--espacio-1` a `--espacio-8`, radios `--radio-s` a `--radio-pildora`, colores temáticos por mundo).
-- **Textos i18n dinámicos**: Consumo sin cadenas fijas mediante el hook `useTextos` (`es` / `en`).
+### `US-CRO-S2-02` — Estados de carga, vacío y error (Vistas 2 y 3)
+- **Carga**: esqueletos animados con respeto a `prefers-reduced-motion` y anuncio `role="status"` (`AvisoCarga` con `textos.estados.cargando`).
+- **Vacío**: estado vacío en `GrillaCromos` cuando los filtros no arrojan resultados, con botón para quitar filtros (`textos.paginas.albumMundo.vacio` / `textos.estados.vacio`).
+- **Error**: `EstadoError` con icono de alerta, mensaje por código desde `textos.errores[codigo]` (respaldo `textos.estados.error.texto`) y botón **Reintentar** (`textos.estados.error.botones.reintentar`).
+- **Simulación de pruebas**: `api.js` lee los query params `?simularLatencia=2000` y `?simularError=503` y envía automáticamente las cabeceras `X-Simular-Latencia` y `X-Simular-Error`.
+
+### `US-CRO-S2-03` — Iniciar sesión (Vista 4)
+- Formulario responsive a pantalla completa en `/ingresar` (dos columnas en escritorio con abanico de 3 cromos; en móvil con abanico de 2 cromos) conectado a `POST /sesion`.
+- Etiquetas visibles asociadas a cada campo (`<label htmlFor>`).
+- Botón del ojo (`ojo` / `ojoTachado`) que muestra/oculta la contraseña anunciando su estado con `aria-pressed` y `aria-label`.
+- Validación de campos obligatorios con mensaje junto a cada campo y foco automático en el primer campo con error.
+- Ingreso exitoso (ej. `laura@cromoverso.test` / `cromos2026`) con redirección a `/` y enlaces a `/registro` y `/recuperar-clave`.
+
+### `US-CRO-S2-04` — Estados de error y carga del formulario de ingreso
+- **Envío en curso**: el botón cambia a **«Ingresando…»** con spinner, queda deshabilitado (`aria-busy="true"`) y previene envíos duplicados.
+- **401 `credenciales_invalidas`**: aviso único sin revelar si falló el correo o la contraseña.
+- **429 `demasiadas_peticiones`**: bloquea el formulario durante los segundos de la cabecera `Retry-After` mostrando una cuenta regresiva (con `aria-live="off"` para no saturar lectores de pantalla) y desbloquea automáticamente al llegar a `0`.
+- **Sin conexión**: conserva lo escrito, muestra el error de conexión y ofrece botón **Reintentar**.
+
+### `US-CRO-S2-05` — Mantener la sesión y cerrarla
+- **Persistencia segura**: la sesión se mantiene tras recargar mediante la cookie `httpOnly` `sesion` gestionada por la API (`credentials: "include"`). **El token nunca se guarda en `localStorage`**.
+- **Consulta de sesión**: `ProveedorSesion` consulta `GET /sesion` al cargar y al recuperar foco/visibilidad con sesión activa.
+- **Navegación según sesión**:
+  - Con sesión: avatar amarillo circular con iniciales en escritorio que abre `MenuCuenta`; en móvil, barra limpia (sin avatar) y tarjeta de usuario con su color de perfil + **Cerrar sesión** dentro del menú hamburguesa.
+  - Sin sesión: botones **Ingresar** y **Crear cuenta**.
+- **Cierre y expiración**: **Cerrar sesión** ejecuta `DELETE /sesion` y regresa a `/` como visitante; si la sesión vence (`401 no_autenticado`), redirige automáticamente a `/ingresar`.
+
+---
+
+## Accesibilidad, i18n y Tokens de Diseño
+
+- **Accesibilidad**: panel de tamaño de texto (Normal, Grande, Muy grande), alto contraste (`.alto-contraste`), reducción de movimiento (`.reducir-movimiento`), subrayado de enlaces (`.subrayar-enlaces`), fuente de lectura fácil (`.fuente-lectura-facil`) y soporte completo de teclado y atributos ARIA.
+- **Tokens**: uso exclusivo de variables definidas en `src/styles/tokens.css`.
+- **Internacionalización y cookies**: textos en `es` y `en` cargados desde `GET /textos?idioma=...` mediante `useTextos`, respetando el consentimiento de cookies para persistir la preferencia de idioma.
