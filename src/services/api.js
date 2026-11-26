@@ -71,7 +71,7 @@ export function cabecerasDeSimulacion(busqueda = globalThis.location?.search) {
  */
 export async function pedirJson(
   ruta,
-  { signal, metodo = "GET", cuerpo, conSesion = false } = {},
+  { signal, metodo = "GET", cuerpo, conSesion = false, headers = {} } = {},
 ) {
   const url = `${API_BASE}/${ruta.replace(/^\/+/, "")}`;
   const respuesta = await fetch(url, {
@@ -80,6 +80,7 @@ export async function pedirJson(
     credentials: conSesion ? "include" : "same-origin",
     headers: {
       ...cabecerasDeSimulacion(),
+      ...headers,
       ...(cuerpo ? { "Content-Type": "application/json" } : {}),
     },
     body: cuerpo ? JSON.stringify(cuerpo) : undefined,
@@ -117,12 +118,16 @@ export async function obtenerMundo(id, opciones) {
   }
 }
 
-export async function obtenerCromos(mundoId, opciones) {
+export async function obtenerCromos(
+  mundoId,
+  { rareza, tipo, ...opciones } = {},
+) {
   const slug = normalizarIdMundo(mundoId);
-  const datos = await pedirJson(
-    `cromos?mundo=${encodeURIComponent(slug)}&limite=100`,
-    opciones,
-  );
+  const parametros = new URLSearchParams({ mundo: slug, limite: "100" });
+  if (rareza) parametros.set("rareza", rareza);
+  if (tipo) parametros.set("tipo", tipo);
+
+  const datos = await pedirJson(`cromos?${parametros.toString()}`, opciones);
   return datos?.datos ?? [];
 }
 

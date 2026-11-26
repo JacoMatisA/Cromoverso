@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Icono from "./Icono.jsx";
+import EtiquetaRareza from "./EtiquetaRareza.jsx";
 import "./MenuLateralMundos.css";
 
 const ICONOS_RAREZA = {
@@ -120,12 +120,11 @@ export default function MenuLateralMundos({
                     onCambiarFiltro("rareza", esSeleccionado ? "" : clave)
                   }
                 >
-                  <span className={`lateral-badge-rareza rareza-badge-${clave}`}>
-                    <Icono nombre={icono} relleno />
-                    <span className="lateral-badge-nombre">
-                      {nombre.toUpperCase()}
-                    </span>
-                  </span>
+                  <EtiquetaRareza
+                    clave={clave}
+                    nombre={nombre}
+                    icono={icono}
+                  />
                   <span className="lateral-filtro-conteo cuerpo-p">
                     {formatearCantidad(conteo)}
                   </span>

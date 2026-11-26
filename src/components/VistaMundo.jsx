@@ -36,9 +36,11 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
 
   const [mundo, setMundo] = useState(null);
   const [mundos, setMundos] = useState([]);
+  const [cromosMundo, setCromosMundo] = useState([]);
   const [cromos, setCromos] = useState([]);
   const [rarezas, setRarezas] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [cargandoCromos, setCargandoCromos] = useState(true);
   const [error, setError] = useState(null);
   const [intento, setIntento] = useState(0);
 
@@ -62,10 +64,10 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
     setCargando(true);
     setError(null);
 
-    async function cargarDatos() {
+    async function cargarMundo() {
       try {
         const opciones = { signal: controlador.signal };
-        const [datosMundo, listaMundos, listaCromos, listaRarezas] =
+        const [datosMundo, listaMundos, listaBase, listaRarezas] =
           await Promise.all([
             obtenerMundo(idNormalizado, opciones),
             obtenerMundos(opciones),
@@ -76,7 +78,7 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
         if (activo) {
           setMundo(datosMundo);
           setMundos(listaMundos);
-          setCromos(listaCromos);
+          setCromosMundo(listaBase);
           setRarezas(listaRarezas);
         }
       } catch (err) {
@@ -88,13 +90,46 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
       }
     }
 
-    cargarDatos();
+    cargarMundo();
 
     return () => {
       activo = false;
       controlador.abort();
     };
   }, [idNormalizado, intento]);
+
+  useEffect(() => {
+    const controlador = new AbortController();
+    let activo = true;
+    setCargandoCromos(true);
+
+    async function cargarCromosFiltrados() {
+      try {
+        const listaCromos = await obtenerCromos(idNormalizado, {
+          signal: controlador.signal,
+          rareza: rarezaActual,
+          tipo: tipoActual,
+        });
+
+        if (activo) {
+          setCromos(listaCromos);
+        }
+      } catch (err) {
+        if (err?.name === "AbortError") return;
+        console.error("Error al cargar cromos:", err);
+        if (activo) setError(err);
+      } finally {
+        if (activo) setCargandoCromos(false);
+      }
+    }
+
+    cargarCromosFiltrados();
+
+    return () => {
+      activo = false;
+      controlador.abort();
+    };
+  }, [idNormalizado, rarezaActual, tipoActual, intento]);
 
   function reintentar() {
     setIntento((n) => n + 1);
@@ -116,46 +151,30 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
   }
 
   const cromosFiltrados = useMemo(() => {
-    return cromos.filter((cromo) => {
-      if (
-        rarezaActual &&
-        cromo.rareza?.toLowerCase() !== rarezaActual.toLowerCase()
-      ) {
-        return false;
-      }
-      if (
-        tipoActual &&
-        cromo.tipo?.toLowerCase() !== tipoActual.toLowerCase()
-      ) {
-        return false;
-      }
-      if (
-        busqueda &&
-        !cromo.nombre?.toLowerCase().includes(busqueda.trim().toLowerCase())
-      ) {
-        return false;
-      }
-      return true;
-    });
-  }, [cromos, rarezaActual, tipoActual, busqueda]);
+    if (!busqueda.trim()) return cromos;
+    const consulta = busqueda.trim().toLowerCase();
+    return cromos.filter((cromo) =>
+      cromo.nombre?.toLowerCase().includes(consulta)
+    );
+  }, [cromos, busqueda]);
 
   const conteoPorRareza = useMemo(() => {
     const acumulador = { legendaria: 0, epica: 0, rara: 0, comun: 0 };
-    cromos.forEach((c) => {
+    cromosMundo.forEach((c) => {
       const r = c.rareza?.toLowerCase();
       if (acumulador[r] !== undefined) acumulador[r] += 1;
     });
     return acumulador;
-  }, [cromos]);
+  }, [cromosMundo]);
 
   const conteoPorTipo = useMemo(() => {
     const acumulador = { heroe: 0, aliado: 0, villano: 0 };
-    cromos.forEach((c) => {
+    cromosMundo.forEach((c) => {
       const t = c.tipo?.toLowerCase();
       if (acumulador[t] !== undefined) acumulador[t] += 1;
     });
     return acumulador;
-  }, [cromos]);
+  }, [cromosMundo]);
 
   const tMundo = textos?.paginas?.albumMundo;
   const tFiltros = tMundo?.filtros;
@@ -436,15 +455,29 @@ export default function VistaMundo({ textos, cargandoTextos, idMundo }) {
               </div>
             </div>
 
-            <div className="catalogo-marco-grilla">
-              <GrillaCromos
-                cromos={cromosFiltrados}
-                mundoNombre={mundo.nombre}
-                colorMundo={mundo.color ?? "var(--marca-primario)"}
-                rarezasInfo={rarezas}
-                textos={textos}
-                onLimpiarFiltros={limpiarFiltros}
-              />
+            <div className="catalogo-marco-grilla" aria-busy={cargandoCromos}>
+              {cargandoCromos ? (
+                <>
+                  <AvisoCarga textos={textos} />
+                  <div className="catalogo-grilla-cromos" aria-hidden="true">
+                    {Array.from({ length: CROMOS_ESQUELETO }, (_, indice) => (
+                      <Esqueleto
+                        key={indice}
+                        className="vista-mundo-esqueleto-carta"
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <GrillaCromos
+                  cromos={cromosFiltrados}
+                  mundoNombre={mundo.nombre}
+                  colorMundo={mundo.color ?? "var(--marca-primario)"}
+                  rarezasInfo={rarezas}
+                  textos={textos}
+                  onLimpiarFiltros={limpiarFiltros}
+                />
+              )}
             </div>
           </main>
         </div>

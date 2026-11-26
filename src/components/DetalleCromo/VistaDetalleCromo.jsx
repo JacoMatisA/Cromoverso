@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import ArteCromo from "../ArteCromo.jsx";
+import EtiquetaRareza from "../EtiquetaRareza.jsx";
 import Icono from "../Icono.jsx";
 import RayosFondo from "../RayosFondo.jsx";
 import VistaMundo from "../VistaMundo.jsx";
+import BarraAtributo from "./BarraAtributo.jsx";
 import { AvisoCarga, Esqueleto, EstadoError } from "../Estados.jsx";
-import { ErrorHttp, obtenerCromo, obtenerCromos } from "../../services/api.js";
+import {
+  ErrorHttp,
+  obtenerCromo,
+  obtenerCromos,
+  obtenerRarezas,
+} from "../../services/api.js";
 import "./DetalleCromo.css";
 
 const ICONOS_RAREZA = {
@@ -50,6 +58,7 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
   const dialogoRef = useRef(null);
 
   const [cromo, setCromo] = useState(null);
+  const [rarezas, setRarezas] = useState([]);
   const [cromoAnterior, setCromoAnterior] = useState(null);
   const [cromoSiguiente, setCromoSiguiente] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -57,7 +66,7 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
   const [errorApi, setErrorApi] = useState(null);
   const [intento, setIntento] = useState(0);
 
-  // Cargar datos del cromo actual y sus vecinos
+  // Cargar datos del cromo actual, catálogo de rarezas y vecinos
   useEffect(() => {
     const controlador = new AbortController();
     let activo = true;
@@ -70,7 +79,10 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
     async function cargarDetalle() {
       try {
         const opciones = { signal: controlador.signal };
-        const datos = await obtenerCromo(id, opciones);
+        const [datos, listaRarezas] = await Promise.all([
+          obtenerCromo(id, opciones),
+          obtenerRarezas(opciones).catch(() => []),
+        ]);
         if (!datos || (!datos.nombre && !datos.id)) {
           if (activo) setError404(true);
           return;
@@ -78,6 +90,7 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
 
         if (!activo) return;
         setCromo(datos);
+        setRarezas(listaRarezas);
 
         if (datos.mundo) {
           try {
@@ -361,14 +374,11 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
                     className="cromo__arte"
                     style={{ "--cromo-color": colorMundo }}
                   >
-                    <div className="cromo__rayos" />
-                    <div className="cromo__halo" />
-                    <div className="cromo__hombros" />
-                    <div className="cromo__cabeza" />
-                    <div className="cromo__antifaz" />
-                    <div className="cromo__emblema">
-                      <Icono nombre={iconoRareza} relleno />
-                    </div>
+                    <ArteCromo
+                      id={cromo.id}
+                      cromo={cromo}
+                      nombre={cromo.nombre}
+                    />
                   </div>
 
                   <span className="cromo__numero">{numeroFormateado}</span>
@@ -393,14 +403,11 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
                       className="cromo__arte"
                       style={{ "--cromo-color": colorMundo }}
                     >
-                      <div className="cromo__rayos" />
-                      <div className="cromo__halo" />
-                      <div className="cromo__hombros" />
-                      <div className="cromo__cabeza" />
-                      <div className="cromo__antifaz" />
-                      <div className="cromo__emblema">
-                        <Icono nombre={iconoRareza} relleno />
-                      </div>
+                      <ArteCromo
+                        id={cromo.id}
+                        cromo={cromo}
+                        nombre={cromo.nombre}
+                      />
                     </div>
                     <span className="cromo__numero">{numeroFormateado}</span>
                     <span className="cromo__rareza">
@@ -417,12 +424,11 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
                   <p className="detalle__id">{cromo.id}</p>
                   <h2 className="detalle__nombre-mobile">{cromo.nombre}</h2>
                   <p className="detalle__sub">{subtituloCromo}</p>
-                  <span className="detalle-etiqueta-rareza">
-                    <span className="detalle-etiqueta-rareza-icono">
-                      <Icono nombre={iconoRareza} relleno />
-                    </span>
-                    <span className="detalle-etiqueta-rareza-texto">{nombreRareza}</span>
-                  </span>
+                  <EtiquetaRareza
+                    clave={claveRareza}
+                    nombre={nombreRareza}
+                    icono={iconoRareza}
+                  />
                 </div>
               </div>
 
@@ -432,12 +438,11 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
               <div className="detalle__info">
                 {/* 1. Etiquetas superiores + ÚNICA X de cierre en Desktop */}
                 <div className="detalle__etiquetas">
-                  <span className="detalle-etiqueta-rareza">
-                    <span className="detalle-etiqueta-rareza-icono">
-                      <Icono nombre={iconoRareza} relleno />
-                    </span>
-                    <span>{nombreRareza}</span>
-                  </span>
+                  <EtiquetaRareza
+                    clave={claveRareza}
+                    nombre={nombreRareza}
+                    icono={iconoRareza}
+                  />
                   <span className="detalle-etiqueta-mundo">
                     {cromo.mundoNombre || cromo.mundo}
                   </span>
@@ -512,27 +517,13 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
                         tDetalle?.atributos?.nombres?.[clave] || clave;
 
                       return (
-                        <div
+                        <BarraAtributo
                           key={clave}
-                          className="detalle__atributo"
-                          style={{ "--valor": porcentaje }}
-                        >
-                          <span className="detalle__atributo-nombre">
-                            {etiqueta}
-                          </span>
-                          <div className="detalle__atributo-medida">
-                            <span className="detalle__barra" aria-hidden="true">
-                              <span
-                                className="detalle__avance"
-                                style={{
-                                  width: `${porcentaje}%`,
-                                  backgroundColor: colorHexMundo,
-                                }}
-                              />
-                            </span>
-                            <span className="detalle__numero">{valor}</span>
-                          </div>
-                        </div>
+                          etiqueta={etiqueta}
+                          valor={valor}
+                          porcentaje={porcentaje}
+                          color={colorHexMundo}
+                        />
                       );
                     })}
                   </div>

@@ -435,7 +435,8 @@
     pointer-events: none;
   }
 
-  .detalle__carta .cromo {
+  .detalle__carta .cromo,
+  .detalle__carta .tarjeta-cromo {
     position: relative;
     z-index: 1;
   }
@@ -465,40 +466,6 @@
 
   .detalle__espacio {
     flex: 1;
-  }
-
-  .detalle-etiqueta-rareza {
-    min-width: calc(var(--espacio-8) + var(--espacio-4));
-    height: calc(var(--espacio-5) + var(--borde-delgado));
-    border-radius: var(--radio-pildora);
-    border: var(--borde-medio) solid var(--rareza-color, var(--rareza-epica));
-    background: var(--fondo-superficie);
-    gap: calc(var(--espacio-1) + var(--borde-grosor));
-    padding: var(--espacio-1) calc(var(--espacio-2) + var(--borde-grosor));
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    font-family: var(--fuente-rubik);
-    font-weight: 700;
-    font-size: var(--tam-etiqueta);
-    line-height: var(--linea-etiqueta);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--rareza-color, var(--rareza-epica));
-  }
-
-  .detalle-etiqueta-rareza-icono {
-    width: var(--tam-etiqueta);
-    height: var(--tam-etiqueta);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .detalle-etiqueta-rareza-icono svg {
-    width: var(--tam-etiqueta);
-    height: var(--tam-etiqueta);
   }
 
   .detalle-etiqueta-mundo {
@@ -1004,55 +971,6 @@
     color: var(--texto-secundario);
     word-break: break-word;
     flex: none;
-  }
-
-  /* Etiqueta de rareza: alargable proporcionalmente al texto sin desbordar */
-  .detalle-etiqueta-rareza {
-    width: auto;
-    min-width: calc(var(--espacio-8) + var(--espacio-4));
-    max-width: 100%;
-    height: calc(var(--espacio-5) + var(--borde-delgado));
-    border-radius: var(--radio-pildora);
-    border: var(--borde-medio) solid var(--rareza-color, var(--rareza-epica));
-    background: var(--fondo-superficie);
-    gap: calc(var(--espacio-1) + var(--borde-grosor));
-    padding: var(--espacio-1) calc(var(--espacio-2) + var(--borde-grosor));
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    flex: none;
-  }
-
-  .detalle-etiqueta-rareza-icono {
-    width: var(--tam-cuerpo-p);
-    height: var(--tam-cuerpo-p);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: none;
-    color: var(--rareza-color, var(--rareza-epica));
-  }
-
-  .detalle-etiqueta-rareza-icono svg {
-    width: var(--tam-cuerpo-p);
-    height: var(--tam-cuerpo-p);
-    fill: currentColor;
-  }
-
-  .detalle-etiqueta-rareza-texto {
-    width: auto;
-    height: var(--linea-etiqueta);
-    font-family: var(--fuente-rubik);
-    font-weight: 700;
-    font-size: var(--tam-etiqueta);
-    line-height: var(--linea-etiqueta);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--texto-principal);
-    display: inline-block;
-    text-align: center;
-    white-space: nowrap;
   }
 
   /* 3. Caja de Poder */
