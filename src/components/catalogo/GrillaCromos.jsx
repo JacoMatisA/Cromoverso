@@ -19,6 +19,7 @@ export default function GrillaCromos({
   textos,
   onLimpiarFiltros,
 }) {
+  // Textos del estado vacío provenientes de GET /textos
   const tVacio = textos?.paginas?.albumMundo?.vacio;
   const tituloVacio = tVacio?.titulo ?? textos?.estados?.vacio?.titulo;
   const textoVacio = tVacio?.texto;

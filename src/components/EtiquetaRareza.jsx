@@ -8,6 +8,7 @@ const ICONOS_RAREZA = {
   comun: "circulo",
 };
 
+/** Etiqueta compartida de rareza para el detalle del cromo y la leyenda del catálogo. */
 export default function EtiquetaRareza({ clave = "comun", nombre, icono }) {
   const id = String(clave).toLowerCase();
   const nombreIcono = icono || ICONOS_RAREZA[id] || "circulo";
@@ -19,3 +20,10 @@ export default function EtiquetaRareza({ clave = "comun", nombre, icono }) {
     </span>
   );
 }
+{/* <span
+      className="etiqueta-rareza"
+      style={{ color: rareza.color, borderColor: rareza.color }}
+    >
+      <Icono nombre={rareza.icono} relleno />
+      <span>{rareza.nombre}</span>
+    </span> */}

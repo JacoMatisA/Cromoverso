@@ -118,6 +118,7 @@ export async function obtenerMundo(id, opciones) {
   }
 }
 
+/** Obtiene los cromos de un mundo con soporte de filtros por rareza y tipo. */
 export async function obtenerCromos(
   mundoId,
   { rareza, tipo, ...opciones } = {},

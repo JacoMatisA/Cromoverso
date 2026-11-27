@@ -439,6 +439,8 @@
   .detalle__carta .tarjeta-cromo {
     position: relative;
     z-index: 1;
+    width: 100%;
+    max-width: 240px;
   }
 
   .detalle__info {

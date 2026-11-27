@@ -44,6 +44,7 @@ export default function TarjetaCromo({
   mundoNombre,
   rarezasInfo = [],
   textos,
+  
 }) {
   // Resolver id y número
   const idFinal = id ?? cromo?.id ?? String(numero ?? cromo?.numero ?? "1");
@@ -76,12 +77,14 @@ export default function TarjetaCromo({
     .replace("{mundo}", nombreMundoFinal)
     .replace("{tipo}", nombreTipo);
 
-  // Destino y accesibilidad
-  const rutaDestino = enlace ?? `/cromos/${idFinal}`;
+  // Destino y accesibilidad (si enlace es null se renderiza como contenedor estático)
+  const esEnlace = enlace !== null;
+  const Contenedor = esEnlace ? Link : "div";
+  const rutaDestino = esEnlace ? (enlace ?? `/cromos/${idFinal}`) : undefined;
   const etiquetaAria = `${numeroFormateado} ${nombreFinal}, ${nombreRareza}, ${nombreTipo}`;
 
   return (
-    <Link
+    <Contenedor
       to={rutaDestino}
       className={`tarjeta-cromo rareza-${claveRareza}`}
       aria-label={etiquetaAria}
@@ -120,6 +123,6 @@ export default function TarjetaCromo({
           <p className="detalle-nota tarjeta-cromo-subtitulo">{subtitulo}</p>
         )}
       </div>
-    </Link>
+    </Contenedor>
   );
 }

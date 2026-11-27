@@ -22,6 +22,7 @@
   flex-shrink: 0;
 }
 
+/* Paleta por clase de rareza */
 .etiqueta-rareza--legendaria {
   background-color: var(--rareza-legendaria-suave);
   color: var(--rareza-legendaria);

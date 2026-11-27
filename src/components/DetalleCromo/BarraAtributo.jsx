@@ -1,7 +1,10 @@
+/** Fila de barra de progreso para un atributo individual del cromo. */
 export default function BarraAtributo({ etiqueta, valor, porcentaje, color }) {
   return (
     <div className="detalle__atributo" style={{ "--valor": porcentaje }}>
-      <span className="detalle__atributo-nombre">{etiqueta}</span>
+      <span className="detalle__atributo-nombre">{etiqueta}
+        
+      </span>
       <div className="detalle__atributo-medida">
         <span className="detalle__barra" aria-hidden="true">
           <span

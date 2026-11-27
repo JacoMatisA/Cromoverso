@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import ArteCromo from "../ArteCromo.jsx";
+import TarjetaCromo from "../cards/TarjetaCromo.jsx";
 import EtiquetaRareza from "../EtiquetaRareza.jsx";
 import Icono from "../Icono.jsx";
 import RayosFondo from "../RayosFondo.jsx";
@@ -197,10 +197,12 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
   const tCromo = textos?.componentes?.cromo;
   const tNoEncontrado = tDetalle?.noEncontrado;
 
+  // Metadatos de rareza (resueltos desde GET /rarezas)
   const claveRareza = String(cromo?.rareza || "comun").toLowerCase();
+  const rarezaActual = rarezas.find((r) => r.id?.toLowerCase() === claveRareza);
   const nombreRareza =
-    tCromo?.rarezas?.[claveRareza] || cromo?.rareza || "Común";
-  const iconoRareza = ICONOS_RAREZA[claveRareza] || "circulo";
+    tCromo?.rarezas?.[claveRareza] || rarezaActual?.nombre || cromo?.rareza || "Común";
+  const iconoRareza = rarezaActual?.icono || ICONOS_RAREZA[claveRareza] || "circulo";
 
   const claveTipo = String(cromo?.tipo || "heroe").toLowerCase();
   const nombreTipo =
@@ -218,10 +220,9 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
         .replace("{posicion}", String(cromo.posicion || cromo.numero || 1))
     : "";
 
-  const numeroRaw = cromo?.posicion || cromo?.numero || 1;
-  const numeroFormateado = String(numeroRaw).padStart(3, "0");
   const subtituloCromo = `${cromo?.mundoNombre || cromo?.mundo || ""} · ${nombreTipo}`;
 
+  // Resumen de atributos del cromo
   const sumaAtributos = useMemo(() => {
     if (!cromo?.atributos) return 0;
     return Object.values(cromo.atributos).reduce(
@@ -368,29 +369,15 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
                   focusable="false"
                 />
 
-                {/* El Cromo Oficial Grande (Desktop) */}
-                <div className={`cromo cromo--g cromo--${claveRareza}`}>
-                  <div
-                    className="cromo__arte"
-                    style={{ "--cromo-color": colorMundo }}
-                  >
-                    <ArteCromo
-                      id={cromo.id}
-                      cromo={cromo}
-                      nombre={cromo.nombre}
-                    />
-                  </div>
-
-                  <span className="cromo__numero">{numeroFormateado}</span>
-                  <span className="cromo__rareza">
-                    <Icono nombre={iconoRareza} relleno />
-                  </span>
-
-                  <div className="cromo__pie">
-                    <h4 className="cromo__nombre">{cromo.nombre}</h4>
-                    <p className="cromo__detalle">{subtituloCromo}</p>
-                  </div>
-                </div>
+                {/* Carta principal del cromo (Desktop) */}
+                <TarjetaCromo
+                  cromo={cromo}
+                  mundoNombre={cromo.mundoNombre || cromo.mundo}
+                  colorMundo={colorHexMundo}
+                  rarezasInfo={rarezas}
+                  textos={textos}
+                  enlace={null}
+                />
               </div>
 
               {/* --------------------------------------------------------------
@@ -398,26 +385,14 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
                   -------------------------------------------------------------- */}
               <div className="detalle__identidad">
                 <div className="detalle__carta-movil">
-                  <div className={`cromo cromo--m cromo--${claveRareza}`}>
-                    <div
-                      className="cromo__arte"
-                      style={{ "--cromo-color": colorMundo }}
-                    >
-                      <ArteCromo
-                        id={cromo.id}
-                        cromo={cromo}
-                        nombre={cromo.nombre}
-                      />
-                    </div>
-                    <span className="cromo__numero">{numeroFormateado}</span>
-                    <span className="cromo__rareza">
-                      <Icono nombre={iconoRareza} relleno />
-                    </span>
-                    <div className="cromo__pie">
-                      <h4 className="cromo__nombre">{cromo.nombre}</h4>
-                      <p className="cromo__detalle">{subtituloCromo}</p>
-                    </div>
-                  </div>
+                  <TarjetaCromo
+                    cromo={cromo}
+                    mundoNombre={cromo.mundoNombre || cromo.mundo}
+                    colorMundo={colorHexMundo}
+                    rarezasInfo={rarezas}
+                    textos={textos}
+                    enlace={null}
+                  />
                 </div>
 
                 <div className="detalle__datos">

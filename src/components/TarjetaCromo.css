@@ -13,14 +13,14 @@
   box-shadow: var(--sombra-pop-pequena);
 }
 
-.tarjeta-cromo:hover,
-.tarjeta-cromo:focus-visible {
+a.tarjeta-cromo:hover,
+a.tarjeta-cromo:focus-visible {
   transform: translateY(-2px);
   box-shadow: var(--sombra-pop);
   outline: none;
 }
 
-.tarjeta-cromo:focus-visible {
+a.tarjeta-cromo:focus-visible {
   border-color: var(--marca-primario);
 }
 
