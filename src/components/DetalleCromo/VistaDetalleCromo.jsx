@@ -176,6 +176,12 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
       if (e.key === "Escape") {
         cerrarModal();
       }
+      if (e.key === "ArrowRight") {
+        navegarDerecha();
+      }
+      if (e.key === "ArrowLeft") {
+        navegarIzquierda();
+      }
     }
 
     window.addEventListener("keydown", manejarKeyDown);
@@ -186,12 +192,21 @@ export default function VistaDetalleCromo({ textos, cargandoTextos }) {
     };
   }, [cromo]);
 
+
   // Salida directa hacia el catálogo del mundo
   function cerrarModal() {
     const destinoMundo = cromo?.mundo ? `/mundos/${cromo.mundo}` : "/mundos/neon";
     navigate(destinoMundo, { replace: true });
   }
 
+  function navegarDerecha() {
+    const destinoCromoDer = cromo?.id ? `/cromos/${cromoSiguiente}` : "";
+        navigate(destinoCromoDer, { replace: true });
+  }
+  function navegarIzquierda() {
+    const destinoCromoIzq = cromo?.id ? `/cromos/${cromoAnterior}` : "";
+        navigate(destinoCromoIzq, { replace: true });
+  }
   // Traducción y resolución de textos desde la API
   const tDetalle = textos?.paginas?.detalleCromo;
   const tCromo = textos?.componentes?.cromo;
